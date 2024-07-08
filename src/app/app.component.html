@@ -2,12 +2,12 @@
   <nz-sider class="menu-sidebar" nzTheme="light" nzCollapsible nzWidth="256px" nzBreakpoint="md"
     [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="sidebar-logo">
-      <a href="#" target="_blank">
+      <a routerLink="dashboard">
         <img src="../assets/logo.svg" alt="logo">
         <h1>Products</h1>
       </a>
     </div>
-    <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+    <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="custom-menu">
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/dashboard">
           <i nz-icon nzType="dashboard"></i>
@@ -47,33 +47,65 @@
     </ul>
 
   </nz-sider>
-  <nz-layout style="overflow-y: auto;">
-    <nz-header>
-      <div class="app-header">
+  <nz-layout style="max-width: none; min-width: 1000px;">
+    <nz-header nz-row nzJustify="space-between" class="app-header" style="padding-right: 40px;">
+      <div nz-col class="flex-nowrap">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
           <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
         </span>
+        <app-search-input></app-search-input>
+      </div>
+      <div nz-col class="flex-nowrap" style="gap: 15px; ">
+        <div>
+          <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" style="color:black">
+            English
+            <span nz-icon nzType="down"></span>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item>English</li>
+              <li nz-menu-item>Khmer</li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+        <nz-badge [nzCount]="5">
+          <div class="icon-tag">
+            <span nz-icon nzType="bell" nzTheme="outline" style="font-size: 18px;"></span>
+          </div>
+        </nz-badge>
+        <nz-badge [nzCount]="5">
+          <div class="icon-tag">
+            <span nz-icon nzType="message" nzTheme="outline" style="font-size: 18px;"></span>
+          </div>
+        </nz-badge>
+        <div class="icon-tag">
+          <span nz-icon nzType="appstore" nzTheme="outline" style="font-size: 18px;"></span>
+        </div>
+
+        <div class="flex-nowrap">
+          <nz-avatar nzIcon="user" nzSize="large"
+            nzSrc="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"></nz-avatar>
+          <h4 style="margin: 0;"> Tith Sopanha</h4>
+        </div>
       </div>
     </nz-header>
-    <nz-content>
+    <nz-content style="overflow: auto; padding: 24px 24px 0 24px;">
       <div style="margin-bottom: 24px;">
         <nz-breadcrumb>
-          <nz-breadcrumb-item>Home</nz-breadcrumb-item>
+          <nz-breadcrumb-item>Dashboard</nz-breadcrumb-item>
           <nz-breadcrumb-item>
-            <a>Application List</a>
+            <a>Products</a>
           </nz-breadcrumb-item>
-          <nz-breadcrumb-item>An Application</nz-breadcrumb-item>
+          <nz-breadcrumb-item>Add products</nz-breadcrumb-item>
         </nz-breadcrumb>
 
       </div>
       <div class="inner-content">
         <router-outlet></router-outlet>
       </div>
-      <div class="inner-content">
-        <router-outlet></router-outlet>
-      </div>
+
+      <nz-footer style="text-align: center;">Ant Design ©2020 Implement By Angular</nz-footer>
     </nz-content>
-    <!-- <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer> -->
-    <div>footer</div>
+
   </nz-layout>
 </nz-layout>

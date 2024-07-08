@@ -16,7 +16,30 @@
   box-shadow: 1px 0 6px rgba(0, 21, 41, 0.1);
 }
 
+.custom-menu {
+  margin-top: 10px;
+}
+
+.custom-menu li {
+  height: 48px;
+  align-items: center;
+}
+
+.custom-menu li a i {
+  font-size: 20px; /* Adjust the font size for the icons */
+  margin-right: 7px; /* Add space between the icon and the text */
+  font-weight: 600;
+}
+
+.custom-menu li a span {
+  font-size: 15px; /* Adjust the font size for the text */
+  font-weight: 600;
+}
+
 .header-trigger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 64px;
   padding: 20px 24px;
   font-size: 20px;
@@ -35,6 +58,7 @@
   overflow: hidden;
   line-height: 64px;
   transition: all 0.3s;
+  border-bottom: 1px solid #f0f2f5;
 }
 
 .sidebar-logo img {
@@ -59,20 +83,33 @@ nz-header {
 }
 
 .app-header {
-  position: relative;
   height: 64px;
   padding: 0;
   background: #fefefe;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-}
-
-nz-content {
-  margin: 24px;
+  flex-wrap: nowrap;
 }
 
 .inner-content {
   padding: 24px;
   border-radius: 15px;
   background: #fff;
-  height: 100%;
+  min-height: 70vh;
+}
+.icon-tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #eff2f6;
+  cursor: pointer;
+}
+
+.flex-nowrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 10px;
 }
