@@ -26,12 +26,18 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
-import { SearchInputComponent } from './shared/components/search-input/search-input.component';
+import { SearchInputComponent } from './shared/components/search-input.component';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { AddUpdateProductComponent } from './pages/products/add-update-product.component';
+import { ButtonComponent } from './shared/components/button.component';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
 
 registerLocaleData(en);
 
@@ -46,6 +52,8 @@ registerLocaleData(en);
     UserComponent,
     PageNotFoundComponent,
     SearchInputComponent,
+    ButtonComponent,
+    AddUpdateProductComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,6 +75,10 @@ registerLocaleData(en);
     NzTableModule,
     NzDividerModule,
     NzPaginationModule,
+    NzResultModule,
+    NzTypographyModule,
+    NzFormModule,
+    NzUploadModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],
