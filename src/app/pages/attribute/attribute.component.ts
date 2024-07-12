@@ -2,14 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-attribute',
-  template: `
-    <p>
-      attribute works!
-    </p>
-  `,
-  styles: [
-  ]
+  template: ` <div class="inner-content"></div> `,
+  styles: [],
 })
-export class AttributeComponent {
-
-}
+export class AttributeComponent {}
