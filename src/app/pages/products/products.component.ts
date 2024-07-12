@@ -15,8 +15,15 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 
   template: `
     <div class="inner-content">
-      <div nz-row style="flex-direction: column; gap: 25px; ">
-        <div nz-row nzJustify="space-between" nzAlign="middle">
+      <div
+        style="display: flex; flex-direction: column;  gap: 15px; height: 100%; "
+      >
+        <div
+          nz-row
+          nzJustify="space-between"
+          nzAlign="middle"
+          style="flex-shrink: 0;"
+        >
           <div nz-row nzAlign="middle">
             <app-search-input
               [(searchValue)]="searchValue"
@@ -28,76 +35,68 @@ import { NzModalService } from 'ng-zorro-antd/modal';
             [routerLink]="'/products/add'"
           ></app-button>
         </div>
-        <!-- <nz-table #basicTable nzShowPagination nzShowSizeChanger [nzData]="dataSet"> -->
-        <nz-table
-          #tableData
-          nzShowPagination
-          nzShowSizeChanger
-          [nzData]="dataSet"
-          [nzLoading]="loading"
-          nzTableLayout="fixed"
-        >
-          <thead>
-            <tr>
-              <th nzWidth="5%" class="text-center">ID</th>
-              <th nzWidth="10%">Image</th>
-              <th nzWidth="20%">Products Name</th>
-              <th nzWidth="10%">Price</th>
-              <th nzWidth="15%">Category</th>
-              <th nzWidth="30%">Description</th>
-              <th nzWidth="10%" class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of tableData.data; index as i">
-              <td class="text-center">
-                {{ (pageIndex - 1) * pageSize + i + 1 }}
-              </td>
-              <td>
-                <img [src]="data.image" style="width: 50px; height: 50px;" />
-              </td>
-              <td nzEllipsis>{{ data.title }}</td>
-              <td>{{ data.price | currency }}</td>
-              <td nzEllipsis>{{ data.category }}</td>
-              <td nzEllipsis>{{ data.description }}</td>
-              <td>
-                <nz-row
-                  nzJustify="center"
-                  style="gap: 10px; flex-wrap: nowrap;"
-                >
-                  <a
-                    routerLink="/products/edit/{{ data.id }}"
-                    nz-button
-                    nzType="primary"
-                    nzGhost
-                  >
-                    <span nz-icon nzType="edit"></span>
-                  </a>
-                  <button nz-button nzType="default" nzDanger>
-                    <span
-                      nz-icon
-                      nzType="delete"
-                      (click)="showConfirm(data.id)"
-                    ></span>
-                  </button>
-                </nz-row>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
-        <!-- <div nz-row nzJustify="space-between" nzAlign="middle">
-          <p style="margin: 0; color: #95989d;">
-            Showing {{ dataDisplay.length }} entries
-          </p>
-          <nz-pagination
-            [nzTotal]="filterData.length"
+
+        <div nz-row style=" flex-grow: 1; overflow: auto;">
+          <nz-table
+            #tableData
+            nzShowPagination
+            nzShowSizeChanger
             [nzPageIndex]="pageIndex"
             [nzPageSize]="pageSize"
-            (nzPageIndexChange)="onIndexChange($event)"
-            (nzPageSizeChange)="onPageSizeChange($event)"
-            [nzTotal]="dataSet.length"
-          ></nz-pagination>
-        </div> -->
+            (nzPageIndexChange)="onPageIndexChange($event)"
+            [nzData]="filterData"
+            [nzLoading]="loading"
+            nzTableLayout="fixed"
+          >
+            <thead>
+              <tr style="position: sticky; top: 0; z-index: 100;">
+                <th nzWidth="5%" style="text-align: center;">#</th>
+                <th nzWidth="10%">Image</th>
+                <th nzWidth="20%">Products Name</th>
+                <th nzWidth="10%">Price</th>
+                <th nzWidth="15%">Category</th>
+                <th nzWidth="30%">Description</th>
+                <th nzWidth="10%" style="text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of tableData.data; index as i">
+                <td class="text-center">
+                  {{ (pageIndex - 1) * pageSize + i + 1 }}
+                </td>
+                <td>
+                  <img [src]="data.image" style="width: 50px; height: 50px;" />
+                </td>
+                <td nzEllipsis style="font-weight: 600;">{{ data.title }}</td>
+                <td>{{ data.price | currency }}</td>
+                <td nzEllipsis>{{ data.category }}</td>
+                <td nzEllipsis>{{ data.description }}</td>
+                <td>
+                  <nz-row
+                    nzJustify="center"
+                    style="gap: 10px; flex-wrap: nowrap;"
+                  >
+                    <a
+                      routerLink="/products/edit/{{ data.id }}"
+                      nz-button
+                      nzType="primary"
+                      nzGhost
+                    >
+                      <span nz-icon nzType="edit"></span>
+                    </a>
+                    <button nz-button nzType="default" nzDanger>
+                      <span
+                        nz-icon
+                        nzType="delete"
+                        (click)="showConfirm(data.id)"
+                      ></span>
+                    </button>
+                  </nz-row>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
       </div>
     </div>
   `,
@@ -127,80 +126,16 @@ import { NzModalService } from 'ng-zorro-antd/modal';
         .ant-select:not(.ant-select-customize-input)
         .ant-select-selector {
         border-radius: 10px;
-        width: 70px;
+
         text-align: center;
-      }
-      .text-center {
-        text-align: center;
-      }
-      :host ::ng-deep .ant-table-thead > tr > th {
-        background-color: #f7f9fb;
-        font-weight: 700;
-        padding: 12px;
-        border-bottom: none;
-      }
-      :host
-        ::ng-deep
-        .ant-table-container
-        table
-        > thead
-        > tr:first-child
-        th:first-child {
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
-      }
-      :host
-        ::ng-deep
-        .ant-table-container
-        table
-        > thead
-        > tr:first-child
-        th:last-child {
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
-      }
-      /* ::ng-deep .ant-table-container table > thead > tr > th {
-        margin-bottom: 10px;
-      } */
-
-      :host ::ng-deep .ant-table-container table > tbody > tr:nth-child(odd) {
-        background-color: #f7f9fb;
-      }
-
-      :host ::ng-deep .ant-table-container table > tbody > tr > td:first-child {
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
-      }
-      :host ::ng-deep .ant-table-container table > tbody > tr > td:last-child {
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
-      }
-      :host ::ng-deep .ant-table-container table > tbody > tr > td {
-        border-bottom: none;
-      }
-
-      :host ::ng-deep .ant-table table {
-        border-collapse: separate;
-        border-spacing: 0px 10px;
-      }
-
-      :host
-        ::ng-deep
-        .ant-table-thead
-        > tr
-        > th:not(:last-child):not(.ant-table-selection-column):not(
-          .ant-table-row-expand-icon-cell
-        ):not([colspan])::before {
-        content: none;
       }
     `,
   ],
-  encapsulation: ViewEncapsulation.Emulated,
+  // encapsulation: ViewEncapsulation.Emulated,
 })
 export class ProductsComponent implements OnInit {
   searchValue = '';
   dataSet: ProductInterface[] = [];
-  dataDisplay: ProductInterface[] = [];
   filterData: ProductInterface[] = [];
   pageIndex = 1;
   pageSize = 10;
@@ -219,7 +154,6 @@ export class ProductsComponent implements OnInit {
     this._productsService.getProducts().subscribe((products) => {
       this.dataSet = products;
       this.filterData = [...this.dataSet];
-      // this.updateDisplayData();
       this.loading = false;
     });
 
@@ -235,7 +169,6 @@ export class ProductsComponent implements OnInit {
   // Search function
   private onSearch(): void {
     if (!this.searchValue) {
-      // If searchValue is empty, reset filterData to all products
       this.filterData = [...this.dataSet];
     } else {
       this.filterData = this.dataSet.filter(
@@ -247,29 +180,7 @@ export class ProductsComponent implements OnInit {
           item.category.toLowerCase().includes(this.searchValue.toLowerCase())
       );
     }
-    this.pageIndex = 1; // Reset pageIndex to show first page of filtered results
   }
-
-  //Pagination
-  // onIndexChange(index: number): void {
-  //   this.pageIndex = index;
-  //   this.updateDisplayData();
-  // }
-
-  // //Pagination
-  // onPageSizeChange(pageSize: number): void {
-  //   this.pageSize = pageSize;
-  //   this.pageIndex = 1;
-  //   this.updateDisplayData();
-  // }
-
-  //Pagination
-  // private updateDisplayData(): void {
-  //   const startIndex = (this.pageIndex - 1) * this.pageSize;
-  //   const endIndex = startIndex + this.pageSize;
-
-  //   this.dataDisplay = this.filterData.slice(startIndex, endIndex);
-  // }
 
   showConfirm(id: number): void {
     this.modal.confirm({
@@ -298,5 +209,9 @@ export class ProductsComponent implements OnInit {
         console.error('Failed to delete product:', error);
       },
     });
+  }
+
+  onPageIndexChange(pageIndex: number): void {
+    this.pageIndex = pageIndex;
   }
 }
