@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ProductsService } from '../products/products.service';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { ProductInterface } from '../products/product-interface';
+
 import { CategoriesService } from './categories.service';
 import { Category } from './categories';
+import { debounceTime, Subject } from 'rxjs';
 
 interface ItemData {
   name: string;
@@ -30,16 +29,15 @@ interface ItemData {
               (searchValueChange)="onSearchInput($event)"
             ></app-search-input>
           </div>
-          <app-button
-            label="Add Product"
-            [routerLink]="'/products/add'"
-          ></app-button>
+          <button nz-button nzSize="large" disabled nzType="primary" nzGhost>
+            Add Category
+          </button>
         </div>
 
         <div nz-row style=" flex-grow: 1; overflow: auto;">
           <nz-table
             #cateTable
-            [nzData]="categoryList"
+            [nzData]="filterData"
             nzTableLayout="fixed"
             nzShowPagination
             [nzPageIndex]="pageIndex"
@@ -69,10 +67,10 @@ interface ItemData {
                     nzJustify="center"
                     style="gap: 10px; flex-wrap: nowrap;"
                   >
-                    <a nz-button nzType="primary" nzGhost>
+                    <a nz-button nzType="primary" nzGhost disabled>
                       <span nz-icon nzType="edit"></span>
                     </a>
-                    <button nz-button nzType="default" nzDanger>
+                    <button nz-button nzType="default" nzDanger disabled>
                       <span nz-icon nzType="delete"></span>
                     </button>
                   </nz-row>
@@ -96,10 +94,12 @@ interface ItemData {
 export class CategoriesComponent implements OnInit {
   searchValue: string = '';
   categoryList: Category[] = [];
-  filterData: ProductInterface[] = [];
+  filterData: Category[] = [];
   pageIndex = 1;
   pageSize = 10;
   loading = true;
+
+  private searchSubject = new Subject<string>();
 
   constructor(private _categoriesService: CategoriesService) {}
   ngOnInit(): void {
@@ -107,13 +107,33 @@ export class CategoriesComponent implements OnInit {
       .getCategoriesWithCount()
       .subscribe((data: Category[]) => {
         this.categoryList = data;
+        this.filterData = [...this.categoryList];
         this.loading = false;
+
+        console.log(this.categoryList);
+        console.log(this.filterData);
       });
+
+    this.searchSubject.pipe(debounceTime(300)).subscribe((searchValue) => {
+      this.searchValue = searchValue;
+      this.onSearch();
+    });
   }
 
   onSearchInput(searchValue: string): void {
-    this.searchValue = searchValue;
+    this.searchSubject.next(searchValue);
   }
+
+  private onSearch(): void {
+    if (!this.searchValue) {
+      this.filterData = [...this.categoryList];
+    } else {
+      this.filterData = this.categoryList.filter((item) =>
+        item.categoryName.toLowerCase().includes(this.searchValue.toLowerCase())
+      );
+    }
+  }
+
   onPageIndexChange(pageIndex: number): void {
     this.pageIndex = pageIndex;
   }

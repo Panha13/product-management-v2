@@ -43,6 +43,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 
+import { AddUserComponent } from './pages/user/add-user.component';
+
 registerLocaleData(en);
 
 @NgModule({
@@ -58,6 +60,7 @@ registerLocaleData(en);
     SearchInputComponent,
     ButtonComponent,
     AddUpdateProductComponent,
+    AddUserComponent,
   ],
   imports: [
     BrowserModule,

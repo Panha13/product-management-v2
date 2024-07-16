@@ -29,6 +29,22 @@ import { NzModalService } from 'ng-zorro-antd/modal';
               [(searchValue)]="searchValue"
               (searchValueChange)="onSearchInput($event)"
             ></app-search-input>
+            <nz-select
+              style="margin-left: 15px;"
+              nzShowSearch
+              nzAllowClear
+              nzSize="large"
+              nzPlaceHolder="Filter By Category"
+              [(ngModel)]="selectedValue"
+              (ngModelChange)="onCategoryChange($event)"
+              [style]="{ width: '180px' }"
+            >
+              <nz-option
+                *ngFor="let category of categories"
+                [nzLabel]="category"
+                [nzValue]="category"
+              ></nz-option>
+            </nz-select>
           </div>
           <app-button
             label="Add Product"
@@ -134,12 +150,14 @@ import { NzModalService } from 'ng-zorro-antd/modal';
   // encapsulation: ViewEncapsulation.Emulated,
 })
 export class ProductsComponent implements OnInit {
+  selectedValue: string | null = null;
   searchValue = '';
   dataSet: ProductInterface[] = [];
   filterData: ProductInterface[] = [];
   pageIndex = 1;
   pageSize = 10;
   loading = true;
+  categories: string[] = [];
 
   private searchSubject = new Subject<string>();
 
@@ -155,6 +173,10 @@ export class ProductsComponent implements OnInit {
       this.dataSet = products;
       this.filterData = [...this.dataSet];
       this.loading = false;
+
+      this.categories = [
+        ...new Set(products.map((product) => product.category)),
+      ];
     });
 
     this.searchSubject.pipe(debounceTime(300)).subscribe((searchValue) => {
@@ -166,6 +188,18 @@ export class ProductsComponent implements OnInit {
   onSearchInput(searchValue: string): void {
     this.searchSubject.next(searchValue);
   }
+
+  onCategoryChange(category: string): void {
+    this.selectedValue = category;
+    if (!category) {
+      this.filterData = [...this.dataSet];
+    } else {
+      this.filterData = this.dataSet.filter(
+        (item) => item.category === category
+      );
+    }
+  }
+
   // Search function
   private onSearch(): void {
     if (!this.searchValue) {
