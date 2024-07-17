@@ -1,7 +1,4 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-
-import { CategoriesService } from './categories.service';
-import { Category } from './categories';
 import { debounceTime, Subject } from 'rxjs';
 
 interface ItemData {
@@ -23,61 +20,9 @@ interface ItemData {
           nzAlign="middle"
           style="flex-shrink: 0;"
         >
-          <div nz-row nzAlign="middle">
-            <app-search-input
-              [(searchValue)]="searchValue"
-              (searchValueChange)="onSearchInput($event)"
-            ></app-search-input>
-          </div>
-          <button nz-button nzSize="large" disabled nzType="primary" nzGhost>
-            Add Category
-          </button>
-        </div>
+          <div nz-row nzAlign="middle"></div>
 
-        <div nz-row style=" flex-grow: 1; overflow: auto;">
-          <nz-table
-            #cateTable
-            [nzData]="filterData"
-            nzTableLayout="fixed"
-            nzShowPagination
-            [nzPageIndex]="pageIndex"
-            [nzPageSize]="pageSize"
-            [nzLoading]="loading"
-            (nzPageIndexChange)="onPageIndexChange($event)"
-          >
-            <thead>
-              <tr style="position: sticky; top: 0; z-index: 100;">
-                <th nzWidth="5%" style="text-align: center;">#</th>
-                <th nzWidth="20%">Category Name</th>
-                <th style="text-align: center;">Quantity</th>
-                <th>Start Date</th>
-                <th style="text-align: center;">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of cateTable.data; index as i">
-                <td class="text-center">
-                  {{ (pageIndex - 1) * pageSize + i + 1 }}
-                </td>
-                <td style="font-weight: 600;">{{ data.categoryName }}</td>
-                <td class="text-center">{{ data.quantity }}</td>
-                <td>20 Nov 2023</td>
-                <td>
-                  <nz-row
-                    nzJustify="center"
-                    style="gap: 10px; flex-wrap: nowrap;"
-                  >
-                    <a nz-button nzType="primary" nzGhost disabled>
-                      <span nz-icon nzType="edit"></span>
-                    </a>
-                    <button nz-button nzType="default" nzDanger disabled>
-                      <span nz-icon nzType="delete"></span>
-                    </button>
-                  </nz-row>
-                </td>
-              </tr>
-            </tbody>
-          </nz-table>
+          <div nz-row style=" flex-grow: 1; overflow: auto;"></div>
         </div>
       </div>
     </div>
@@ -92,49 +37,6 @@ interface ItemData {
   encapsulation: ViewEncapsulation.None,
 })
 export class CategoriesComponent implements OnInit {
-  searchValue: string = '';
-  categoryList: Category[] = [];
-  filterData: Category[] = [];
-  pageIndex = 1;
-  pageSize = 10;
-  loading = true;
-
-  private searchSubject = new Subject<string>();
-
-  constructor(private _categoriesService: CategoriesService) {}
-  ngOnInit(): void {
-    this._categoriesService
-      .getCategoriesWithCount()
-      .subscribe((data: Category[]) => {
-        this.categoryList = data;
-        this.filterData = [...this.categoryList];
-        this.loading = false;
-
-        console.log(this.categoryList);
-        console.log(this.filterData);
-      });
-
-    this.searchSubject.pipe(debounceTime(300)).subscribe((searchValue) => {
-      this.searchValue = searchValue;
-      this.onSearch();
-    });
-  }
-
-  onSearchInput(searchValue: string): void {
-    this.searchSubject.next(searchValue);
-  }
-
-  private onSearch(): void {
-    if (!this.searchValue) {
-      this.filterData = [...this.categoryList];
-    } else {
-      this.filterData = this.categoryList.filter((item) =>
-        item.categoryName.toLowerCase().includes(this.searchValue.toLowerCase())
-      );
-    }
-  }
-
-  onPageIndexChange(pageIndex: number): void {
-    this.pageIndex = pageIndex;
-  }
+  constructor() {}
+  ngOnInit(): void {}
 }

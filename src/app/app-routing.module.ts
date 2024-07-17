@@ -7,7 +7,6 @@ import { AttributeComponent } from './pages/attribute/attribute.component';
 import { OrderComponent } from './pages/order/order.component';
 import { UserComponent } from './pages/user/user.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
-import { AddUpdateProductComponent } from './pages/products/add-update-product.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/products' },
@@ -26,16 +25,6 @@ const routes: Routes = [
       {
         path: '',
         component: ProductsComponent,
-      },
-      {
-        path: 'add',
-        component: AddUpdateProductComponent,
-        data: { title: 'Add Product', breadcrumb: 'Add Product' },
-      },
-      {
-        path: 'edit/:id',
-        component: AddUpdateProductComponent,
-        data: { title: 'Update Product', breadcrumb: 'Update Product' },
       },
     ],
   },
