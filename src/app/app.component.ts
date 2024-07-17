@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    console.log(this.router.events);
+    // console.log(this.router.events);
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
         mergeMap((route) => route.data)
       )
       .subscribe((data: any) => {
-        console.log(data);
+        // console.log(data);
         this.pageTitle = data.title || 'Default Title';
       });
   }

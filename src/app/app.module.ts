@@ -38,6 +38,12 @@ import { AddUpdateProductComponent } from './pages/products/add-update-product.c
 import { ButtonComponent } from './shared/components/button.component';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+
+import { AddUserComponent } from './pages/user/add-user.component';
 
 registerLocaleData(en);
 
@@ -54,6 +60,7 @@ registerLocaleData(en);
     SearchInputComponent,
     ButtonComponent,
     AddUpdateProductComponent,
+    AddUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,6 +86,10 @@ registerLocaleData(en);
     NzTypographyModule,
     NzFormModule,
     NzUploadModule,
+    NzSpinModule,
+    ReactiveFormsModule,
+    NzMessageModule,
+    NzModalModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],
