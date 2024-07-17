@@ -23,7 +23,7 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
   styles: [
     `
       .user-image > img {
-        border-radius: 10px;
+        border-radius: 12px;
         overflow: hidden;
         width: 50px;
         height: 100%;
