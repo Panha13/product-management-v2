@@ -32,6 +32,11 @@ const routes: Routes = [
         component: AddUpdateProductComponent,
         data: { title: 'Add Product', breadcrumb: 'Add Product' },
       },
+      {
+        path: 'edit/:id',
+        component: AddUpdateProductComponent,
+        data: { title: 'Update Product', breadcrumb: 'Update Product' },
+      },
     ],
   },
 
