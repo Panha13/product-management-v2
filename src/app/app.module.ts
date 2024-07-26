@@ -39,6 +39,8 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 registerLocaleData(en);
 
@@ -81,6 +83,8 @@ registerLocaleData(en);
     ReactiveFormsModule,
     NzMessageModule,
     NzModalModule,
+    NzIconModule,
+    NzTagModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],

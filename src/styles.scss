@@ -1,4 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+* {
+  font-family: "Inter", sans-serif;
+}
 .inner-content {
   padding: 24px;
   border-radius: 15px;
@@ -9,16 +14,31 @@
 button {
   border-radius: 10px;
 }
+.data-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
 // ::-webkit-scrollbar {
 //   display: none;
 // }
 .text-center {
   text-align: center;
 }
+
+.font-bold {
+  font-weight: 700;
+}
+.font-semibold {
+  font-weight: 600;
+}
+
 .ant-table-thead > tr > th {
   background-color: #f7f9fb;
   font-weight: 700;
-  padding: 12px;
+  padding: 14px;
   border-bottom: none;
 }
 
@@ -55,4 +75,14 @@ button {
     .ant-table-row-expand-icon-cell
   ):not([colspan])::before {
   content: none;
+}
+td {
+  font-size: 14px;
+  font-weight: 400;
+}
+.ant-table tfoot > tr > td,
+.ant-table tfoot > tr > th,
+.ant-table-tbody > tr > td,
+.ant-table-thead > tr > th {
+  padding: 12px;
 }
