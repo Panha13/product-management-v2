@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Product } from './product';
 
 @Injectable({
@@ -12,12 +12,18 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this._apiUrl);
+    return this.http
+      .get<Product[]>(this._apiUrl)
+      .pipe(
+        map((products) => products.sort((a, b) => b.product_id - a.product_id))
+      );
   }
 
   getProduct(id: number): Observable<Product> {
     return this.http.get<Product>(`${this._apiUrl}/${id}`);
   }
+
+  // getCategories():Observable
 
   addProduct(product: Product): Observable<Product> {
     return this.http.post<Product>(this._apiUrl, product);

@@ -14,7 +14,28 @@ export class ProductUiService {
       const modal = this.modalService.create({
         nzTitle: product ? 'Edit Product' : 'Add Product',
         nzContent: ProductOperationComponent,
+        nzCentered: true,
         nzData: { product: product || null },
+        nzFooter: null,
+        nzOnOk: () => resolve(true),
+        nzOnCancel: () => resolve(false),
+      });
+
+      modal.afterClose.subscribe((result: boolean) => {
+        resolve(result);
+      });
+    });
+  }
+
+  confirmDelete(message: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const modal = this.modalService.confirm({
+        nzTitle: 'Confirm Deletion',
+        nzContent: `<p>${message}</p>`,
+        nzOkText: 'Yes',
+        nzOkType: 'primary',
+
+        nzOkDanger: true,
         nzOnOk: () => resolve(true),
         nzOnCancel: () => resolve(false),
       });

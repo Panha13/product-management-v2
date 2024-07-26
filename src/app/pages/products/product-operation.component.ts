@@ -3,40 +3,142 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from './product';
 import { ProductService } from './product.service';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { CategoriesService } from '../categories/categories.service';
+import { Category } from '../categories/category';
 
 @Component({
   selector: 'app-product-operation',
   template: `
-    <form [formGroup]="form" (ngSubmit)="submitForm()">
-      <label for="name">Product Name:</label>
-      <input id="name" formControlName="name" /><br />
-
-      <label for="price">Price:</label>
-      <input id="price" formControlName="price" /><br />
-
-      <label for="stock_quantity">Quantity</label>
-      <input id="stock_quantity" formControlName="stock_quantity" /><br />
-
-      <label for="image">Image link</label>
-      <input id="image" formControlName="image" /><br />
-
-      <label for="category">Category</label>
-      <input id="category" formControlName="category" /><br />
-
-      <label for="description">Description</label>
-      <input id="description" formControlName="description" /><br />
-      <button nz-button nzType="primary" type="submit">Submit</button>
-    </form>
+    <div nz-row nzJustify="center">
+      <form
+        class="form-container"
+        nz-form
+        [nzLayout]="'vertical'"
+        [formGroup]="form"
+        (ngSubmit)="submitForm()"
+      >
+        <nz-form-item>
+          <nz-form-label nzFor="name" class="required-marker"
+            >Product Name</nz-form-label
+          >
+          <nz-form-control nzErrorTip="Please enter product name">
+            <input
+              nz-input
+              placeholder="Enter product name"
+              formControlName="name"
+              type="text"
+              id="name"
+            />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzFor="image" class="required-marker"
+            >Image Link</nz-form-label
+          >
+          <nz-form-control nzErrorTip="Please enter image link">
+            <input
+              nz-input
+              placeholder="Enter image link"
+              formControlName="image"
+              type="text"
+              id="image"
+            />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label class="required-marker">Category</nz-form-label>
+          <nz-form-control nzErrorTip="Please select category">
+            <nz-select
+              id="category"
+              nzShowSearch
+              nzAllowClear
+              nzPlaceHolder="Select category"
+              formControlName="category"
+            >
+              <nz-option
+                *ngFor="let category of categories"
+                [nzLabel]="category.name"
+                [nzValue]="category.category_id"
+              ></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <div nz-row nzGutter="16">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzFor="price" class="required-marker"
+                >Stock</nz-form-label
+              >
+              <nz-form-control nzErrorTip="Please enter stock quantity">
+                <input
+                  nz-input
+                  placeholder="Enter stock quantity"
+                  formControlName="stock_quantity"
+                  type="number"
+                  id="stock_quantity"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label nzFor="price" class="required-marker"
+                >Price</nz-form-label
+              >
+              <nz-form-control nzErrorTip="Please enter price">
+                <input
+                  nz-input
+                  placeholder="Enter price"
+                  formControlName="price"
+                  type="number"
+                  id="price"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <nz-form-item>
+          <nz-form-label nzFor="description" class="required-marker"
+            >Description</nz-form-label
+          >
+          <nz-form-control nzErrorTip="Please enter description">
+            <textarea
+              nz-input
+              id="description"
+              placeholder="Product description"
+              [nzAutosize]="{ minRows: 3, maxRows: 3 }"
+              formControlName="description"
+            ></textarea>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control style="text-align: end;">
+            <button
+              nz-button
+              nzType="default"
+              type="button"
+              style="margin-right: 10px;"
+              (click)="cancel()"
+            >
+              Cancel
+            </button>
+            <button nz-button nzType="primary" type="submit">Submit</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
   `,
   styles: [],
 })
 export class ProductOperationComponent implements OnInit {
   form!: FormGroup;
   product: Product | null = null;
+  categories: Category[] = [];
 
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
+    private categoryService: CategoriesService,
     private modalRef: NzModalRef<ProductOperationComponent>,
     @Inject(NZ_MODAL_DATA) private data: { product: Product | null }
   ) {
@@ -48,14 +150,18 @@ export class ProductOperationComponent implements OnInit {
       name: [this.product?.product_name || '', [Validators.required]],
       price: [this.product?.price || '', [Validators.required]],
       image: [this.product?.image || '', [Validators.required]],
-      category: [this.product?.category || '', [Validators.required]],
+      category: [this.product?.category.category_id || ''],
       stock_quantity: [
         this.product?.stock_quantity || '',
         [Validators.required],
       ],
-      description: [this.product?.description || '', [Validators.required]],
+      description: [this.product?.description || ''],
     });
-    this.setFormValue();
+
+    this.categoryService.getCategories().subscribe((categories) => {
+      this.categories = categories;
+      this.setFormValue();
+    });
   }
 
   setFormValue() {
@@ -64,7 +170,7 @@ export class ProductOperationComponent implements OnInit {
         name: this.product.product_name || '',
         price: this.product.price || '',
         image: this.product.image || '',
-        category: this.product.category || '',
+        category: this.product.category.category_id || '',
         stock_quantity: this.product.stock_quantity || '',
         description: this.product.description || '',
       });
@@ -86,5 +192,10 @@ export class ProductOperationComponent implements OnInit {
         });
       }
     }
+    console.log(this.form.value);
+  }
+
+  cancel(): void {
+    this.modalRef.close(false);
   }
 }
