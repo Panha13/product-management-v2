@@ -1,6 +1,7 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { ProductService } from './product.service';
 import { Product } from './product';
+import { ProductUiService } from './product-ui.service';
 
 @Component({
   selector: 'app-products',
@@ -34,7 +35,13 @@ import { Product } from './product';
                 <span style="font-size: 18px;" nz-icon nzType="search"></span>
               </ng-template>
             </div>
-            <button nz-button nzType="primary" nzSize="large" nzGhost>
+            <button
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzGhost
+              (click)="addProduct()"
+            >
               <span nz-icon nzType="plus"></span>
               Add Product
             </button>
@@ -86,10 +93,21 @@ import { Product } from './product';
                     nzJustify="center"
                     style="gap: 10px; flex-wrap: nowrap;"
                   >
-                    <a nz-button nzType="primary" nzGhost>
+                    <button
+                      nz-button
+                      nzType="primary"
+                      nzGhost
+                      (click)="editProduct(data)"
+                    >
                       <span nz-icon nzType="edit"></span>
-                    </a>
-                    <button nz-button nzType="default" nzDanger>
+                    </button>
+                    <button
+                      nz-button
+                      nzType="default"
+                      disabled
+                      nzDanger
+                      (click)="deleteProduct(data.product_id)"
+                    >
                       <span nz-icon nzType="delete"></span>
                     </button>
                   </nz-row>
@@ -145,7 +163,10 @@ export class ProductsComponent implements OnInit {
   pageSize = 10;
   loading = true;
 
-  constructor(private productsService: ProductService) {}
+  constructor(
+    private productsService: ProductService,
+    private productUiService: ProductUiService
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -164,6 +185,28 @@ export class ProductsComponent implements OnInit {
         console.error('Error fetching products:', error);
         this.loading = false;
       },
+    });
+  }
+
+  addProduct(): void {
+    this.productUiService.openProductModal().then((result) => {
+      if (result) {
+        this.loadProducts();
+      }
+    });
+  }
+
+  editProduct(product: Product): void {
+    this.productUiService.openProductModal(product).then((result) => {
+      if (result) {
+        this.loadProducts();
+      }
+    });
+  }
+
+  deleteProduct(productId: number): void {
+    this.productsService.deleteProduct(productId).subscribe(() => {
+      this.loadProducts();
     });
   }
 

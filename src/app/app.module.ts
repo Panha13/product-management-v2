@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
@@ -36,11 +36,11 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { ReactiveFormsModule } from '@angular/forms';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { ProductOperationComponent } from './pages/products/product-operation.component';
 
 registerLocaleData(en);
 
@@ -54,10 +54,12 @@ registerLocaleData(en);
     OrderComponent,
     UserComponent,
     PageNotFoundComponent,
+    ProductOperationComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -80,7 +82,7 @@ registerLocaleData(en);
     NzFormModule,
     NzUploadModule,
     NzSpinModule,
-    ReactiveFormsModule,
+
     NzMessageModule,
     NzModalModule,
     NzIconModule,
