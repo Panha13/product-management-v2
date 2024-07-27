@@ -3,6 +3,7 @@ import { ProductService } from './product.service';
 import { Product } from './product';
 import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { Subject, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -30,6 +31,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
                   type="text"
                   nz-input
                   placeholder="Search product here..."
+                  [(ngModel)]="searchQuery"
+                  (keydown)="handleKeyDown($event)"
                 />
               </nz-input-group>
               <ng-template #suffixIconSearch>
@@ -50,16 +53,17 @@ import { NzMessageService } from 'ng-zorro-antd/message';
         </div>
         <div nz-row style=" flex-grow: 1; overflow: auto;">
           <nz-table
-            #basicTable
             [nzData]="products"
             nzTableLayout="fixed"
             nzShowPagination
             nzShowSizeChanger
+            [nzFrontPagination]="false"
             [nzPageIndex]="pageIndex"
             [nzPageSize]="pageSize"
+            [nzTotal]="totalProducts"
             (nzPageIndexChange)="onPageIndexChange($event)"
+            (nzPageSizeChange)="onPageSizeChange($event)"
             [nzLoading]="loading"
-            nzTableLayout="fixed"
           >
             <thead>
               <tr style="position: sticky; top: 0; z-index: 100;">
@@ -73,7 +77,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let data of basicTable.data">
+              <tr *ngFor="let data of products">
                 <td nzEllipsis class="font-semibold">
                   <img [src]="data.image" class="data-image" />
                   {{ data.product_name }}
@@ -159,9 +163,12 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
-  pageIndex = 1;
-  pageSize = 10;
-  loading = true;
+  totalProducts: number = 0;
+  pageIndex: number = 1;
+  pageSize: number = 10;
+  loading: boolean = false;
+  searchQuery: string = '';
+  private searchSubject = new Subject<string>();
 
   constructor(
     private productsService: ProductService,
@@ -171,22 +178,29 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProducts();
+    this.searchSubject.pipe(debounceTime(300)).subscribe((query) => {
+      this.loadProducts();
+    });
   }
 
   loadProducts(): void {
     this.loading = true;
-    this.productsService.getProducts().subscribe({
-      next: (data) => {
-        setTimeout(() => {
-          this.products = data;
+    this.productsService
+      .getProducts(this.pageIndex, this.pageSize, this.searchQuery)
+      .subscribe({
+        next: (response: any) => {
+          setTimeout(() => {
+            this.products = response.data;
+            this.totalProducts = response.total;
+            this.loading = false;
+          }, 250);
+        },
+        error: (error) => {
+          console.error('Error fetching products:', error);
+          this.message.error('Failed to load products.');
           this.loading = false;
-        }, 250);
-      },
-      error: (error) => {
-        console.error('Error fetching products:', error);
-        this.loading = false;
-      },
-    });
+        },
+      });
   }
 
   addProduct(): void {
@@ -228,5 +242,19 @@ export class ProductsComponent implements OnInit {
   onPageIndexChange(pageIndex: number): void {
     this.pageIndex = pageIndex;
     this.loadProducts();
+  }
+  onPageSizeChange(pageSize: number): void {
+    this.pageSize = pageSize;
+    this.pageIndex = 1; // Reset page index to 1 when page size changes
+    this.loadProducts();
+  }
+  onSearch(query: string): void {
+    this.pageIndex = 1; // Reset to first page on search
+    this.loadProducts();
+  }
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.onSearch(this.searchQuery);
+    }
   }
 }
