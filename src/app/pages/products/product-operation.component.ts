@@ -21,7 +21,13 @@ import { Category } from '../categories/category';
           <nz-form-label nzFor="name" class="required-marker"
             >Product Name</nz-form-label
           >
-          <nz-form-control nzErrorTip="Please enter product name">
+          <nz-form-control
+            [nzErrorTip]="
+              form.get('name')?.hasError('required')
+                ? 'Please enter product name'
+                : ''
+            "
+          >
             <input
               nz-input
               placeholder="Enter product name"
@@ -35,7 +41,13 @@ import { Category } from '../categories/category';
           <nz-form-label nzFor="image" class="required-marker"
             >Image Link</nz-form-label
           >
-          <nz-form-control nzErrorTip="Please enter image link">
+          <nz-form-control
+            [nzErrorTip]="
+              form.get('image')?.hasError('required')
+                ? 'Please enter image link'
+                : ''
+            "
+          >
             <input
               nz-input
               placeholder="Enter image link"
@@ -47,7 +59,7 @@ import { Category } from '../categories/category';
         </nz-form-item>
         <nz-form-item>
           <nz-form-label class="required-marker">Category</nz-form-label>
-          <nz-form-control nzErrorTip="Please select category">
+          <nz-form-control>
             <nz-select
               id="category"
               nzShowSearch
@@ -66,10 +78,16 @@ import { Category } from '../categories/category';
         <div nz-row nzGutter="16">
           <div nz-col [nzSpan]="12">
             <nz-form-item>
-              <nz-form-label nzFor="price" class="required-marker"
+              <nz-form-label nzFor="stock_quantity" class="required-marker"
                 >Stock</nz-form-label
               >
-              <nz-form-control nzErrorTip="Please enter stock quantity">
+              <nz-form-control
+                [nzErrorTip]="
+                  form.get('stock_quantity')?.hasError('required')
+                    ? 'Please enter stock quantity'
+                    : ''
+                "
+              >
                 <input
                   nz-input
                   placeholder="Enter stock quantity"
@@ -85,7 +103,13 @@ import { Category } from '../categories/category';
               <nz-form-label nzFor="price" class="required-marker"
                 >Price</nz-form-label
               >
-              <nz-form-control nzErrorTip="Please enter price">
+              <nz-form-control
+                [nzErrorTip]="
+                  form.get('price')?.hasError('required')
+                    ? 'Please enter price'
+                    : ''
+                "
+              >
                 <input
                   nz-input
                   placeholder="Enter price"
@@ -101,7 +125,13 @@ import { Category } from '../categories/category';
           <nz-form-label nzFor="description" class="required-marker"
             >Description</nz-form-label
           >
-          <nz-form-control nzErrorTip="Please enter description">
+          <nz-form-control
+            [nzErrorTip]="
+              form.get('description')?.hasError('required')
+                ? 'Please enter description'
+                : ''
+            "
+          >
             <textarea
               nz-input
               id="description"
@@ -148,33 +178,24 @@ export class ProductOperationComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       name: [this.product?.product_name || '', [Validators.required]],
-      price: [this.product?.price || '', [Validators.required]],
+      price: [
+        this.product?.price !== undefined ? this.product.price : '',
+        [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+      ],
       image: [this.product?.image || '', [Validators.required]],
-      category: [this.product?.category.category_id || ''],
+      category: [this.product?.category.category_id || null],
       stock_quantity: [
-        this.product?.stock_quantity || '',
-        [Validators.required],
+        this.product?.stock_quantity !== undefined
+          ? this.product.stock_quantity
+          : '',
+        [Validators.required, Validators.pattern(/^[0-9]\d*$/)],
       ],
       description: [this.product?.description || ''],
     });
 
     this.categoryService.getCategories().subscribe((categories) => {
       this.categories = categories;
-      this.setFormValue();
     });
-  }
-
-  setFormValue() {
-    if (this.product) {
-      this.form.patchValue({
-        name: this.product.product_name || '',
-        price: this.product.price || '',
-        image: this.product.image || '',
-        category: this.product.category.category_id || '',
-        stock_quantity: this.product.stock_quantity || '',
-        description: this.product.description || '',
-      });
-    }
   }
 
   submitForm(): void {
@@ -191,11 +212,17 @@ export class ProductOperationComponent implements OnInit {
           this.modalRef.close(true);
         });
       }
+    } else {
+      for (const i in this.form.controls) {
+        this.form.controls[i].markAsDirty();
+        this.form.controls[i].updateValueAndValidity();
+      }
     }
     console.log(this.form.value);
   }
 
   cancel(): void {
     this.modalRef.close(false);
+    this.form.reset();
   }
 }
