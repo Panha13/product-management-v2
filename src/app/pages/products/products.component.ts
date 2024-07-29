@@ -1,9 +1,11 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output } from '@angular/core';
 import { ProductService } from './product.service';
 import { Product } from './product';
 import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Subject, debounceTime } from 'rxjs';
+import { PaginationService } from 'src/app/helpers/pagination.service';
+import { ProductListComponent } from './product-list.component';
 
 @Component({
   selector: 'app-products',
@@ -25,20 +27,12 @@ import { Subject, debounceTime } from 'rxjs';
             nzJustify="space-between"
             style=" width:100%"
           >
-            <div nz-col nzSpan="8">
-              <nz-input-group [nzSuffix]="suffixIconSearch">
-                <input
-                  type="text"
-                  nz-input
-                  placeholder="Search product here..."
-                  [(ngModel)]="searchQuery"
-                  (keydown)="handleKeyDown($event)"
-                />
-              </nz-input-group>
-              <ng-template #suffixIconSearch>
-                <span style="font-size: 18px;" nz-icon nzType="search"></span>
-              </ng-template>
-            </div>
+            <app-search-input
+              [placeholder]="'Search product here...'"
+              [(searchQuery)]="searchQuery"
+              (search)="onSearch($event)"
+            ></app-search-input>
+
             <button
               nz-button
               nzType="primary"
@@ -125,43 +119,18 @@ import { Subject, debounceTime } from 'rxjs';
   `,
   styles: [
     `
-      nz-input-group {
-        border-radius: 10px;
-        padding: 8px;
-        width: 420px;
-      }
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .showing {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-      }
-      .truncate {
-        max-width: 250px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        /* display: inline-block;
-        vertical-align: top; */
-      }
-
       :host
         ::ng-deep
         .ant-select:not(.ant-select-customize-input)
         .ant-select-selector {
         border-radius: 10px;
-
         text-align: center;
       }
     `,
   ],
   // encapsulation: ViewEncapsulation.Emulated,
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   totalProducts: number = 0;
   pageIndex: number = 1;
@@ -173,10 +142,13 @@ export class ProductsComponent implements OnInit {
   constructor(
     private productsService: ProductService,
     private productUiService: ProductUiService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private paginationService: PaginationService
   ) {}
 
   ngOnInit(): void {
+    this.pageIndex = this.paginationService.getPageIndex();
+    this.pageSize = this.paginationService.getPageSize();
     this.loadProducts();
     this.searchSubject.pipe(debounceTime(300)).subscribe((query) => {
       this.loadProducts();
@@ -241,20 +213,27 @@ export class ProductsComponent implements OnInit {
 
   onPageIndexChange(pageIndex: number): void {
     this.pageIndex = pageIndex;
+    this.paginationService.setPageIndex(pageIndex);
     this.loadProducts();
   }
   onPageSizeChange(pageSize: number): void {
     this.pageSize = pageSize;
     this.pageIndex = 1; // Reset page index to 1 when page size changes
+    this.paginationService.setPageSize(pageSize);
     this.loadProducts();
   }
   onSearch(query: string): void {
     this.pageIndex = 1; // Reset to first page on search
+    this.searchQuery = query;
     this.loadProducts();
   }
   handleKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       this.onSearch(this.searchQuery);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.paginationService.clearPaginationState();
   }
 }

@@ -41,7 +41,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { ProductOperationComponent } from './pages/products/product-operation.component';
-import { SearchComponent } from './shared/components/search.component';
+import { SearchInputComponent } from './shared/components/search-input.component';
 
 registerLocaleData(en);
 
@@ -56,7 +56,7 @@ registerLocaleData(en);
     UserComponent,
     PageNotFoundComponent,
     ProductOperationComponent,
-    SearchComponent,
+    SearchInputComponent,
   ],
   imports: [
     BrowserModule,

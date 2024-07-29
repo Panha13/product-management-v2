@@ -34,6 +34,7 @@ import { Category } from '../categories/category';
               formControlName="name"
               type="text"
               id="name"
+              autocomplete="true"
             />
           </nz-form-control>
         </nz-form-item>
