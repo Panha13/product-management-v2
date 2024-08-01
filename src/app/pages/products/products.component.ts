@@ -5,16 +5,13 @@ import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Subject, debounceTime } from 'rxjs';
 import { PaginationService } from 'src/app/helpers/pagination.service';
-import { ProductListComponent } from './product-list.component';
 
 @Component({
   selector: 'app-products',
 
   template: `
     <div class="inner-content">
-      <div
-        style="display: flex; flex-direction: column;  gap: 15px; height: 100%; "
-      >
+      <div class="flex-column-gap">
         <div
           nz-row
           nzJustify="space-between"
@@ -39,6 +36,7 @@ import { ProductListComponent } from './product-list.component';
               nzSize="large"
               nzGhost
               (click)="addProduct()"
+              style="border-radius:10px;"
             >
               <span nz-icon nzType="plus"></span>
               Add Product
@@ -74,14 +72,16 @@ import { ProductListComponent } from './product-list.component';
               <tr *ngFor="let data of products">
                 <td nzEllipsis class="font-semibold">
                   <img [src]="data.image" class="data-image" />
-                  {{ data.product_name }}
+                  {{ data.name }}
                 </td>
-                <td nzEllipsis>#{{ data.product_id }}</td>
+                <td nzEllipsis>#{{ data.code }}</td>
                 <td>
                   {{ data.price | currency : 'USD' }}
                 </td>
                 <td>{{ data.stock_quantity }}</td>
-                <td>{{ data.category.name || 'No category' }}</td>
+                <td>
+                  {{ data.category ? data.category.name : 'No category' }}
+                </td>
                 <td>
                   <nz-tag [nzColor]="data.stock_quantity > 0 ? 'green' : 'red'"
                     >{{ data.stock_quantity > 0 ? 'In stock' : 'Out of stock' }}

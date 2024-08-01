@@ -62,11 +62,11 @@ import { Category } from '../categories/category';
           <nz-form-label class="required-marker">Category</nz-form-label>
           <nz-form-control>
             <nz-select
-              id="category"
+              id="category_id"
               nzShowSearch
               nzAllowClear
               nzPlaceHolder="Select category"
-              formControlName="category"
+              formControlName="category_id"
             >
               <nz-option
                 *ngFor="let category of categories"
@@ -178,13 +178,15 @@ export class ProductOperationComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      name: [this.product?.product_name || '', [Validators.required]],
+      name: [this.product?.name || '', [Validators.required]],
       price: [
         this.product?.price !== undefined ? this.product.price : '',
         [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
       ],
       image: [this.product?.image || '', [Validators.required]],
-      category: [this.product?.category.category_id || null],
+      category_id: [
+        this.product?.category ? this.product.category.category_id : null,
+      ],
       stock_quantity: [
         this.product?.stock_quantity !== undefined
           ? this.product.stock_quantity

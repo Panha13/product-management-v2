@@ -35,6 +35,13 @@ button {
   font-weight: 600;
 }
 
+.flex-column-gap {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+}
+
 .ant-table-thead > tr > th {
   background-color: #f7f9fb;
   font-weight: 700;
@@ -85,4 +92,25 @@ td {
 .ant-table-tbody > tr > td,
 .ant-table-thead > tr > th {
   padding: 12px;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
