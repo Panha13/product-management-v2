@@ -49,6 +49,16 @@ button {
   border-bottom: none;
 }
 
+.required-marker::after {
+  display: inline-block;
+  margin-left: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: "*";
+}
+
 .ant-table-container table > thead > tr:first-child th:first-child {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;

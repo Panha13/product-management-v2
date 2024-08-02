@@ -80,7 +80,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                 </td>
                 <td>{{ data.stock_quantity }}</td>
                 <td>
-                  {{ data.category ? data.category.name : 'No category' }}
+                  {{ data.category ? data.category.name : '—' }}
                 </td>
                 <td>
                   <nz-tag [nzColor]="data.stock_quantity > 0 ? 'green' : 'red'"

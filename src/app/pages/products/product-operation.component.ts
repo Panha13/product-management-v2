@@ -5,6 +5,8 @@ import { ProductService } from './product.service';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { CategoriesService } from '../categories/categories.service';
 import { Category } from '../categories/category';
+import { Unit, UnitsService } from '../units/units.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-product-operation',
@@ -58,24 +60,48 @@ import { Category } from '../categories/category';
             />
           </nz-form-control>
         </nz-form-item>
-        <nz-form-item>
-          <nz-form-label class="required-marker">Category</nz-form-label>
-          <nz-form-control>
-            <nz-select
-              id="category_id"
-              nzShowSearch
-              nzAllowClear
-              nzPlaceHolder="Select category"
-              formControlName="category_id"
-            >
-              <nz-option
-                *ngFor="let category of categories"
-                [nzLabel]="category.name"
-                [nzValue]="category.category_id"
-              ></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
+        <div nz-row nzGutter="16">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label>Category</nz-form-label>
+              <nz-form-control>
+                <nz-select
+                  id="category_id"
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Select category"
+                  formControlName="category_id"
+                >
+                  <nz-option
+                    *ngFor="let category of categories"
+                    [nzLabel]="category.name"
+                    [nzValue]="category.category_id"
+                  ></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <nz-form-item>
+              <nz-form-label class="required-marker">Unit</nz-form-label>
+              <nz-form-control>
+                <nz-select
+                  id="unit_id"
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Select Unit"
+                  formControlName="unit_id"
+                >
+                  <nz-option
+                    *ngFor="let unit of units"
+                    [nzLabel]="unit.name"
+                    [nzValue]="unit.unit_id"
+                  ></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
         <div nz-row nzGutter="16">
           <div nz-col [nzSpan]="12">
             <nz-form-item>
@@ -123,9 +149,7 @@ import { Category } from '../categories/category';
           </div>
         </div>
         <nz-form-item>
-          <nz-form-label nzFor="description" class="required-marker"
-            >Description</nz-form-label
-          >
+          <nz-form-label nzFor="description">Description</nz-form-label>
           <nz-form-control
             [nzErrorTip]="
               form.get('description')?.hasError('required')
@@ -165,13 +189,16 @@ export class ProductOperationComponent implements OnInit {
   form!: FormGroup;
   product: Product | null = null;
   categories: Category[] = [];
+  units: Unit[] = [];
 
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
     private categoryService: CategoriesService,
+    private unitService: UnitsService,
     private modalRef: NzModalRef<ProductOperationComponent>,
-    @Inject(NZ_MODAL_DATA) private data: { product: Product | null }
+    private message: NzMessageService,
+    @Inject(NZ_MODAL_DATA) private data: { product: Product | null } ///note
   ) {
     this.product = data.product;
   }
@@ -187,6 +214,7 @@ export class ProductOperationComponent implements OnInit {
       category_id: [
         this.product?.category ? this.product.category.category_id : null,
       ],
+      unit_id: [this.product?.unit_id, [Validators.required]],
       stock_quantity: [
         this.product?.stock_quantity !== undefined
           ? this.product.stock_quantity
@@ -198,6 +226,9 @@ export class ProductOperationComponent implements OnInit {
 
     this.categoryService.getCategories().subscribe((categories) => {
       this.categories = categories;
+    });
+    this.unitService.getUnits().subscribe((unitData) => {
+      this.units = unitData;
     });
   }
 

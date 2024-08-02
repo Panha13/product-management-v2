@@ -15,7 +15,7 @@ export class ProductUiService {
         nzTitle: product ? 'Edit Product' : 'Add Product',
         nzContent: ProductOperationComponent,
         nzCentered: true,
-        nzData: { product: product || null },
+        nzData: { product: product },
         nzFooter: null,
         nzOnOk: () => resolve(true),
         nzOnCancel: () => resolve(false),

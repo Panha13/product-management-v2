@@ -6,6 +6,7 @@ export interface Product {
   description: string;
   price: number;
   stock_quantity: number;
+  unit_id: number;
   category: {
     category_id: number;
     name: string;
