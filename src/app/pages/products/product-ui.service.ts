@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Product } from './product';
 import { ProductOperationComponent } from './product-operation.component';
@@ -9,36 +9,31 @@ import { ProductOperationComponent } from './product-operation.component';
 export class ProductUiService {
   constructor(private modalService: NzModalService) {}
 
-  openProductModal(product?: Product): Promise<boolean> {
-    return new Promise((resolve) => {
-      const modal = this.modalService.create({
-        nzTitle: product ? 'Edit Product' : 'Add Product',
-        nzContent: ProductOperationComponent,
-        nzCentered: true,
-        nzData: { product: product },
-        nzFooter: null,
-        nzOnOk: () => resolve(true),
-        nzOnCancel: () => resolve(false),
-      });
+  refresher = new EventEmitter<void>();
 
-      modal.afterClose.subscribe((result: boolean) => {
-        resolve(result);
-      });
+  showAdd() {
+    this.modalService.create({
+      nzTitle: 'Add Product',
+      nzContent: ProductOperationComponent,
+      nzCentered: true,
+      nzFooter: null,
+      nzOnOk: () => {
+        this.refresher.emit();
+      },
     });
   }
 
-  confirmDelete(message: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      const modal = this.modalService.confirm({
-        nzTitle: 'Confirm Deletion',
-        nzContent: `<p>${message}</p>`,
-        nzOkText: 'Yes',
-        nzOkType: 'primary',
-
-        nzOkDanger: true,
-        nzOnOk: () => resolve(true),
-        nzOnCancel: () => resolve(false),
-      });
+  showEdit(product: Product) {
+    this.modalService.create({
+      nzTitle: 'Edit Product ',
+      nzContent: ProductOperationComponent,
+      nzCentered: true,
+      nzData: product,
+      nzFooter: null,
+      nzOnOk: () => {
+        this.refresher.emit();
+        console.log('hi');
+      },
     });
   }
 }

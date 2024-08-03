@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from './product';
 import { ProductService } from './product.service';
@@ -7,6 +7,7 @@ import { CategoriesService } from '../categories/categories.service';
 import { Category } from '../categories/category';
 import { Unit, UnitsService } from '../units/units.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { ProductUiService } from './product-ui.service';
 
 @Component({
   selector: 'app-product-operation',
@@ -17,7 +18,6 @@ import { NzMessageService } from 'ng-zorro-antd/message';
         nz-form
         [nzLayout]="'vertical'"
         [formGroup]="form"
-        (ngSubmit)="submitForm()"
       >
         <nz-form-item>
           <nz-form-label nzFor="name" class="required-marker"
@@ -173,24 +173,40 @@ import { NzMessageService } from 'ng-zorro-antd/message';
               nzType="default"
               type="button"
               style="margin-right: 10px;"
-              (click)="cancel()"
             >
               Cancel
             </button>
-            <button nz-button nzType="primary" type="submit">Submit</button>
+            <button
+              nz-button
+              nzType="primary"
+              [disabled]="!form.valid || loading"
+              (click)="onSubmit()"
+            >
+              <i *ngIf="loading" nz-icon nzType="loading"></i>
+              Submit
+            </button>
           </nz-form-control>
         </nz-form-item>
       </form>
     </div>
   `,
-  styles: [],
+  styles: [
+    `
+      .ant-btn-primary[disabled] {
+        background-color: #1890ff;
+        color: #ffffff;
+        border: none;
+        opacity: 0.65;
+      }
+      .ant-btn-primary:hover {
+        background-color: #096dd9;
+        color: #ffffff;
+        border-color: #096dd9;
+      }
+    `,
+  ],
 })
 export class ProductOperationComponent implements OnInit {
-  form!: FormGroup;
-  product: Product | null = null;
-  categories: Category[] = [];
-  units: Unit[] = [];
-
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
@@ -198,12 +214,20 @@ export class ProductOperationComponent implements OnInit {
     private unitService: UnitsService,
     private modalRef: NzModalRef<ProductOperationComponent>,
     private message: NzMessageService,
-    @Inject(NZ_MODAL_DATA) private data: { product: Product | null } ///note
-  ) {
-    this.product = data.product;
-  }
+    private uiService: ProductUiService
+  ) {}
+
+  private modal = inject(NZ_MODAL_DATA) as Product;
+  form!: FormGroup;
+  product!: Product;
+  categories: Category[] = [];
+  units: Unit[] = [];
+  loading: boolean = false;
 
   ngOnInit(): void {
+    //Inject data
+    this.product = this.modal;
+
     this.form = this.fb.group({
       name: [this.product?.name || '', [Validators.required]],
       price: [
@@ -232,31 +256,47 @@ export class ProductOperationComponent implements OnInit {
     });
   }
 
-  submitForm(): void {
+  onSubmit(): void {
     if (this.form.valid) {
-      const productData = this.form.value;
+      this.loading = true;
+      const productData = { ...this.form.value };
       if (this.product) {
         this.productService
           .updateProduct(this.product.product_id, productData)
-          .subscribe(() => {
-            this.modalRef.close(true);
+          .subscribe({
+            next: () => {
+              this.loading = false;
+              this.modalRef.close(true);
+              this.message.success('Product added successfully!');
+              this.uiService.refresher.emit();
+            },
+            error: (error) => {
+              console.log(error);
+              this.message.error('An error occurred while adding the product.');
+              this.loading = false;
+            },
+            complete: () => {
+              this.loading = false;
+            },
           });
       } else {
-        this.productService.addProduct(productData).subscribe(() => {
-          this.modalRef.close(true);
+        this.productService.addProduct(productData).subscribe({
+          next: () => {
+            this.loading = false;
+            this.modalRef.close(true);
+            this.message.success('Product added successfully.');
+            this.modalRef.triggerOk();
+          },
+          error: (error: any) => {
+            console.error(error);
+            this.loading = false;
+            this.message.error('An error occurred while adding the product.');
+          },
+          complete: () => {
+            this.loading = false;
+          },
         });
       }
-    } else {
-      for (const i in this.form.controls) {
-        this.form.controls[i].markAsDirty();
-        this.form.controls[i].updateValueAndValidity();
-      }
     }
-    console.log(this.form.value);
-  }
-
-  cancel(): void {
-    this.modalRef.close(false);
-    this.form.reset();
   }
 }
