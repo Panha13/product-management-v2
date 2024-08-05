@@ -84,7 +84,13 @@ import { ProductUiService } from './product-ui.service';
           <div nz-col [nzSpan]="12">
             <nz-form-item>
               <nz-form-label class="required-marker">Unit</nz-form-label>
-              <nz-form-control>
+              <nz-form-control
+                [nzErrorTip]="
+                  form.get('unit_id')?.hasError('required')
+                    ? 'Please enter product unit'
+                    : ''
+                "
+              >
                 <nz-select
                   id="unit_id"
                   nzShowSearch
@@ -198,6 +204,9 @@ import { ProductUiService } from './product-ui.service';
         border: none;
         opacity: 0.65;
       }
+      .ant-btn-primary[disabled]:hover {
+        background-color: #1890ff;
+      }
       .ant-btn-primary:hover {
         background-color: #096dd9;
         color: #ffffff;
@@ -267,7 +276,7 @@ export class ProductOperationComponent implements OnInit {
             next: () => {
               this.loading = false;
               this.modalRef.close(true);
-              this.message.success('Product added successfully!');
+              this.message.success('Product edited successfully!');
               this.uiService.refresher.emit();
             },
             error: (error) => {
@@ -285,7 +294,7 @@ export class ProductOperationComponent implements OnInit {
             this.loading = false;
             this.modalRef.close(true);
             this.message.success('Product added successfully.');
-            this.modalRef.triggerOk();
+            this.uiService.refresher.emit();
           },
           error: (error: any) => {
             console.error(error);

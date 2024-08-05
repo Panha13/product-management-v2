@@ -100,7 +100,12 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                     >
                       <span nz-icon nzType="edit"></span>
                     </button>
-                    <button nz-button nzType="default" nzDanger>
+                    <button
+                      nz-button
+                      nzType="default"
+                      nzDanger
+                      (click)="showDelete(data)"
+                    >
                       <span nz-icon nzType="delete"></span>
                     </button>
                   </nz-row>
@@ -147,13 +152,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.pageSize = this.paginationService.getPageSize();
     this.loadProducts();
 
-    this.searchSubject.pipe(debounceTime(300)).subscribe((query) => {
+    this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
       this.loadProducts();
     });
 
     this.refreshSub$ = this.productUiService.refresher.subscribe(() => {
-      console.log('Hit');
-
       this.loadProducts();
     });
   }
@@ -185,6 +188,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   editProduct(product: Product): void {
     this.productUiService.showEdit(product);
+  }
+
+  showDelete(product: Product): void {
+    this.productUiService.showDelete(product);
   }
 
   onPageIndexChange(pageIndex: number): void {
