@@ -86,7 +86,6 @@ registerLocaleData(en);
     NzFormModule,
     NzUploadModule,
     NzSpinModule,
-
     NzMessageModule,
     NzModalModule,
     NzIconModule,
