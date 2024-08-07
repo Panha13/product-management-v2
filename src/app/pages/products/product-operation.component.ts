@@ -20,9 +20,7 @@ import { ProductUiService } from './product-ui.service';
         [formGroup]="form"
       >
         <nz-form-item>
-          <nz-form-label nzFor="name" class="required-marker"
-            >Product Name</nz-form-label
-          >
+          <nz-form-label class="required-marker">Product Name</nz-form-label>
           <nz-form-control
             [nzErrorTip]="
               form.get('name')?.hasError('required')
@@ -35,15 +33,12 @@ import { ProductUiService } from './product-ui.service';
               placeholder="Enter product name"
               formControlName="name"
               type="text"
-              id="name"
               autocomplete="true"
             />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label nzFor="image" class="required-marker"
-            >Image Link</nz-form-label
-          >
+          <nz-form-label class="required-marker">Image Link</nz-form-label>
           <nz-form-control
             [nzErrorTip]="
               form.get('image')?.hasError('required')
@@ -56,7 +51,6 @@ import { ProductUiService } from './product-ui.service';
               placeholder="Enter image link"
               formControlName="image"
               type="text"
-              id="image"
             />
           </nz-form-control>
         </nz-form-item>
@@ -66,7 +60,6 @@ import { ProductUiService } from './product-ui.service';
               <nz-form-label>Category</nz-form-label>
               <nz-form-control>
                 <nz-select
-                  id="category_id"
                   nzShowSearch
                   nzAllowClear
                   nzPlaceHolder="Select category"
@@ -92,7 +85,6 @@ import { ProductUiService } from './product-ui.service';
                 "
               >
                 <nz-select
-                  id="unit_id"
                   nzShowSearch
                   nzAllowClear
                   nzPlaceHolder="Select Unit"
@@ -111,9 +103,7 @@ import { ProductUiService } from './product-ui.service';
         <div nz-row nzGutter="16">
           <div nz-col [nzSpan]="12">
             <nz-form-item>
-              <nz-form-label nzFor="stock_quantity" class="required-marker"
-                >Stock</nz-form-label
-              >
+              <nz-form-label class="required-marker">Stock</nz-form-label>
               <nz-form-control
                 [nzErrorTip]="
                   form.get('stock_quantity')?.hasError('required')
@@ -121,21 +111,20 @@ import { ProductUiService } from './product-ui.service';
                     : ''
                 "
               >
-                <input
-                  nz-input
-                  placeholder="Enter stock quantity"
+                <nz-input-number
+                  [nzMin]="0"
+                  [nzStep]="1"
+                  [nzPrecision]="0"
                   formControlName="stock_quantity"
-                  type="number"
-                  id="stock_quantity"
-                />
+                  [nzPlaceHolder]="'Please enter quantity'"
+                  style="width: 100%;"
+                ></nz-input-number>
               </nz-form-control>
             </nz-form-item>
           </div>
           <div nz-col [nzSpan]="12">
             <nz-form-item>
-              <nz-form-label nzFor="price" class="required-marker"
-                >Price</nz-form-label
-              >
+              <nz-form-label class="required-marker">Price</nz-form-label>
               <nz-form-control
                 [nzErrorTip]="
                   form.get('price')?.hasError('required')
@@ -143,19 +132,19 @@ import { ProductUiService } from './product-ui.service';
                     : ''
                 "
               >
-                <input
-                  nz-input
-                  placeholder="Enter price"
+                <nz-input-number
+                  [nzMin]="0"
+                  [nzStep]="0.1"
                   formControlName="price"
-                  type="number"
-                  id="price"
-                />
+                  [nzPlaceHolder]="'Please enter price'"
+                  style="width: 100%;"
+                ></nz-input-number>
               </nz-form-control>
             </nz-form-item>
           </div>
         </div>
         <nz-form-item>
-          <nz-form-label nzFor="description">Description</nz-form-label>
+          <nz-form-label>Description</nz-form-label>
           <nz-form-control
             [nzErrorTip]="
               form.get('description')?.hasError('required')
@@ -165,7 +154,6 @@ import { ProductUiService } from './product-ui.service';
           >
             <textarea
               nz-input
-              id="description"
               placeholder="Product description"
               [nzAutosize]="{ minRows: 3, maxRows: 3 }"
               formControlName="description"
@@ -196,24 +184,7 @@ import { ProductUiService } from './product-ui.service';
       </form>
     </div>
   `,
-  styles: [
-    `
-      .ant-btn-primary[disabled] {
-        background-color: #1890ff;
-        color: #ffffff;
-        border: none;
-        opacity: 0.65;
-      }
-      .ant-btn-primary[disabled]:hover {
-        background-color: #1890ff;
-      }
-      .ant-btn-primary:hover {
-        background-color: #096dd9;
-        color: #ffffff;
-        border-color: #096dd9;
-      }
-    `,
-  ],
+  styles: [``],
 })
 export class ProductOperationComponent implements OnInit {
   constructor(
@@ -241,19 +212,19 @@ export class ProductOperationComponent implements OnInit {
       name: [this.product?.name || '', [Validators.required]],
       price: [
         this.product?.price !== undefined ? this.product.price : '',
-        [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+        [Validators.required],
+      ],
+      stock_quantity: [
+        this.product?.stock_quantity !== undefined
+          ? this.product.stock_quantity
+          : '',
+        [Validators.required],
       ],
       image: [this.product?.image || '', [Validators.required]],
       category_id: [
         this.product?.category ? this.product.category.category_id : null,
       ],
       unit_id: [this.product?.unit_id, [Validators.required]],
-      stock_quantity: [
-        this.product?.stock_quantity !== undefined
-          ? this.product.stock_quantity
-          : '',
-        [Validators.required, Validators.pattern(/^[0-9]\d*$/)],
-      ],
       description: [this.product?.description || ''],
     });
 
