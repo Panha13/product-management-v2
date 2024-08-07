@@ -60,7 +60,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
             <thead>
               <tr style="position: sticky; top: 0; z-index: 100;">
                 <th nzWidth="20%">Product</th>
-                <th>Product ID</th>
+                <th>Code</th>
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Category</th>

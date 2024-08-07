@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from './product';
 import { ProductService } from './product.service';
@@ -117,7 +117,7 @@ import { ProductUiService } from './product-ui.service';
                   [nzPrecision]="0"
                   formControlName="stock_quantity"
                   [nzPlaceHolder]="'Please enter quantity'"
-                  style="width: 100%;"
+                  class="w-100"
                 ></nz-input-number>
               </nz-form-control>
             </nz-form-item>
@@ -137,7 +137,7 @@ import { ProductUiService } from './product-ui.service';
                   [nzStep]="0.1"
                   formControlName="price"
                   [nzPlaceHolder]="'Please enter price'"
-                  style="width: 100%;"
+                  class="w-100"
                 ></nz-input-number>
               </nz-form-control>
             </nz-form-item>
@@ -184,7 +184,13 @@ import { ProductUiService } from './product-ui.service';
       </form>
     </div>
   `,
-  styles: [``],
+  styles: [
+    `
+      .w-100 {
+        width: 100%;
+      }
+    `,
+  ],
 })
 export class ProductOperationComponent implements OnInit {
   constructor(
