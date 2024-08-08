@@ -217,9 +217,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.refreshSub$) {
-      this.refreshSub$.unsubscribe();
-    }
+    this.refreshSub$.unsubscribe();
     this.paginationService.clearPaginationState();
   }
 }

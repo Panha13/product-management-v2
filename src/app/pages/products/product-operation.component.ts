@@ -214,6 +214,12 @@ export class ProductOperationComponent implements OnInit {
     //Inject data
     this.product = this.modal;
 
+    this.initForm();
+    this.loadCate();
+    this.loadUnits();
+  }
+
+  private initForm(): void {
     this.form = this.fb.group({
       name: [this.product?.name || '', [Validators.required]],
       price: [
@@ -233,12 +239,25 @@ export class ProductOperationComponent implements OnInit {
       unit_id: [this.product?.unit_id, [Validators.required]],
       description: [this.product?.description || ''],
     });
+  }
 
-    this.categoryService.getCategories().subscribe((categories) => {
-      this.categories = categories;
+  private loadCate(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (categories) => (this.categories = categories),
+      error: (error) => {
+        console.error('Failed to load categories:', error);
+        this.message.error('An error occured while loading categories.');
+      },
     });
-    this.unitService.getUnits().subscribe((unitData) => {
-      this.units = unitData;
+  }
+
+  private loadUnits(): void {
+    this.unitService.getUnits().subscribe({
+      next: (unitData) => (this.units = unitData),
+      error: (error) => {
+        console.error('Failed to load units:', error);
+        this.message.error('An error occurred while loading units.');
+      },
     });
   }
 
