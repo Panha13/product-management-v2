@@ -43,6 +43,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { ProductOperationComponent } from './pages/products/product-operation.component';
 import { SearchInputComponent } from './shared/components/search-input.component';
 import { UnitsComponent } from './pages/units/units.component';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 
 registerLocaleData(en);
 
@@ -86,11 +87,11 @@ registerLocaleData(en);
     NzFormModule,
     NzUploadModule,
     NzSpinModule,
-
     NzMessageModule,
     NzModalModule,
     NzIconModule,
     NzTagModule,
+    NzInputNumberModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],

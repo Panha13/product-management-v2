@@ -3,7 +3,7 @@ import { ProductService } from './product.service';
 import { Product } from './product';
 import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { PaginationService } from 'src/app/helpers/pagination.service';
 
 @Component({
@@ -35,8 +35,8 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
               nzType="primary"
               nzSize="large"
               nzGhost
-              (click)="addProduct()"
               style="border-radius:10px;"
+              (click)="addProduct()"
             >
               <span nz-icon nzType="plus"></span>
               Add Product
@@ -60,7 +60,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
             <thead>
               <tr style="position: sticky; top: 0; z-index: 100;">
                 <th nzWidth="20%">Product</th>
-                <th>Product ID</th>
+                <th>Code</th>
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Category</th>
@@ -104,7 +104,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                       nz-button
                       nzType="default"
                       nzDanger
-                      (click)="deleteProduct(data.product_id)"
+                      (click)="showDelete(data)"
                     >
                       <span nz-icon nzType="delete"></span>
                     </button>
@@ -138,6 +138,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   searchQuery: string = '';
   private searchSubject = new Subject<string>();
+  private refreshSub$!: Subscription;
 
   constructor(
     private productsService: ProductService,
@@ -150,7 +151,12 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.pageIndex = this.paginationService.getPageIndex();
     this.pageSize = this.paginationService.getPageSize();
     this.loadProducts();
-    this.searchSubject.pipe(debounceTime(300)).subscribe((query) => {
+
+    this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.loadProducts();
+    });
+
+    this.refreshSub$ = this.productUiService.refresher.subscribe(() => {
       this.loadProducts();
     });
   }
@@ -175,40 +181,17 @@ export class ProductsComponent implements OnInit, OnDestroy {
       });
   }
 
+  //Modal
   addProduct(): void {
-    this.productUiService.openProductModal().then((result) => {
-      if (result) {
-        this.message.success('Product added successfully.');
-        this.loadProducts();
-      }
-    });
+    this.productUiService.showAdd();
   }
 
   editProduct(product: Product): void {
-    this.productUiService.openProductModal(product).then((result) => {
-      if (result) {
-        this.message.success('Product edited successfully.');
-        this.loadProducts();
-      }
-    });
+    this.productUiService.showEdit(product);
   }
 
-  deleteProduct(productId: number): void {
-    this.productUiService
-      .confirmDelete('Are you sure you want to delete this product?')
-      .then((confirmed) => {
-        if (confirmed) {
-          this.productsService.deleteProduct(productId).subscribe({
-            next: () => {
-              this.message.success('Product deleted successfully.');
-              this.loadProducts();
-            },
-            error: (error) => {
-              this.message.error('Failed to delete product.');
-            },
-          });
-        }
-      });
+  showDelete(product: Product): void {
+    this.productUiService.showDelete(product);
   }
 
   onPageIndexChange(pageIndex: number): void {
@@ -234,6 +217,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.refreshSub$.unsubscribe();
     this.paginationService.clearPaginationState();
   }
 }

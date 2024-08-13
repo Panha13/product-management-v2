@@ -101,8 +101,9 @@ td {
 .ant-table tfoot > tr > th,
 .ant-table-tbody > tr > td,
 .ant-table-thead > tr > th {
-  padding: 12px;
+  padding: 6px 12px;
 }
+
 /* width */
 ::-webkit-scrollbar {
   width: 7px;
@@ -123,4 +124,45 @@ td {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.ant-btn-primary[disabled] {
+  background-color: #1890ff;
+  color: #ffffff;
+  border: none;
+  opacity: 0.65;
+}
+.ant-btn-primary[disabled]:hover {
+  background-color: #1890ff;
+  color: #ffffff;
+}
+.ant-btn-primary:hover {
+  background-color: #096dd9;
+  color: #ffffff;
+  border-color: #096dd9;
+}
+
+.custom-modal .ant-modal-title {
+  text-align: center;
+  width: 100%; /* Ensure it spans the width of the modal */
+}
+
+.ant-modal-header {
+  padding: 12px 24px;
+}
+
+.ant-modal-close-x {
+  display: block;
+  width: 46.8px;
+  height: 46.8px;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 46.8px;
+  text-align: center;
+  text-transform: none;
+  text-rendering: auto;
+}
+
+.ant-form-item {
+  margin: 0 0 15px;
 }
