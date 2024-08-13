@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  TranslateService as MyTranslateService,
-  Language,
-} from './helpers/translate.service';
+
+export interface Language {
+  name: string;
+  code: string;
+  flag: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -11,25 +13,35 @@ import {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(
-    private translateService: TranslateService,
-    private myTranslateService: MyTranslateService
-  ) {}
+  constructor(private translateService: TranslateService) {}
   isCollapsed = false;
-  languages: Language[] = [];
   selectedLanguage!: Language;
+  defaultLanguage = 'en';
+  languages: Language[] = [
+    {
+      name: 'English',
+      code: 'en',
+      flag: '../assets/english-sharp-icon.svg',
+    },
+    { name: 'Khmer', code: 'km', flag: '../assets/khmer-sharp-icon.svg' },
+  ];
+
+  private getDefaultLanguage(): Language {
+    return this.languages.find((lang) => lang.code === this.defaultLanguage)!;
+  }
 
   ngOnInit(): void {
-    this.languages = this.myTranslateService.getLanguages();
-    this.selectedLanguage = this.myTranslateService.getSelectedLanguage();
-
+    const storedLang =
+      localStorage.getItem('selectedLang') || this.defaultLanguage;
+    this.selectedLanguage =
+      this.languages.find((lang) => lang.code === storedLang) ||
+      this.getDefaultLanguage();
     this.translateService.use(this.selectedLanguage.code);
   }
 
   switchLanguage(lang: Language): void {
-    this.myTranslateService.setSelectedLanguage(lang.code);
     this.selectedLanguage = lang;
-
-    this.translateService.use(this.selectedLanguage.code);
+    this.translateService.use(lang.code);
+    localStorage.setItem('selectedLang', lang.code);
   }
 }
