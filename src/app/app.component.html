@@ -69,14 +69,16 @@
           <span nz-icon nzType="appstore" nzTheme="outline" style="font-size: 18px;"></span>
         </div>
         <div class="icon-tag">
-          <div nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" style="color:black">
+          <div nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
             <img class="flag" [src]="selectedLanguage.flag" [alt]="selectedLanguage.name">
           </div>
           <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu>
-              <li *ngFor="let lang of languages" nz-menu-item (click)="switchLanguage(lang)">
+              <li *ngFor="let lang of languages" nz-menu-item (click)="switchLanguage(lang)"
+                [ngClass]="{'active': lang.code === selectedLanguage.code}">
                 <img class="flag" [src]="lang.flag" [alt]="lang.name">
                 {{ lang.name }}
+                <span *ngIf="lang.code === selectedLanguage.code">✔️</span>
               </li>
             </ul>
           </nz-dropdown-menu>
