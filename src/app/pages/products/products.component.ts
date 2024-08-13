@@ -39,7 +39,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
               (click)="addProduct()"
             >
               <span nz-icon nzType="plus"></span>
-              Add Product
+              {{ 'Add Product' | translate }}
             </button>
           </div>
         </div>
@@ -59,13 +59,13 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
           >
             <thead>
               <tr style="position: sticky; top: 0; z-index: 100;">
-                <th nzWidth="20%">Product</th>
-                <th>Code</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Category</th>
-                <th>Status</th>
-                <th style="text-align:center">Action</th>
+                <th nzWidth="20%">{{ 'Product' | translate }}</th>
+                <th>{{ 'Code' | translate }}</th>
+                <th>{{ 'Price' | translate }}</th>
+                <th>{{ 'Quantity' | translate }}</th>
+                <th>{{ 'Category' | translate }}</th>
+                <th>{{ 'Status' | translate }}</th>
+                <th style="text-align:center">{{ 'Action' | translate }}</th>
               </tr>
             </thead>
             <tbody>

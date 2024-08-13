@@ -19,7 +19,6 @@ export class ProductUiService {
 
   showAdd() {
     this.modalService.create({
-      nzTitle: 'Add Product',
       nzWidth: '540px',
       nzContent: ProductOperationComponent,
       nzCentered: true,
@@ -30,7 +29,6 @@ export class ProductUiService {
 
   showEdit(product: Product) {
     this.modalService.create({
-      nzTitle: 'Edit Product ',
       nzWidth: '540px',
       nzContent: ProductOperationComponent,
       nzCentered: true,

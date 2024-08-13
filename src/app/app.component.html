@@ -10,37 +10,37 @@
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/dashboard">
           <i nz-icon nzType="dashboard"></i>
-          <span>Dashboard</span>
+          <span>{{'Dashboard' | translate}}</span>
         </a>
       </li>
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/products">
           <i nz-icon nzType="shopping-cart"></i>
-          <span>Products</span>
+          <span>{{'Products' | translate}}</span>
         </a>
       </li>
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/categories">
           <i nz-icon nzType="appstore"></i>
-          <span>Categories</span>
+          <span>{{'Categories' | translate}}</span>
         </a>
       </li>
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/attributes">
           <i nz-icon nzType="tags"></i>
-          <span>Attributes</span>
+          <span>{{'Attributes'| translate}}</span>
         </a>
       </li>
       <li nz-menu-item nzMatchRouter nzDisabled>
         <a routerLink="/order">
           <i nz-icon nzType="shopping"></i>
-          <span>Order</span>
+          <span>{{'Order'| translate}}</span>
         </a>
       </li>
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/user">
           <i nz-icon nzType="user"></i>
-          <span>User</span>
+          <span>{{'User'| translate}}</span>
         </a>
       </li>
     </ul>
@@ -55,18 +55,6 @@
         <!-- <app-search-input></app-search-input> -->
       </div>
       <div nz-col class="flex-nowrap" style="gap: 15px; ">
-        <div>
-          <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" style="color:black">
-            English
-            <span nz-icon nzType="down"></span>
-          </a>
-          <nz-dropdown-menu #menu="nzDropdownMenu">
-            <ul nz-menu>
-              <li nz-menu-item>English</li>
-              <li nz-menu-item>Khmer</li>
-            </ul>
-          </nz-dropdown-menu>
-        </div>
         <nz-badge [nzCount]="5">
           <div class="icon-tag">
             <span nz-icon nzType="bell" nzTheme="outline" style="font-size: 18px;"></span>
@@ -80,6 +68,22 @@
         <div class="icon-tag">
           <span nz-icon nzType="appstore" nzTheme="outline" style="font-size: 18px;"></span>
         </div>
+        <div class="icon-tag">
+          <div nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+            <img class="flag" [src]="selectedLanguage.flag" [alt]="selectedLanguage.name">
+          </div>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li *ngFor="let lang of languages" nz-menu-item (click)="switchLanguage(lang)"
+                [ngClass]="{'active': lang.code === selectedLanguage.code}">
+                <img class="flag" [src]="lang.flag" [alt]="lang.name">
+                {{ lang.name }}
+                <span *ngIf="lang.code === selectedLanguage.code">✔️</span>
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+
 
         <div class="flex-nowrap">
           <nz-avatar nzIcon="user" nzSize="large"
@@ -89,21 +93,9 @@
       </div>
     </nz-header>
     <nz-content style="overflow: auto; padding:  24px;">
-      <!-- <div nz-row nzJustify="space-between" nzAlign="middle" style="margin-bottom:  15px;">
-        <nz-breadcrumb [nzAutoGenerate]="true">
-          <nz-breadcrumb-item>
-            Home
-          </nz-breadcrumb-item>
-        </nz-breadcrumb>
-        <div>
-          <h2 style="margin: 0; font-weight: bold;">{{pageTitle}}</h2>
-        </div>
-      </div> -->
+
       <router-outlet></router-outlet>
-      <!-- <div class=" inner-content">
-          <router-outlet></router-outlet>
-          </div> -->
-      <!-- <nz-footer style="text-align: center;">Ant Design ©2020 Implement By Angular</nz-footer> -->
+
     </nz-content>
 
   </nz-layout>

@@ -14,6 +14,10 @@ import { Observable, Observer } from 'rxjs';
 @Component({
   selector: 'app-product-operation',
   template: `
+    <div *nzModalTitle>
+      <span *ngIf="product">{{ 'Edit Product' | translate }}</span>
+      <span *ngIf="!product">{{ 'Add Product' | translate }}</span>
+    </div>
     <div nz-row nzJustify="center">
       <form
         class="form-container"
@@ -24,9 +28,9 @@ import { Observable, Observer } from 'rxjs';
         <div nz-row nzGutter="16">
           <div nz-col [nzSpan]="12">
             <nz-form-item>
-              <nz-form-label class="required-marker"
-                >Product Name</nz-form-label
-              >
+              <nz-form-label class="required-marker">{{
+                'Product Name' | translate
+              }}</nz-form-label>
               <nz-form-control
                 [nzErrorTip]="
                   form.get('name')?.hasError('required')
@@ -36,7 +40,7 @@ import { Observable, Observer } from 'rxjs';
               >
                 <input
                   nz-input
-                  placeholder="Enter product name"
+                  [placeholder]="'Enter product name' | translate"
                   formControlName="name"
                   type="text"
                   autocomplete="true"
@@ -44,7 +48,9 @@ import { Observable, Observer } from 'rxjs';
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-              <nz-form-label class="required-marker">Price</nz-form-label>
+              <nz-form-label class="required-marker">{{
+                'Price' | translate
+              }}</nz-form-label>
               <nz-form-control
                 [nzErrorTip]="
                   form.get('price')?.hasError('required')
@@ -56,7 +62,7 @@ import { Observable, Observer } from 'rxjs';
                   [nzMin]="0"
                   [nzStep]="0.1"
                   formControlName="price"
-                  [nzPlaceHolder]="'Please enter price'"
+                  [nzPlaceHolder]="'Please enter price' | translate"
                   class="w-100"
                 ></nz-input-number>
               </nz-form-control>
@@ -83,7 +89,9 @@ import { Observable, Observer } from 'rxjs';
         <div nz-row nzGutter="16">
           <div nz-col [nzSpan]="12">
             <nz-form-item>
-              <nz-form-label class="required-marker">Stock</nz-form-label>
+              <nz-form-label class="required-marker">{{
+                'Stock' | translate
+              }}</nz-form-label>
               <nz-form-control
                 [nzErrorTip]="
                   form.get('stock_quantity')?.hasError('required')
@@ -96,7 +104,7 @@ import { Observable, Observer } from 'rxjs';
                   [nzStep]="1"
                   [nzPrecision]="0"
                   formControlName="stock_quantity"
-                  [nzPlaceHolder]="'Please enter quantity'"
+                  [nzPlaceHolder]="'Please enter quantity' | translate"
                   class="w-100"
                 ></nz-input-number>
               </nz-form-control>
@@ -104,7 +112,9 @@ import { Observable, Observer } from 'rxjs';
           </div>
           <div nz-col [nzSpan]="12">
             <nz-form-item>
-              <nz-form-label class="required-marker">Unit</nz-form-label>
+              <nz-form-label class="required-marker">{{
+                'Unit' | translate
+              }}</nz-form-label>
               <nz-form-control
                 [nzErrorTip]="
                   form.get('unit_id')?.hasError('required')
@@ -115,7 +125,7 @@ import { Observable, Observer } from 'rxjs';
                 <nz-select
                   nzShowSearch
                   nzAllowClear
-                  nzPlaceHolder="Select Unit"
+                  [nzPlaceHolder]="'Select Unit' | translate"
                   formControlName="unit_id"
                 >
                   <nz-option
@@ -129,12 +139,12 @@ import { Observable, Observer } from 'rxjs';
           </div>
         </div>
         <nz-form-item>
-          <nz-form-label>Category</nz-form-label>
+          <nz-form-label>{{ 'Category' | translate }}</nz-form-label>
           <nz-form-control>
             <nz-select
               nzShowSearch
               nzAllowClear
-              nzPlaceHolder="Select category"
+              [nzPlaceHolder]="'Select category' | translate"
               formControlName="category_id"
             >
               <nz-option
@@ -146,7 +156,7 @@ import { Observable, Observer } from 'rxjs';
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label>Description</nz-form-label>
+          <nz-form-label>{{ 'Description' | translate }}</nz-form-label>
           <nz-form-control
             [nzErrorTip]="
               form.get('description')?.hasError('required')
@@ -156,7 +166,7 @@ import { Observable, Observer } from 'rxjs';
           >
             <textarea
               nz-input
-              placeholder="Product description"
+              [placeholder]="'Product description' | translate"
               [nzAutosize]="{ minRows: 3, maxRows: 3 }"
               formControlName="description"
             ></textarea>
@@ -283,7 +293,7 @@ export class ProductOperationComponent implements OnInit {
   }
 
   private initForm(): void {
-    this.imageUrl = this.product?.image || '';
+    this.initImg();
     this.form = this.fb.group({
       name: [this.product?.name || '', [Validators.required]],
       price: [
@@ -296,13 +306,17 @@ export class ProductOperationComponent implements OnInit {
           : '',
         [Validators.required],
       ],
-      image: [this.product?.image || '', [Validators.required]],
+      image: [this.imageUrl || '', [Validators.required]],
       category_id: [
         this.product?.category ? this.product.category.category_id : null,
       ],
       unit_id: [this.product?.unit_id, [Validators.required]],
       description: [this.product?.description || ''],
     });
+  }
+
+  private initImg(): void {
+    this.imageUrl = this.product?.image || '';
 
     if (this.imageUrl) {
       this.fileProfile = [
