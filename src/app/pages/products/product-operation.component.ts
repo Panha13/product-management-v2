@@ -15,8 +15,8 @@ import { Observable, Observer } from 'rxjs';
   selector: 'app-product-operation',
   template: `
     <div *nzModalTitle>
-      <span *ngIf="product">{{ 'Edit Product' | translate }}</span>
-      <span *ngIf="!product">{{ 'Add Product' | translate }}</span>
+      <span *ngIf="modal">{{ 'Edit Product' | translate }}</span>
+      <span *ngIf="!modal">{{ 'Add Product' | translate }}</span>
     </div>
     <div nz-row nzJustify="center">
       <form
@@ -237,23 +237,59 @@ export class ProductOperationComponent implements OnInit {
     private uiService: ProductUiService
   ) {}
 
-  private modal = inject(NZ_MODAL_DATA) as Product;
+  readonly modal = inject(NZ_MODAL_DATA) as Product;
   uploadUrl = 'http://localhost:3000/api/upload';
   fileProfile: NzUploadFile[] = [];
   form!: FormGroup;
-  product!: Product;
+  product: Product = {};
   categories: Category[] = [];
   units: Unit[] = [];
   loading: boolean = false;
   imageUrl: string = '';
 
   ngOnInit(): void {
-    //Inject data
     this.product = this.modal;
-
     this.initForm();
     this.loadCate();
     this.loadUnits();
+
+    if (this.product) {
+      this.setFrmValue(this.product.product_id!);
+    }
+  }
+
+  private initForm(): void {
+    this.form = this.fb.group({
+      name: [null, [Validators.required]],
+      price: [null, [Validators.required]],
+      stock_quantity: [null, [Validators.required]],
+      image: [null, [Validators.required]],
+      category_id: [null],
+      unit_id: [null, [Validators.required]],
+      description: [null],
+    });
+  }
+
+  private setFrmValue(product_id: number): void {
+    this.productService.getProduct(product_id).subscribe((product) => {
+      this.form.patchValue(product);
+      this.initImg();
+    });
+  }
+
+  private initImg(): void {
+    this.imageUrl = this.product?.image || '';
+
+    if (this.imageUrl) {
+      this.fileProfile = [
+        {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: this.imageUrl,
+        },
+      ];
+    }
   }
 
   beforeUpload = (
@@ -292,44 +328,6 @@ export class ProductOperationComponent implements OnInit {
     }
   }
 
-  private initForm(): void {
-    this.initImg();
-    this.form = this.fb.group({
-      name: [this.product?.name || '', [Validators.required]],
-      price: [
-        this.product?.price !== undefined ? this.product.price : '',
-        [Validators.required],
-      ],
-      stock_quantity: [
-        this.product?.stock_quantity !== undefined
-          ? this.product.stock_quantity
-          : '',
-        [Validators.required],
-      ],
-      image: [this.imageUrl || '', [Validators.required]],
-      category_id: [
-        this.product?.category ? this.product.category.category_id : null,
-      ],
-      unit_id: [this.product?.unit_id, [Validators.required]],
-      description: [this.product?.description || ''],
-    });
-  }
-
-  private initImg(): void {
-    this.imageUrl = this.product?.image || '';
-
-    if (this.imageUrl) {
-      this.fileProfile = [
-        {
-          uid: '-1',
-          name: 'image.png',
-          status: 'done',
-          url: this.imageUrl,
-        },
-      ];
-    }
-  }
-
   private loadCate(): void {
     this.categoryService.getCategories().subscribe({
       next: (categories) => (this.categories = categories),
@@ -358,7 +356,7 @@ export class ProductOperationComponent implements OnInit {
 
       const productAction$ = this.product
         ? this.productService.updateProduct(
-            this.product.product_id,
+            this.product.product_id!,
             productData
           )
         : this.productService.addProduct(productData);

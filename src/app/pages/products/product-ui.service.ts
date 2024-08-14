@@ -47,7 +47,7 @@ export class ProductUiService {
       nzCancelText: 'No',
       nzOnOk: () =>
         new Promise((resolve, reject) => {
-          this.productService.deleteProduct(product.product_id).subscribe({
+          this.productService.deleteProduct(product.product_id!).subscribe({
             next: () => {
               this.message.success('Product deleted successfully.');
               this.refresher.emit();
