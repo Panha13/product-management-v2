@@ -50,12 +50,15 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
             <thead>
               <tr class="table-header">
                 <th nzWidth="20%">{{ 'Product' | translate }}</th>
-                <th>{{ 'Code' | translate }}</th>
-                <th>{{ 'Price' | translate }}</th>
-                <th>{{ 'Quantity' | translate }}</th>
-                <th>{{ 'Category' | translate }}</th>
-                <th>{{ 'Status' | translate }}</th>
-                <th [nzAlign]="'center'">{{ 'Action' | translate }}</th>
+                <th nzWidth="10%">{{ 'Code' | translate }}</th>
+                <th nzWidth="10%">{{ 'Price' | translate }}</th>
+                <th nzWidth="10%">{{ 'Quantity' | translate }}</th>
+                <th nzWidth="15%">{{ 'Category' | translate }}</th>
+                <th nzWidth="30%">{{ 'Description' | translate }}</th>
+                <th nzWidth="13%">{{ 'Status' | translate }}</th>
+                <th nzWidth="12%" [nzAlign]="'center'">
+                  {{ 'Action' | translate }}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -72,6 +75,9 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                 <td>
                   {{ data.category ? data.category.name : '—' }}
                 </td>
+                <td nzEllipsis>
+                  {{ data.description ? data.description : '—' }}
+                </td>
                 <td>
                   <nz-tag [nzColor]="data.stock_quantity! > 0 ? 'green' : 'red'"
                     >{{
@@ -79,6 +85,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                     }}
                   </nz-tag>
                 </td>
+
                 <td>
                   <nz-row class="action-buttons">
                     <button
