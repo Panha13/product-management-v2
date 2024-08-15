@@ -23,5 +23,10 @@
   "Please enter quantity": "សូមបញ្ចូលបរិមាណ",
   "Select category": "ជ្រើសប្រភេទ",
   "Product description": "ការពិពណ៌នាផលិតផល",
-  "Select Unit": "ជ្រើសឯកតា"
+  "Select Unit": "ជ្រើសឯកតា",
+  "Search product here": "ស្វែងរកផលិតផលនៅទីនេះ",
+  "Please enter product name": "សូមបញ្ចូលឈ្មោះផលិតផល",
+  "Please enter stock quantity": "សូមបញ្ចូលបរិមាណស្តុក",
+  "Please select product unit": "សូមជ្រើសរើសឯកតាផលិតផល",
+  "Enter product price": "បញ្ចូលតម្លៃផលិតផល"
 }

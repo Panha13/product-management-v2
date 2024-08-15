@@ -37,7 +37,7 @@ import { Observable, Observer } from 'rxjs';
               <nz-form-control
                 [nzErrorTip]="
                   form.get('name')?.hasError('required')
-                    ? 'Please enter product name'
+                    ? ('Please enter product name' | translate)
                     : ''
                 "
               >
@@ -57,7 +57,7 @@ import { Observable, Observer } from 'rxjs';
               <nz-form-control
                 [nzErrorTip]="
                   form.get('price')?.hasError('required')
-                    ? 'Please enter price'
+                    ? ('Please enter price' | translate)
                     : ''
                 "
               >
@@ -65,7 +65,7 @@ import { Observable, Observer } from 'rxjs';
                   [nzMin]="0"
                   [nzStep]="0.1"
                   formControlName="price"
-                  [nzPlaceHolder]="'Please enter price' | translate"
+                  [nzPlaceHolder]="'Enter product price' | translate"
                   class="w-100"
                 ></nz-input-number>
               </nz-form-control>
@@ -98,7 +98,7 @@ import { Observable, Observer } from 'rxjs';
               <nz-form-control
                 [nzErrorTip]="
                   form.get('stock_quantity')?.hasError('required')
-                    ? 'Please enter stock quantity'
+                    ? ('Please enter stock quantity' | translate)
                     : ''
                 "
               >
@@ -121,7 +121,7 @@ import { Observable, Observer } from 'rxjs';
               <nz-form-control
                 [nzErrorTip]="
                   form.get('unit_id')?.hasError('required')
-                    ? 'Please enter product unit'
+                    ? ('Please select product unit' | translate)
                     : ''
                 "
               >
@@ -160,13 +160,7 @@ import { Observable, Observer } from 'rxjs';
         </nz-form-item>
         <nz-form-item>
           <nz-form-label>{{ 'Description' | translate }}</nz-form-label>
-          <nz-form-control
-            [nzErrorTip]="
-              form.get('description')?.hasError('required')
-                ? 'Please enter description'
-                : ''
-            "
-          >
+          <nz-form-control>
             <textarea
               nz-input
               [placeholder]="'Product description' | translate"
@@ -218,7 +212,7 @@ import { Observable, Observer } from 'rxjs';
       }
 
       .form-container {
-        position: relative; /* Make sure the container is positioned relative */
+        position: relative;
       }
 
       .loading-overlay {
@@ -230,13 +224,8 @@ import { Observable, Observer } from 'rxjs';
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: rgba(
-          255,
-          255,
-          255,
-          0.8
-        ); /* Optional: to give a slight overlay effect */
-        z-index: 1000; /* Ensure it's above other content */
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 1000;
       }
     `,
   ],
@@ -248,8 +237,7 @@ export class ProductOperationComponent implements OnInit {
     private categoryService: CategoriesService,
     private unitService: UnitsService,
     private modalRef: NzModalRef<ProductOperationComponent>,
-    private message: NzMessageService,
-    private uiService: ProductUiService
+    private message: NzMessageService
   ) {}
 
   readonly modal = inject(NZ_MODAL_DATA) as Product;
@@ -295,6 +283,7 @@ export class ProductOperationComponent implements OnInit {
         this.loading_form = false;
       },
       error: (err) => {
+        console.log(err);
         this.message.error('Failed to load product details.');
       },
     });

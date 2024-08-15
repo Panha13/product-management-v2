@@ -25,7 +25,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
             style=" width:100%"
           >
             <app-search-input
-              [placeholder]="'Search product here...'"
+              [placeholder]="'Search product here' | translate"
               [(searchQuery)]="searchQuery"
               (search)="onSearch($event)"
             ></app-search-input>

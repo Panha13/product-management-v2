@@ -23,5 +23,10 @@
   "Please enter quantity": "Please enter quantity",
   "Select category": "Select category",
   "Product description": "Product description",
-  "Select Unit": "Select Unit"
+  "Select Unit": "Select Unit",
+  "Search product here": "Search product here",
+  "Please enter product name": "Please enter product name",
+  "Please enter stock quantity": "Please enter stock quantity",
+  "Please select product unit": "Please select product unit",
+  "Enter product price": "Enter product price"
 }
