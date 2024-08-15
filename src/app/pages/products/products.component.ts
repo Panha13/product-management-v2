@@ -12,18 +12,8 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
   template: `
     <div class="inner-content">
       <div class="flex-column-gap">
-        <div
-          nz-row
-          nzJustify="space-between"
-          nzAlign="middle"
-          style="flex-shrink: 0;"
-        >
-          <div
-            nz-row
-            nzAlign="middle"
-            nzJustify="space-between"
-            style=" width:100%"
-          >
+        <div class="flex-row-gap">
+          <div class="full-width-row">
             <app-search-input
               [placeholder]="'Search product here' | translate"
               [(searchQuery)]="searchQuery"
@@ -43,7 +33,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
             </button>
           </div>
         </div>
-        <div nz-row style=" flex-grow: 1; overflow: auto;">
+        <div nz-row class="flex-grow">
           <nz-table
             [nzData]="products"
             nzTableLayout="fixed"
@@ -58,14 +48,14 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
             [nzLoading]="loading"
           >
             <thead>
-              <tr style="position: sticky; top: 0; z-index: 100;">
+              <tr class="table-header">
                 <th nzWidth="20%">{{ 'Product' | translate }}</th>
                 <th>{{ 'Code' | translate }}</th>
                 <th>{{ 'Price' | translate }}</th>
                 <th>{{ 'Quantity' | translate }}</th>
                 <th>{{ 'Category' | translate }}</th>
                 <th>{{ 'Status' | translate }}</th>
-                <th style="text-align:center">{{ 'Action' | translate }}</th>
+                <th [nzAlign]="'center'">{{ 'Action' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -90,10 +80,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                   </nz-tag>
                 </td>
                 <td>
-                  <nz-row
-                    nzJustify="center"
-                    style="gap: 10px; flex-wrap: nowrap;"
-                  >
+                  <nz-row class="action-buttons">
                     <button
                       nz-button
                       nzType="primary"

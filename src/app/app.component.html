@@ -46,27 +46,27 @@
     </ul>
 
   </nz-sider>
-  <nz-layout style="max-width: none; min-width: 1000px;">
-    <nz-header nz-row nzJustify="space-between" class="app-header" style="padding-right: 40px;">
+  <nz-layout class="layout-container">
+    <nz-header nz-row nzJustify="space-between" class="app-header">
       <div nz-col class="flex-nowrap">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
           <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
         </span>
         <!-- <app-search-input></app-search-input> -->
       </div>
-      <div nz-col class="flex-nowrap" style="gap: 15px; ">
+      <div nz-col class="flex-nowrap">
         <nz-badge [nzCount]="5">
           <div class="icon-tag">
-            <span nz-icon nzType="bell" nzTheme="outline" style="font-size: 18px;"></span>
+            <span nz-icon nzType="bell" nzTheme="outline"></span>
           </div>
         </nz-badge>
         <nz-badge [nzCount]="5">
           <div class="icon-tag">
-            <span nz-icon nzType="message" nzTheme="outline" style="font-size: 18px;"></span>
+            <span nz-icon nzType="message" nzTheme="outline"></span>
           </div>
         </nz-badge>
         <div class="icon-tag">
-          <span nz-icon nzType="appstore" nzTheme="outline" style="font-size: 18px;"></span>
+          <span nz-icon nzType="appstore" nzTheme="outline"></span>
         </div>
 
         <!-- Languages -->
@@ -90,11 +90,11 @@
         <div class="flex-nowrap">
           <nz-avatar nzIcon="user" nzSize="large"
             nzSrc="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"></nz-avatar>
-          <h4 style="margin: 0;"> Tith Sopanha</h4>
+          <h4 class="margin-zero"> Tith Sopanha</h4>
         </div>
       </div>
     </nz-header>
-    <nz-content style="overflow: auto; padding:  18px;">
+    <nz-content class="content-layout">
 
       <router-outlet></router-outlet>
 

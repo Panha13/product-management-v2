@@ -82,9 +82,19 @@ nz-header {
   z-index: 2;
 }
 
-.app-header {
+.layout-container {
+  max-width: none;
+  min-width: 1000px;
+}
+
+.content-layout {
+  overflow: auto;
+  padding: 18px;
+}
+
+.app-layout .app-header {
   height: 64px;
-  padding: 0;
+  padding: 0 24px 0 0;
   background: #fefefe;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   flex-wrap: nowrap;
@@ -100,12 +110,15 @@ nz-header {
   background-color: #eff2f6;
   cursor: pointer;
 }
+.icon-tag span {
+  font-size: 18px;
+}
 
 .flex-nowrap {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-  gap: 10px;
+  gap: 15px;
 }
 
 .flag {

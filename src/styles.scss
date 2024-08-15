@@ -33,11 +33,47 @@ button {
   font-weight: 600;
 }
 
+.margin-zero {
+  margin: 0;
+}
+
 .flex-column-gap {
   display: flex;
   flex-direction: column;
   gap: 15px;
   height: 100%;
+}
+
+.flex-row-gap {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.flex-grow {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.full-width-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.table-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: nowrap;
 }
 
 .ant-table-thead > tr > th {
