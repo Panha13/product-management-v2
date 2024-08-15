@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from './product';
 import { ProductService } from './product.service';
@@ -19,6 +19,9 @@ import { Observable, Observer } from 'rxjs';
       <span *ngIf="!modal">{{ 'Add Product' | translate }}</span>
     </div>
     <div nz-row nzJustify="center">
+      <div *ngIf="loading_form" class="loading-overlay">
+        <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+      </div>
       <form
         class="form-container"
         nz-form
@@ -172,29 +175,19 @@ import { Observable, Observer } from 'rxjs';
             ></textarea>
           </nz-form-control>
         </nz-form-item>
-        <nz-form-item>
-          <nz-form-control style="text-align: end;">
-            <button
-              nz-button
-              nzType="default"
-              type="button"
-              style="margin-right: 10px;"
-              (click)="onCancel()"
-            >
-              Cancel
-            </button>
-            <button
-              nz-button
-              nzType="primary"
-              [disabled]="!form.valid || loading"
-              (click)="onSubmit()"
-            >
-              <i *ngIf="loading" nz-icon nzType="loading"></i>
-              Submit
-            </button>
-          </nz-form-control>
-        </nz-form-item>
       </form>
+    </div>
+    <div *nzModalFooter>
+      <button nz-button nzType="default" (click)="onCancel()">Cancel</button>
+      <button
+        nz-button
+        nzType="primary"
+        [disabled]="loading || !form.valid"
+        (click)="onSubmit()"
+        [nzLoading]="loading"
+      >
+        Submit
+      </button>
     </div>
   `,
   styles: [
@@ -223,6 +216,28 @@ import { Observable, Observer } from 'rxjs';
       :host ::ng-deep .ant-upload-list-item-thumbnail img {
         object-fit: cover;
       }
+
+      .form-container {
+        position: relative; /* Make sure the container is positioned relative */
+      }
+
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Optional: to give a slight overlay effect */
+        z-index: 1000; /* Ensure it's above other content */
+      }
     `,
   ],
 })
@@ -245,6 +260,7 @@ export class ProductOperationComponent implements OnInit {
   categories: Category[] = [];
   units: Unit[] = [];
   loading: boolean = false;
+  loading_form: boolean = false;
   imageUrl: string = '';
 
   ngOnInit(): void {
@@ -254,6 +270,7 @@ export class ProductOperationComponent implements OnInit {
     this.loadUnits();
 
     if (this.product) {
+      this.loading_form = true;
       this.setFrmValue(this.product.product_id!);
     }
   }
@@ -271,9 +288,15 @@ export class ProductOperationComponent implements OnInit {
   }
 
   private setFrmValue(product_id: number): void {
-    this.productService.getProduct(product_id).subscribe((product) => {
-      this.form.patchValue(product);
-      this.initImg();
+    this.productService.getProduct(product_id).subscribe({
+      next: (product) => {
+        this.form.patchValue(product);
+        this.initImg();
+        this.loading_form = false;
+      },
+      error: (err) => {
+        this.message.error('Failed to load product details.');
+      },
     });
   }
 
@@ -382,9 +405,8 @@ export class ProductOperationComponent implements OnInit {
 
   private handleSuccess(successMessage: string): void {
     this.loading = false;
-    this.modalRef.close(true);
+    this.modalRef.triggerOk();
     this.message.success(successMessage);
-    this.uiService.refresher.emit();
   }
 
   private handleError(error: any): void {

@@ -135,6 +135,7 @@ td {
 .ant-btn-primary[disabled]:hover {
   background-color: #1890ff;
   color: #ffffff;
+  cursor: not-allowed;
 }
 .ant-btn-primary:hover {
   background-color: #096dd9;
@@ -145,6 +146,14 @@ td {
 .custom-modal .ant-modal-title {
   text-align: center;
   width: 100%; /* Ensure it spans the width of the modal */
+}
+
+.custom-modal .ant-modal-footer {
+  padding: 0px 48px 24px;
+  text-align: right;
+  background: 0 0;
+  border-radius: 0 0 2px 2px;
+  border: none;
 }
 
 .ant-modal-header {

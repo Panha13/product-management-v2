@@ -22,8 +22,10 @@ export class ProductUiService {
       nzWidth: '540px',
       nzContent: ProductOperationComponent,
       nzCentered: true,
-      nzFooter: null,
       nzClassName: 'custom-modal',
+      nzOnOk: () => {
+        this.refresher.emit();
+      },
     });
   }
 
@@ -33,8 +35,10 @@ export class ProductUiService {
       nzContent: ProductOperationComponent,
       nzCentered: true,
       nzData: product,
-      nzFooter: null,
       nzClassName: 'custom-modal',
+      nzOnOk: () => {
+        this.refresher.emit();
+      },
     });
   }
 

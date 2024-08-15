@@ -15,8 +15,11 @@ export interface Language {
 export class AppComponent implements OnInit {
   constructor(private translateService: TranslateService) {}
   isCollapsed = false;
+
+  //Language
   selectedLanguage!: Language;
   defaultLanguage = 'en';
+
   languages: Language[] = [
     {
       name: 'English',
