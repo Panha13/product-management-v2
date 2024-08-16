@@ -253,6 +253,7 @@ export class ProductOperationComponent implements OnInit {
 
   ngOnInit(): void {
     this.product = this.modal;
+    console.log(this.product);
     this.initForm();
     this.loadCate();
     this.loadUnits();
@@ -278,30 +279,33 @@ export class ProductOperationComponent implements OnInit {
   private setFrmValue(product_id: number): void {
     this.productService.getProduct(product_id).subscribe({
       next: (product) => {
-        this.form.patchValue(product);
-        this.initImg();
+        this.form.setValue({
+          name: product.name,
+          price: product.price,
+          stock_quantity: product.stock_quantity,
+          image: product.image,
+          category_id: product.category?.category_id || null,
+          unit_id: product.unit_id,
+          description: product.description || null,
+        });
+        // Initialize image data
+        this.fileProfile = [
+          {
+            uid: '-1',
+            name: 'image.png',
+            status: 'done',
+            url: product.image,
+          },
+        ];
+
         this.loading_form = false;
       },
       error: (err) => {
         console.log(err);
+        this.loading_form = false;
         this.message.error('Failed to load product details.');
       },
     });
-  }
-
-  private initImg(): void {
-    this.imageUrl = this.product?.image || '';
-
-    if (this.imageUrl) {
-      this.fileProfile = [
-        {
-          uid: '-1',
-          name: 'image.png',
-          status: 'done',
-          url: this.imageUrl,
-        },
-      ];
-    }
   }
 
   beforeUpload = (
@@ -309,16 +313,15 @@ export class ProductOperationComponent implements OnInit {
     _fileList: NzUploadFile[]
   ): Observable<boolean> => {
     return new Observable((observer: Observer<boolean>) => {
-      const isJpgOrPng =
-        file.type === 'image/jpeg' || file.type === 'image/png';
+      const isImage = file.type?.startsWith('image/');
 
-      if (!isJpgOrPng) {
-        this.message.error('You can only upload JPG file !');
+      if (!isImage) {
+        this.message.error('You can only upload image files!');
         observer.complete();
         return;
       }
 
-      observer.next(isJpgOrPng);
+      observer.next(isImage);
       observer.complete();
     });
   };

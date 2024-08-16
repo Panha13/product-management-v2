@@ -51,11 +51,13 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
               <tr class="table-header">
                 <th nzWidth="20%">{{ 'Product' | translate }}</th>
                 <th nzWidth="10%">{{ 'Code' | translate }}</th>
-                <th nzWidth="10%">{{ 'Price' | translate }}</th>
-                <th nzWidth="10%">{{ 'Quantity' | translate }}</th>
-                <th nzWidth="15%">{{ 'Category' | translate }}</th>
-                <th nzWidth="30%">{{ 'Description' | translate }}</th>
-                <th nzWidth="13%">{{ 'Status' | translate }}</th>
+                <th nzWidth="14%">{{ 'Price' | translate }}</th>
+                <th nzWidth="10%" nzEllipsis>
+                  {{ 'Quantity' | translate }}
+                </th>
+                <th nzWidth="12%">{{ 'Category' | translate }}</th>
+                <th nzWidth="20%">{{ 'Description' | translate }}</th>
+                <th nzWidth="14%">{{ 'Status' | translate }}</th>
                 <th nzWidth="12%" [nzAlign]="'center'">
                   {{ 'Action' | translate }}
                 </th>
@@ -72,7 +74,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                   {{ data.price | currency : 'USD' }}
                 </td>
                 <td>{{ data.stock_quantity }}</td>
-                <td>
+                <td nzEllipsis>
                   {{ data.category ? data.category.name : '—' }}
                 </td>
                 <td nzEllipsis>
