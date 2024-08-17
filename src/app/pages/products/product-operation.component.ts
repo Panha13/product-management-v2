@@ -3,11 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from './product';
 import { ProductService } from './product.service';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { CategoriesService } from '../categories/categories.service';
-import { Category } from '../categories/category';
-import { Unit, UnitsService } from '../units/units.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { ProductUiService } from './product-ui.service';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
 
@@ -223,11 +219,10 @@ export class ProductOperationComponent implements OnInit {
   fileProfile: NzUploadFile[] = [];
   form!: FormGroup;
   product: Product = {};
-  categories: Category[] = [];
-  units: Unit[] = [];
   loading: boolean = false;
   loading_form: boolean = false;
   imageUrl: string = '';
+  defaultImg: string = '../../assets/image/default-product-image.png';
 
   ngOnInit(): void {
     this.product = this.modal;
@@ -245,7 +240,7 @@ export class ProductOperationComponent implements OnInit {
       name: [null, [Validators.required]],
       price: [null, [Validators.required]],
       stock_quantity: [null, [Validators.required]],
-      image: [null, [Validators.required]],
+      image: [null],
       category_id: [null],
       unit_id: [null, [Validators.required]],
       description: [null],
@@ -259,7 +254,7 @@ export class ProductOperationComponent implements OnInit {
           name: product.name,
           price: product.price,
           stock_quantity: product.stock_quantity,
-          image: product.image,
+          image: product.image || this.defaultImg,
           category_id: product.category?.category_id || null,
           unit_id: product.unit_id,
           description: product.description || null,
@@ -324,6 +319,10 @@ export class ProductOperationComponent implements OnInit {
       this.loading = true;
 
       const productData = { ...this.form.value };
+
+      if (!productData.image) {
+        productData.image = this.defaultImg;
+      }
 
       const productAction$ = this.product
         ? this.productService.updateProduct(

@@ -24,9 +24,9 @@ export class AppComponent implements OnInit {
     {
       name: 'English',
       code: 'en',
-      flag: '../assets/english-sharp-icon.svg',
+      flag: '../assets/image/english-sharp-icon.svg',
     },
-    { name: 'Khmer', code: 'km', flag: '../assets/khmer-sharp-icon.svg' },
+    { name: 'Khmer', code: 'km', flag: '../assets/image/khmer-sharp-icon.svg' },
   ];
 
   private getDefaultLanguage(): Language {
