@@ -46,6 +46,8 @@ import { UnitsComponent } from './pages/units/units.component';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { CategorySelectComponent } from './pages/categories/category-select.component';
+import { UnitSelectComponent } from './pages/units/unit-select.component';
 
 registerLocaleData(en);
 
@@ -66,6 +68,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProductOperationComponent,
     SearchInputComponent,
     UnitsComponent,
+    CategorySelectComponent,
+    UnitSelectComponent,
   ],
   imports: [
     BrowserModule,

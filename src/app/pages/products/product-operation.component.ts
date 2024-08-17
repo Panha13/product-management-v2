@@ -125,18 +125,7 @@ import { Observable, Observer } from 'rxjs';
                     : ''
                 "
               >
-                <nz-select
-                  nzShowSearch
-                  nzAllowClear
-                  [nzPlaceHolder]="'Select Unit' | translate"
-                  formControlName="unit_id"
-                >
-                  <nz-option
-                    *ngFor="let unit of units"
-                    [nzLabel]="unit.name"
-                    [nzValue]="unit.unit_id"
-                  ></nz-option>
-                </nz-select>
+                <app-unit-select formControlName="unit_id"></app-unit-select>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -144,18 +133,9 @@ import { Observable, Observer } from 'rxjs';
         <nz-form-item>
           <nz-form-label>{{ 'Category' | translate }}</nz-form-label>
           <nz-form-control>
-            <nz-select
-              nzShowSearch
-              nzAllowClear
-              [nzPlaceHolder]="'Select category' | translate"
+            <app-category-select
               formControlName="category_id"
-            >
-              <nz-option
-                *ngFor="let category of categories"
-                [nzLabel]="category.name"
-                [nzValue]="category.category_id"
-              ></nz-option>
-            </nz-select>
+            ></app-category-select>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -234,8 +214,6 @@ export class ProductOperationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
-    private categoryService: CategoriesService,
-    private unitService: UnitsService,
     private modalRef: NzModalRef<ProductOperationComponent>,
     private message: NzMessageService
   ) {}
@@ -255,8 +233,6 @@ export class ProductOperationComponent implements OnInit {
     this.product = this.modal;
     console.log(this.product);
     this.initForm();
-    this.loadCate();
-    this.loadUnits();
 
     if (this.product) {
       this.loading_form = true;
@@ -341,26 +317,6 @@ export class ProductOperationComponent implements OnInit {
       console.error('Upload error:', info.file.error);
       this.message.error('Image upload failed.');
     }
-  }
-
-  private loadCate(): void {
-    this.categoryService.getCategories().subscribe({
-      next: (categories) => (this.categories = categories),
-      error: (error) => {
-        console.error('Failed to load categories:', error);
-        this.message.error('An error occured while loading categories.');
-      },
-    });
-  }
-
-  private loadUnits(): void {
-    this.unitService.getUnits().subscribe({
-      next: (unitData) => (this.units = unitData),
-      error: (error) => {
-        console.error('Failed to load units:', error);
-        this.message.error('An error occurred while loading units.');
-      },
-    });
   }
 
   onSubmit(): void {
