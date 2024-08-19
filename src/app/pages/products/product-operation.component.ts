@@ -6,6 +6,7 @@ import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
+import { CustomValidators } from 'src/app/helpers/customValidators';
 
 @Component({
   selector: 'app-product-operation',
@@ -23,6 +24,7 @@ import { Observable, Observer } from 'rxjs';
         nz-form
         [nzLayout]="'vertical'"
         [formGroup]="form"
+        [nzAutoTips]="autoTips"
       >
         <div nz-row nzGutter="16">
           <div nz-col [nzSpan]="12">
@@ -30,13 +32,7 @@ import { Observable, Observer } from 'rxjs';
               <nz-form-label class="required-marker">{{
                 'Product Name' | translate
               }}</nz-form-label>
-              <nz-form-control
-                [nzErrorTip]="
-                  form.get('name')?.hasError('required')
-                    ? ('Please enter product name' | translate)
-                    : ''
-                "
-              >
+              <nz-form-control>
                 <input
                   nz-input
                   [placeholder]="'Enter product name' | translate"
@@ -50,13 +46,7 @@ import { Observable, Observer } from 'rxjs';
               <nz-form-label class="required-marker">{{
                 'Price' | translate
               }}</nz-form-label>
-              <nz-form-control
-                [nzErrorTip]="
-                  form.get('price')?.hasError('required')
-                    ? ('Please enter price' | translate)
-                    : ''
-                "
-              >
+              <nz-form-control>
                 <nz-input-number
                   [nzMin]="0"
                   [nzStep]="0.1"
@@ -91,13 +81,7 @@ import { Observable, Observer } from 'rxjs';
               <nz-form-label class="required-marker">{{
                 'Stock' | translate
               }}</nz-form-label>
-              <nz-form-control
-                [nzErrorTip]="
-                  form.get('stock_quantity')?.hasError('required')
-                    ? ('Please enter stock quantity' | translate)
-                    : ''
-                "
-              >
+              <nz-form-control>
                 <nz-input-number
                   [nzMin]="0"
                   [nzStep]="1"
@@ -114,13 +98,7 @@ import { Observable, Observer } from 'rxjs';
               <nz-form-label class="required-marker">{{
                 'Unit' | translate
               }}</nz-form-label>
-              <nz-form-control
-                [nzErrorTip]="
-                  form.get('unit_id')?.hasError('required')
-                    ? ('Please select product unit' | translate)
-                    : ''
-                "
-              >
+              <nz-form-control>
                 <app-unit-select formControlName="unit_id"></app-unit-select>
               </nz-form-control>
             </nz-form-item>
@@ -223,10 +201,10 @@ export class ProductOperationComponent implements OnInit {
   loading_form: boolean = false;
   imageUrl: string = '';
   defaultImg: string = '../../assets/image/default-product-image.png';
+  autoTips = CustomValidators.autoTips;
 
   ngOnInit(): void {
     this.product = this.modal;
-    console.log(this.product);
     this.initForm();
 
     if (this.product) {
@@ -236,13 +214,14 @@ export class ProductOperationComponent implements OnInit {
   }
 
   private initForm(): void {
+    const { required } = CustomValidators;
     this.form = this.fb.group({
-      name: [null, [Validators.required]],
-      price: [null, [Validators.required]],
-      stock_quantity: [null, [Validators.required]],
+      name: [null, [required]],
+      price: [null, [required]],
+      stock_quantity: [null, [required]],
       image: [null],
       category_id: [null],
-      unit_id: [null, [Validators.required]],
+      unit_id: [null, [required]],
       description: [null],
     });
   }

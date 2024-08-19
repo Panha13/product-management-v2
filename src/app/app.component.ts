@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { NzI18nService, en_US, km_KH } from 'ng-zorro-antd/i18n';
 
 export interface Language {
   name: string;
@@ -13,7 +14,10 @@ export interface Language {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(private translateService: TranslateService) {}
+  constructor(
+    private translateService: TranslateService,
+    private i18n: NzI18nService
+  ) {}
   isCollapsed = false;
 
   //Language
@@ -46,5 +50,10 @@ export class AppComponent implements OnInit {
     this.selectedLanguage = lang;
     this.translateService.use(lang.code);
     localStorage.setItem('selectedLang', lang.code);
+    if (lang.code === 'km') {
+      this.i18n.setLocale(km_KH);
+    } else {
+      this.i18n.setLocale(en_US);
+    }
   }
 }
