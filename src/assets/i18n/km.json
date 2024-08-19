@@ -28,5 +28,7 @@
   "Please enter product name": "សូមបញ្ចូលឈ្មោះផលិតផល",
   "Please enter stock quantity": "សូមបញ្ចូលបរិមាណស្តុក",
   "Please select product unit": "សូមជ្រើសរើសឯកតាផលិតផល",
-  "Enter product price": "បញ្ចូលតម្លៃផលិតផល"
+  "Enter product price": "បញ្ចូលតម្លៃផលិតផល",
+  "In stock": "មានស្តុក",
+  "Out of stock": "អស់ស្តុក"
 }

@@ -48,6 +48,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CategorySelectComponent } from './pages/categories/category-select.component';
 import { UnitSelectComponent } from './pages/units/unit-select.component';
+import { CurrencyPipe } from './pipes/currency.pipe';
 
 registerLocaleData(en);
 
@@ -70,6 +71,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     UnitsComponent,
     CategorySelectComponent,
     UnitSelectComponent,
+    CurrencyPipe,
   ],
   imports: [
     BrowserModule,

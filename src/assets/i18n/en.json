@@ -28,5 +28,7 @@
   "Please enter product name": "Please enter product name",
   "Please enter stock quantity": "Please enter stock quantity",
   "Please select product unit": "Please select product unit",
-  "Enter product price": "Enter product price"
+  "Enter product price": "Enter product price",
+  "In stock": "In stock",
+  "Out of stock": "Out of stock"
 }

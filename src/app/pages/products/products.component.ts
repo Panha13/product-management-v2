@@ -83,7 +83,9 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                 <td>
                   <nz-tag [nzColor]="data.stock_quantity! > 0 ? 'green' : 'red'"
                     >{{
-                      data.stock_quantity! > 0 ? 'In stock' : 'Out of stock'
+                      data.stock_quantity! > 0
+                        ? ('In stock' | translate)
+                        : ('Out of stock' | translate)
                     }}
                   </nz-tag>
                 </td>
