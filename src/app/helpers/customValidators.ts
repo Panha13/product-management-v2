@@ -1,4 +1,4 @@
-import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 
 export type MyErrorsOptions = { km: string; en: string };
 export type MyValidationErrors = Record<string, MyErrorsOptions>;
@@ -13,17 +13,4 @@ export class CustomValidators extends Validators {
     },
     default: {},
   };
-  static nameMaxLengthValidator(maxLength: number = 500): ValidatorFn {
-    return (control: AbstractControl): MyValidationErrors | null => {
-      if (Validators.maxLength(maxLength)(control) === null) {
-        return null;
-      }
-      return {
-        maxlength: {
-          km: `មិនត្រូវសរសេរលើសពី ${maxLength}អក្សរ!`,
-          en: `Must not exceed ${maxLength} characters!`,
-        },
-      };
-    };
-  }
 }
