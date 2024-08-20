@@ -44,16 +44,13 @@ export class AppComponent implements OnInit {
       this.languages.find((lang) => lang.code === storedLang) ||
       this.getDefaultLanguage();
     this.translateService.use(this.selectedLanguage.code);
+    this.i18n.setLocale(this.selectedLanguage.code === 'km' ? km_KH : en_US);
   }
 
   switchLanguage(lang: Language): void {
     this.selectedLanguage = lang;
     this.translateService.use(lang.code);
+    this.i18n.setLocale(lang.code === 'km' ? km_KH : en_US);
     localStorage.setItem('selectedLang', lang.code);
-    if (lang.code === 'km') {
-      this.i18n.setLocale(km_KH);
-    } else {
-      this.i18n.setLocale(en_US);
-    }
   }
 }
