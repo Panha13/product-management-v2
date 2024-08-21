@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewEncapsulation,
+  inject,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from './product';
 import { ProductService } from './product.service';
@@ -12,8 +18,8 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
   selector: 'app-product-operation',
   template: `
     <div *nzModalTitle>
-      <span *ngIf="modal">{{ 'Edit Product' | translate }}</span>
-      <span *ngIf="!modal">{{ 'Add Product' | translate }}</span>
+      <span *ngIf="productId">{{ 'Edit Product' | translate }}</span>
+      <span *ngIf="!productId">{{ 'Add Product' | translate }}</span>
     </div>
     <div nz-row nzJustify="center">
       <div *ngIf="loading_form" class="loading-overlay">
@@ -38,7 +44,6 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
                   [placeholder]="'Enter product name' | translate"
                   formControlName="name"
                   type="text"
-                  autocomplete="true"
                 />
               </nz-form-control>
             </nz-form-item>
@@ -164,23 +169,6 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
       :host ::ng-deep .ant-upload-list-item-thumbnail img {
         object-fit: cover;
       }
-
-      .form-container {
-        position: relative;
-      }
-
-      .loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(255, 255, 255, 0.8);
-        z-index: 1000;
-      }
     `,
   ],
 })
@@ -192,11 +180,10 @@ export class ProductOperationComponent implements OnInit {
     private message: NzMessageService
   ) {}
 
-  readonly modal = inject(NZ_MODAL_DATA) as Product;
+  readonly productId = inject(NZ_MODAL_DATA);
   uploadUrl = 'http://localhost:3000/api/upload';
   fileProfile: NzUploadFile[] = [];
   form!: FormGroup;
-  product: Product = {};
   loading: boolean = false;
   loading_form: boolean = false;
   imageUrl: string = '';
@@ -204,12 +191,11 @@ export class ProductOperationComponent implements OnInit {
   autoTips = CustomValidators.autoTips;
 
   ngOnInit(): void {
-    this.product = this.modal;
     this.initForm();
 
-    if (this.product) {
+    if (this.productId) {
       this.loading_form = true;
-      this.setFrmValue(this.product.product_id!);
+      this.setFrmValue();
     }
   }
 
@@ -226,17 +212,17 @@ export class ProductOperationComponent implements OnInit {
     });
   }
 
-  private setFrmValue(product_id: number): void {
-    this.productService.getProduct(product_id).subscribe({
-      next: (product) => {
+  private setFrmValue(): void {
+    this.productService.getProduct(this.productId).subscribe({
+      next: (result) => {
         this.form.setValue({
-          name: product.name,
-          price: product.price,
-          stock_quantity: product.stock_quantity,
-          image: product.image || this.defaultImg,
-          category_id: product.category?.category_id || null,
-          unit_id: product.unit_id,
-          description: product.description || null,
+          name: result.name,
+          price: result.price,
+          stock_quantity: result.stock_quantity,
+          image: result.image || this.defaultImg,
+          category_id: result.category?.category_id || null,
+          unit_id: result.unit_id,
+          description: result.description || null,
         });
         // Initialize image data
         this.fileProfile = [
@@ -244,7 +230,7 @@ export class ProductOperationComponent implements OnInit {
             uid: '-1',
             name: 'image.png',
             status: 'done',
-            url: product.image,
+            url: result.image,
           },
         ];
 
@@ -303,17 +289,14 @@ export class ProductOperationComponent implements OnInit {
         productData.image = this.defaultImg;
       }
 
-      const productAction$ = this.product
-        ? this.productService.updateProduct(
-            this.product.product_id!,
-            productData
-          )
+      const productAction$ = this.productId
+        ? this.productService.updateProduct(this.productId, productData)
         : this.productService.addProduct(productData);
 
       productAction$.subscribe({
         next: () => {
           this.handleSuccess(
-            this.product
+            this.productId
               ? 'Product edited successfully!'
               : 'Product added successfully.'
           );

@@ -29,6 +29,10 @@
   "Please enter stock quantity": "Please enter stock quantity",
   "Please select product unit": "Please select product unit",
   "Enter product price": "Enter product price",
+  "Enter note": "Enter note",
   "In stock": "In stock",
-  "Out of stock": "Out of stock"
+  "Out of stock": "Out of stock",
+  "Note": "Note",
+  "Delete": "Delete",
+  "Cancel": "Cancel"
 }

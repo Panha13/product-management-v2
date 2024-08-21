@@ -55,6 +55,7 @@ import { CurrencyPipe } from './pipes/currency.pipe';
 // Translations
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ProductDeleteComponent } from './pages/products/product-delete.component';
 
 registerLocaleData(en);
 
@@ -83,6 +84,7 @@ export function i18nFactory(): NzI18nInterface {
     CategorySelectComponent,
     UnitSelectComponent,
     CurrencyPipe,
+    ProductDeleteComponent,
   ],
   imports: [
     BrowserModule,

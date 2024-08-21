@@ -181,11 +181,6 @@ td {
   border-color: #096dd9;
 }
 
-.custom-modal .ant-modal-title {
-  text-align: center;
-  width: 100%; /* Ensure it spans the width of the modal */
-}
-
 .custom-modal .ant-modal-footer {
   padding: 0px 48px 24px;
   text-align: right;
@@ -194,8 +189,17 @@ td {
   border: none;
 }
 
+.modal-delete .ant-modal-body {
+  padding: 12px 28px;
+}
+.modal-delete .ant-modal-footer {
+  border: none;
+  padding: 0 28px 24px;
+}
+
 .ant-modal-header {
   padding: 12px 24px;
+  text-align: center;
 }
 
 .ant-modal-close-x {
@@ -212,4 +216,21 @@ td {
 
 .ant-form-item {
   margin: 0 0 15px;
+}
+
+.form-container {
+  position: relative;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1000;
 }
