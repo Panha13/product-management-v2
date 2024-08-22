@@ -23,6 +23,7 @@ export class ProductUiService {
       nzWidth: '540px',
       nzContent: ProductOperationComponent,
       nzCentered: true,
+      nzMaskClosable: false,
       nzClassName: 'custom-modal',
       nzOnOk: () => {
         this.refresher.emit();
@@ -35,6 +36,7 @@ export class ProductUiService {
       nzWidth: '540px',
       nzContent: ProductOperationComponent,
       nzCentered: true,
+      nzMaskClosable: false,
       nzData: id,
       nzClassName: 'custom-modal',
       nzOnOk: () => {
@@ -49,6 +51,7 @@ export class ProductUiService {
       nzWidth: '450px',
       nzContent: ProductDeleteComponent,
       nzData: id,
+      nzMaskClosable: false,
       nzClassName: 'modal-delete',
       nzOnOk: () => {
         this.refresher.emit();

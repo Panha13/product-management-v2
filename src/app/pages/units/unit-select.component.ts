@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Unit, UnitsService } from './units.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-unit-select',
@@ -12,12 +13,15 @@ import { Unit, UnitsService } from './units.service';
       [nzDisabled]="isDisabled"
       [(ngModel)]="selectedValue"
       (ngModelChange)="onChangeUnit($event)"
+      [nzLoading]="loading"
     >
-      <nz-option
-        *ngFor="let unit of units"
-        [nzLabel]="unit.name"
-        [nzValue]="unit.unit_id"
-      ></nz-option>
+      <nz-option *ngIf="loading" nzDisabled nzCustomContent>
+        <span nz-icon nzType="loading" class="loading-icon"></span>
+        Loading...
+      </nz-option>
+      <ng-container *ngFor="let unit of units">
+        <nz-option [nzValue]="unit.unit_id" [nzLabel]="unit.name"></nz-option>
+      </ng-container>
     </nz-select>
   `,
   providers: [
@@ -29,12 +33,16 @@ import { Unit, UnitsService } from './units.service';
   ],
 })
 export class UnitSelectComponent implements OnInit, ControlValueAccessor {
-  constructor(private unitService: UnitsService) {}
+  constructor(
+    private unitService: UnitsService,
+    private notify: NzNotificationService
+  ) {}
 
   @Input() placeholder: string = 'Select Unit';
   units: Unit[] = [];
   selectedValue: number | null = null;
   isDisabled: boolean = false;
+  loading: boolean = false;
   onChange(value: any) {}
   onTouched() {}
 
@@ -42,10 +50,16 @@ export class UnitSelectComponent implements OnInit, ControlValueAccessor {
     this.loadUnits();
   }
   private loadUnits(): void {
+    this.loading = true;
     this.unitService.getUnits().subscribe({
-      next: (unitData) => (this.units = unitData),
+      next: (unitData) => {
+        this.units = unitData;
+        this.loading = false;
+      },
       error: (error) => {
-        console.error('Failed to load units:', error);
+        console.error(error);
+        this.notify.error('Error', 'Failed to load units.');
+        this.loading = false;
       },
     });
   }

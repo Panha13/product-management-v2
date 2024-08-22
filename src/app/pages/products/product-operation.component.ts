@@ -13,6 +13,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
 import { CustomValidators } from 'src/app/helpers/customValidators';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-product-operation',
@@ -177,6 +178,7 @@ export class ProductOperationComponent implements OnInit {
     private fb: FormBuilder,
     private productService: ProductService,
     private modalRef: NzModalRef<ProductOperationComponent>,
+    private notify: NzNotificationService,
     private message: NzMessageService
   ) {}
 
@@ -241,7 +243,9 @@ export class ProductOperationComponent implements OnInit {
       error: (err) => {
         console.log(err);
         this.loading_form = false;
-        this.message.error('Failed to load product details.');
+        this.notify.error('Error', 'Failed to load product details.', {
+          nzDuration: 2500,
+        });
       },
     });
   }

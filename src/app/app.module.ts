@@ -34,6 +34,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 
 // Components
 import { ProductsComponent } from './pages/products/products.component';
@@ -117,6 +118,7 @@ export function i18nFactory(): NzI18nInterface {
     NzIconModule,
     NzTagModule,
     NzInputNumberModule,
+    NzNotificationModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
