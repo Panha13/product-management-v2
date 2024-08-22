@@ -49,6 +49,7 @@ import { SearchInputComponent } from './shared/components/search-input.component
 import { UnitsComponent } from './pages/units/units.component';
 import { CategorySelectComponent } from './pages/categories/category-select.component';
 import { UnitSelectComponent } from './pages/units/unit-select.component';
+import { PageComponent } from './pages/page.component';
 
 // Pipes
 import { CurrencyPipe } from './pipes/currency.pipe';
@@ -86,6 +87,7 @@ export function i18nFactory(): NzI18nInterface {
     UnitSelectComponent,
     CurrencyPipe,
     ProductDeleteComponent,
+    PageComponent,
   ],
   imports: [
     BrowserModule,
