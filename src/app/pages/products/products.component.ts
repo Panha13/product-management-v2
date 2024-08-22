@@ -104,7 +104,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                       nz-button
                       nzType="default"
                       nzDanger
-                      (click)="showDelete(data)"
+                      (click)="uiService.showDelete(data.product_id || 0)"
                     >
                       <span nz-icon nzType="delete"></span>
                     </button>
@@ -179,14 +179,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
       });
-  }
-
-  // editProduct(product: Product): void {
-  //   this.uiService.showEdit(product);
-  // }
-
-  showDelete(product: Product): void {
-    this.uiService.showDelete(product);
   }
 
   onPageIndexChange(pageIndex: number): void {

@@ -65,7 +65,7 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
           <div nz-col [nzSpan]="12">
             <nz-form-item>
               <nz-upload
-                [nzAction]="uploadUrl"
+                [nzAction]="API_UPLOAD_URL"
                 [(nzFileList)]="fileProfile"
                 [nzBeforeUpload]="beforeUpload"
                 (nzChange)="handleImageUpload($event)"
@@ -180,14 +180,16 @@ export class ProductOperationComponent implements OnInit {
     private message: NzMessageService
   ) {}
 
+  private readonly DEFAULT_IMG_URL =
+    '../../assets/image/default-product-image.png';
+  readonly API_UPLOAD_URL = 'http://localhost:3000/api/upload';
   readonly productId = inject(NZ_MODAL_DATA);
-  uploadUrl = 'http://localhost:3000/api/upload';
+
   fileProfile: NzUploadFile[] = [];
   form!: FormGroup;
   loading: boolean = false;
   loading_form: boolean = false;
   imageUrl: string = '';
-  defaultImg: string = '../../assets/image/default-product-image.png';
   autoTips = CustomValidators.autoTips;
 
   ngOnInit(): void {
@@ -219,7 +221,7 @@ export class ProductOperationComponent implements OnInit {
           name: result.name,
           price: result.price,
           stock_quantity: result.stock_quantity,
-          image: result.image || this.defaultImg,
+          image: result.image || this.DEFAULT_IMG_URL,
           category_id: result.category?.category_id || null,
           unit_id: result.unit_id,
           description: result.description || null,
@@ -286,7 +288,7 @@ export class ProductOperationComponent implements OnInit {
       const productData = { ...this.form.value };
 
       if (!productData.image) {
-        productData.image = this.defaultImg;
+        productData.image = this.DEFAULT_IMG_URL;
       }
 
       const productAction$ = this.productId

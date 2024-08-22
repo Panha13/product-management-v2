@@ -1,13 +1,15 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { ProductService } from './product.service';
 import { Product } from './product';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-product-delete',
   template: `
     <div *nzModalTitle>
-      <span>{{ 'Delete' | translate }}</span>
+      <span>{{ 'Delete' | translate }} {{ model.code }}</span>
     </div>
     <div>
       <div *ngIf="loading_form" class="loading-overlay">
@@ -61,15 +63,38 @@ import { Product } from './product';
 export class ProductDeleteComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
-    private raf: NzModalRef<ProductDeleteComponent>
+    private raf: NzModalRef<ProductDeleteComponent>,
+    private service: ProductService,
+    private msg: NzMessageService
   ) {}
+
+  private id = inject(NZ_MODAL_DATA);
 
   loading: boolean = false;
   loading_form: boolean = false;
   frm!: FormGroup;
+  model: Product = {};
 
   ngOnInit() {
-    this.initFrm();
+    if (this.id) {
+      this.initFrm();
+      this.loading_form = true;
+      this.service.getProduct(this.id).subscribe({
+        next: (result) => {
+          this.model = result;
+          this.frm.setValue({
+            name: this.model.name,
+            note: '',
+          });
+          this.loading_form = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading_form = false;
+          this.msg.error('Product not found. It might have been deleted.');
+        },
+      });
+    }
   }
 
   private initFrm(): void {
@@ -79,7 +104,21 @@ export class ProductDeleteComponent implements OnInit {
     });
   }
 
-  onDelete(): void {}
+  onDelete(): void {
+    this.loading = true;
+    this.service.deleteProduct(this.id, this.frm.value.note).subscribe({
+      next: () => {
+        this.loading = false;
+        this.raf.triggerOk();
+        this.msg.success('Product deleted successfull');
+      },
+      error: (err) => {
+        this.loading = false;
+        this.msg.error('Product deleted failed!');
+        console.error('Deletion failed', err);
+      },
+    });
+  }
 
   onCancel(): void {
     this.raf.triggerCancel();
