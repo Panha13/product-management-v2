@@ -40,7 +40,6 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { ProductsComponent } from './pages/products/products.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { CategoriesComponent } from './pages/categories/categories.component';
-import { AttributeComponent } from './pages/attribute/attribute.component';
 import { OrderComponent } from './pages/order/order.component';
 import { UserComponent } from './pages/user/user.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
@@ -50,6 +49,9 @@ import { UnitsComponent } from './pages/units/units.component';
 import { CategorySelectComponent } from './pages/categories/category-select.component';
 import { UnitSelectComponent } from './pages/units/unit-select.component';
 import { PageComponent } from './pages/page.component';
+import { CategoryOperationComponent } from './pages/categories/category-operation.component';
+import { ProductDeleteComponent } from './pages/products/product-delete.component';
+import { CategoryDeleteComponent } from './pages/categories/category-delete.component';
 
 // Pipes
 import { CurrencyPipe } from './pipes/currency.pipe';
@@ -57,7 +59,6 @@ import { CurrencyPipe } from './pipes/currency.pipe';
 // Translations
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { ProductDeleteComponent } from './pages/products/product-delete.component';
 
 registerLocaleData(en);
 
@@ -76,7 +77,6 @@ export function i18nFactory(): NzI18nInterface {
     ProductsComponent,
     DashboardComponent,
     CategoriesComponent,
-    AttributeComponent,
     OrderComponent,
     UserComponent,
     PageNotFoundComponent,
@@ -88,6 +88,8 @@ export function i18nFactory(): NzI18nInterface {
     CurrencyPipe,
     ProductDeleteComponent,
     PageComponent,
+    CategoryOperationComponent,
+    CategoryDeleteComponent,
   ],
   imports: [
     BrowserModule,

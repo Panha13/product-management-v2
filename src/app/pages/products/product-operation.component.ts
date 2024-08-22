@@ -132,7 +132,9 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
       </form>
     </div>
     <div *nzModalFooter>
-      <button nz-button nzType="default" (click)="onCancel()">Cancel</button>
+      <button nz-button nzType="default" (click)="onCancel()">
+        {{ 'Cancel' | translate }}
+      </button>
       <button
         nz-button
         nzType="primary"
@@ -140,7 +142,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
         (click)="onSubmit()"
         [nzLoading]="loading"
       >
-        Submit
+        {{ 'Submit' | translate }}
       </button>
     </div>
   `,

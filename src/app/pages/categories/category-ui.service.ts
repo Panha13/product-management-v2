@@ -1,30 +1,21 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { Product } from './product';
-import { ProductOperationComponent } from './product-operation.component';
-import { ProductService } from './product.service';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { ProductDeleteComponent } from './product-delete.component';
+import { CategoryOperationComponent } from './category-operation.component';
+import { CategoryDeleteComponent } from './category-delete.component';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProductUiService {
-  constructor(
-    private modalService: NzModalService,
-    private productService: ProductService,
-    private message: NzMessageService
-  ) {}
+export class CategoryUiService {
+  constructor(private modalService: NzModalService) {}
 
   refresher = new EventEmitter<void>();
 
   showAdd() {
     this.modalService.create({
       nzWidth: '540px',
-      nzContent: ProductOperationComponent,
-      nzCentered: true,
+      nzContent: CategoryOperationComponent,
       nzMaskClosable: false,
-      nzClassName: 'custom-modal',
       nzOnOk: () => {
         this.refresher.emit();
       },
@@ -34,11 +25,9 @@ export class ProductUiService {
   showEdit(id: number) {
     this.modalService.create({
       nzWidth: '540px',
-      nzContent: ProductOperationComponent,
-      nzCentered: true,
+      nzContent: CategoryOperationComponent,
       nzMaskClosable: false,
       nzData: id,
-      nzClassName: 'custom-modal',
       nzOnOk: () => {
         this.refresher.emit();
       },
@@ -48,7 +37,7 @@ export class ProductUiService {
   showDelete(id: number): void {
     this.modalService.create({
       nzWidth: '450px',
-      nzContent: ProductDeleteComponent,
+      nzContent: CategoryDeleteComponent,
       nzData: id,
       nzMaskClosable: false,
       nzClassName: 'modal-delete',

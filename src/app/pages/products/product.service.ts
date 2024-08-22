@@ -20,7 +20,6 @@ export class ProductService {
       .set('page', pageIndex.toString())
       .set('pageSize', pageSize.toString())
       .set('searchQuery', searchQuery);
-
     return this.http.get<any>(this._apiUrl, { params });
   }
 

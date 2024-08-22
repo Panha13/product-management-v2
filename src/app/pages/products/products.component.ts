@@ -143,13 +143,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
   constructor(
     private productsService: ProductService,
     public uiService: ProductUiService,
-    private message: NzMessageService,
-    private paginationService: PaginationService
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {
-    this.pageIndex = this.paginationService.getPageIndex();
-    this.pageSize = this.paginationService.getPageSize();
     this.loadProducts();
 
     this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
@@ -183,13 +180,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   onPageIndexChange(pageIndex: number): void {
     this.pageIndex = pageIndex;
-    this.paginationService.setPageIndex(pageIndex);
     this.loadProducts();
   }
   onPageSizeChange(pageSize: number): void {
     this.pageSize = pageSize;
     this.pageIndex = 1; // Reset page index to 1 when page size changes
-    this.paginationService.setPageSize(pageSize);
     this.loadProducts();
   }
   onSearch(query: string): void {
@@ -205,6 +200,5 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.refreshSub$?.unsubscribe();
-    this.paginationService.clearPaginationState();
   }
 }

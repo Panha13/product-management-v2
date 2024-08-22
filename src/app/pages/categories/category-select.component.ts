@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CategoriesService } from './categories.service';
-import { Category } from './category';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { CategoriesService, Category } from './categories.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
@@ -24,7 +22,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
       <ng-container *ngFor="let category of categories">
         <nz-option
           [nzValue]="category.category_id"
-          [nzLabel]="category.name"
+          [nzLabel]="category.name!"
         ></nz-option>
       </ng-container>
     </nz-select>
@@ -48,6 +46,8 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
   selectedValue: number | null = null;
   isDisabled: boolean = false;
   loading: boolean = false;
+  pageIndex: number = 1;
+  pageSize: number = 999999;
   onChange(value: any) {}
   onTouched() {}
 
@@ -57,17 +57,19 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
 
   loadCate(): void {
     this.loading = true;
-    this.categoryService.getCategories().subscribe({
-      next: (categories) => {
-        this.categories = categories;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error(error);
-        this.notify.error('Error', 'Failed to load categories.');
-        this.loading = false;
-      },
-    });
+    this.categoryService
+      .getCategories(this.pageIndex, this.pageSize, '')
+      .subscribe({
+        next: (ressult) => {
+          this.categories = ressult.data;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error(error);
+          this.notify.error('Error', 'Failed to load categories.');
+          this.loading = false;
+        },
+      });
   }
 
   onChangeCate(categoryId: number): void {
