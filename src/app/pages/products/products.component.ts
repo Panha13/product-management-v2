@@ -26,7 +26,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
               nzSize="large"
               nzGhost
               style="border-radius:10px;"
-              (click)="addProduct()"
+              (click)="uiService.showAdd()"
             >
               <span nz-icon nzType="plus"></span>
               {{ 'Add Product' | translate }}
@@ -96,7 +96,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                       nz-button
                       nzType="primary"
                       nzGhost
-                      (click)="editProduct(data)"
+                      (click)="uiService.showEdit(data.product_id || 0)"
                     >
                       <span nz-icon nzType="edit"></span>
                     </button>
@@ -104,7 +104,7 @@ import { PaginationService } from 'src/app/helpers/pagination.service';
                       nz-button
                       nzType="default"
                       nzDanger
-                      (click)="showDelete(data)"
+                      (click)="uiService.showDelete(data.product_id || 0)"
                     >
                       <span nz-icon nzType="delete"></span>
                     </button>
@@ -142,7 +142,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   constructor(
     private productsService: ProductService,
-    private productUiService: ProductUiService,
+    public uiService: ProductUiService,
     private message: NzMessageService,
     private paginationService: PaginationService
   ) {}
@@ -156,7 +156,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       this.loadProducts();
     });
 
-    this.refreshSub$ = this.productUiService.refresher.subscribe(() => {
+    this.refreshSub$ = this.uiService.refresher.subscribe(() => {
       this.loadProducts();
     });
   }
@@ -179,19 +179,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
       });
-  }
-
-  //Modal
-  addProduct(): void {
-    this.productUiService.showAdd();
-  }
-
-  editProduct(product: Product): void {
-    this.productUiService.showEdit(product);
-  }
-
-  showDelete(product: Product): void {
-    this.productUiService.showDelete(product);
   }
 
   onPageIndexChange(pageIndex: number): void {
