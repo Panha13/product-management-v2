@@ -35,7 +35,7 @@ import { CategoriesService, Category } from './categories.service';
             <textarea
               nz-input
               [placeholder]="'Enter note' | translate"
-              [nzAutosize]="{ minRows: 3, maxRows: 3 }"
+              rows="3"
               formControlName="note"
             ></textarea>
           </nz-form-control>

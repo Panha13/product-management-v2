@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { CategoriesService, Category } from './categories.service';
+import { CategoriesService, Category, QueryParam } from './categories.service';
 import { CategoryUiService } from './category-ui.service';
 
 @Component({
@@ -37,8 +37,8 @@ import { CategoryUiService } from './category-ui.service';
             nzShowPagination
             nzShowSizeChanger
             [nzFrontPagination]="false"
-            [nzPageIndex]="pageIndex"
-            [nzPageSize]="pageSize"
+            [nzPageIndex]="param.pageIndex"
+            [nzPageSize]="param.pageSize"
             [nzTotal]="totalCate"
             (nzPageIndexChange)="onPageIndexChange($event)"
             (nzPageSizeChange)="onPageSizeChange($event)"
@@ -57,7 +57,7 @@ import { CategoryUiService } from './category-ui.service';
             <tbody>
               <tr *ngFor="let data of categories; let i = index">
                 <td nzEllipsis>
-                  {{ (this.pageIndex - 1) * this.pageSize + i + 1 }}
+                  {{ (this.param.pageIndex - 1) * this.param.pageSize + i + 1 }}
                 </td>
                 <td class="font-semibold">{{ data.name }}</td>
 
@@ -97,8 +97,12 @@ import { CategoryUiService } from './category-ui.service';
 export class CategoriesComponent implements OnInit, OnDestroy {
   categories: Category[] = [];
   totalCate: number = 0;
-  pageIndex: number = 1;
-  pageSize: number = 10;
+  param: QueryParam = {
+    pageIndex: 1,
+    pageSize: 10,
+    searchQuery: '',
+  };
+
   loading: boolean = false;
   searchQuery: string = '';
   private searchSubject = new Subject<string>();
@@ -124,37 +128,35 @@ export class CategoriesComponent implements OnInit, OnDestroy {
 
   loadCate(): void {
     this.loading = true;
-    this.service
-      .getCategories(this.pageIndex, this.pageSize, this.searchQuery)
-      .subscribe({
-        next: (response: any) => {
-          setTimeout(() => {
-            this.categories = response.data;
-            this.totalCate = response.total;
-            this.loading = false;
-          }, 250);
-        },
-        error: (error) => {
-          console.error('Error fetching categories:', error);
-          this.message.error('Failed to load categories.');
+    this.service.getCategories(this.param).subscribe({
+      next: (response: any) => {
+        setTimeout(() => {
+          this.categories = response.data;
+          this.totalCate = response.total;
           this.loading = false;
-        },
-      });
+        }, 250);
+      },
+      error: (error) => {
+        console.error('Error fetching categories:', error);
+        this.message.error('Failed to load categories.');
+        this.loading = false;
+      },
+    });
   }
 
   onPageIndexChange(pageIndex: number): void {
-    this.pageIndex = pageIndex;
+    this.param.pageIndex = pageIndex;
     this.loadCate();
   }
   onPageSizeChange(pageSize: number): void {
-    this.pageSize = pageSize;
-    this.pageIndex = 1; // Reset page index to 1 when page size changes
+    this.param.pageSize = pageSize;
+    this.param.pageIndex = 1; // Reset page index to 1 when page size changes
 
     this.loadCate();
   }
   onSearch(query: string): void {
-    this.pageIndex = 1; // Reset to first page on search
-    this.searchQuery = query;
+    this.param.pageIndex = 1; // Reset to first page on search
+    this.param.searchQuery = query;
     this.loadCate();
   }
   handleKeyDown(event: KeyboardEvent): void {

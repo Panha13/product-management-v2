@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CategoriesService, Category } from './categories.service';
+import { CategoriesService, Category, QueryParam } from './categories.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
@@ -43,11 +43,15 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
 
   @Input() placeholder: string = 'Select category';
   categories: Category[] = [];
+  param: QueryParam = {
+    pageIndex: 1,
+    pageSize: 999999,
+    searchQuery: '',
+  };
   selectedValue: number | null = null;
   isDisabled: boolean = false;
   loading: boolean = false;
-  pageIndex: number = 1;
-  pageSize: number = 999999;
+
   onChange(value: any) {}
   onTouched() {}
 
@@ -57,20 +61,18 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
 
   loadCate(): void {
     this.loading = true;
-    this.categoryService
-      .getCategories(this.pageIndex, this.pageSize, '')
-      .subscribe({
-        next: (ressult) => {
-          // console.log(ressult.data);
-          this.categories = ressult.data;
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error(error);
-          this.notify.error('Error', 'Failed to load categories.');
-          this.loading = false;
-        },
-      });
+    this.categoryService.getCategories(this.param).subscribe({
+      next: (ressult) => {
+        // console.log(ressult.data);
+        this.categories = ressult.data;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error(error);
+        this.notify.error('Error', 'Failed to load categories.');
+        this.loading = false;
+      },
+    });
   }
 
   onChangeCate(categoryId: number): void {
@@ -80,6 +82,7 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
 
   writeValue(value: any): void {
     this.selectedValue = value;
+    console.log('hit');
   }
   registerOnChange(fn: any): void {
     this.onChange = fn;

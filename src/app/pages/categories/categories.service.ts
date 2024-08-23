@@ -7,6 +7,11 @@ export interface Category {
   name?: string;
   description?: string;
 }
+export interface QueryParam {
+  pageIndex: number;
+  pageSize: number;
+  searchQuery: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -15,15 +20,11 @@ export class CategoriesService {
   private _apiUrl = 'http://localhost:3000/api/categories';
   constructor(private http: HttpClient) {}
 
-  getCategories(
-    pageIndex: number,
-    pageSize: number,
-    searchQuery: string
-  ): Observable<any> {
+  getCategories(param: QueryParam): Observable<any> {
     const params = new HttpParams()
-      .set('page', pageIndex.toString())
-      .set('pageSize', pageSize.toString())
-      .set('searchQuery', searchQuery);
+      .set('page', param.pageIndex.toString())
+      .set('pageSize', param.pageSize.toString())
+      .set('searchQuery', param.searchQuery);
     return this.http.get<any>(this._apiUrl, { params });
   }
 
