@@ -20,7 +20,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
         Loading...
       </nz-option>
       <ng-container *ngFor="let unit of units">
-        <nz-option [nzValue]="unit.unit_id" [nzLabel]="unit.name"></nz-option>
+        <nz-option [nzValue]="unit.unit_id" [nzLabel]="unit.name!"></nz-option>
       </ng-container>
     </nz-select>
   `,
@@ -43,6 +43,8 @@ export class UnitSelectComponent implements OnInit, ControlValueAccessor {
   selectedValue: number | null = null;
   isDisabled: boolean = false;
   loading: boolean = false;
+  pageIndex: number = 1;
+  pageSize: number = 999999;
   onChange(value: any) {}
   onTouched() {}
 
@@ -51,9 +53,9 @@ export class UnitSelectComponent implements OnInit, ControlValueAccessor {
   }
   private loadUnits(): void {
     this.loading = true;
-    this.unitService.getUnits().subscribe({
-      next: (unitData) => {
-        this.units = unitData;
+    this.unitService.getUnits(this.pageIndex, this.pageSize, '').subscribe({
+      next: (result) => {
+        this.units = result.data;
         this.loading = false;
       },
       error: (error) => {

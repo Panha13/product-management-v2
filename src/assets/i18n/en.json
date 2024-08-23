@@ -35,5 +35,17 @@
   "Note": "Note",
   "Delete": "Delete",
   "Cancel": "Cancel",
-  "Loading": "Loading"
+  "Loading": "Loading",
+  "Search categories here": "Search categories here",
+  "Category Name": "Category Name",
+  "Enter category name": "Enter category name",
+  "Add Category": "Add Category",
+  "Edit Category": "Edit Category",
+  "Submit": "Submit",
+  "Enter description": "Enter description",
+  "Search units here": "Search units here",
+  "Unit Name": "Unit Name",
+  "Units": "Units",
+  "Add Unit": "Add Unit",
+  "Enter unit name": "Enter unit name"
 }

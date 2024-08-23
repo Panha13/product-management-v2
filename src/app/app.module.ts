@@ -52,6 +52,8 @@ import { PageComponent } from './pages/page.component';
 import { CategoryOperationComponent } from './pages/categories/category-operation.component';
 import { ProductDeleteComponent } from './pages/products/product-delete.component';
 import { CategoryDeleteComponent } from './pages/categories/category-delete.component';
+import { UnitOperationComponent } from './pages/units/unit-operation.component';
+import { UnitDeleteComponent } from './pages/units/unit-delete.component';
 
 // Pipes
 import { CurrencyPipe } from './pipes/currency.pipe';
@@ -90,6 +92,8 @@ export function i18nFactory(): NzI18nInterface {
     PageComponent,
     CategoryOperationComponent,
     CategoryDeleteComponent,
+    UnitOperationComponent,
+    UnitDeleteComponent,
   ],
   imports: [
     BrowserModule,

@@ -12,7 +12,7 @@ import { CategoryUiService } from './category-ui.service';
         <div class="flex-row-gap">
           <div class="full-width-row">
             <app-search-input
-              [placeholder]="'Search product here' | translate"
+              [placeholder]="'Search categories here' | translate"
               [(searchQuery)]="searchQuery"
               (search)="onSearch($event)"
             ></app-search-input>
@@ -59,7 +59,7 @@ import { CategoryUiService } from './category-ui.service';
                 <td nzEllipsis>
                   {{ (this.pageIndex - 1) * this.pageSize + i + 1 }}
                 </td>
-                <td>{{ data.name }}</td>
+                <td class="font-semibold">{{ data.name }}</td>
 
                 <td nzEllipsis>
                   {{ data.description ? data.description : '—' }}
@@ -92,13 +92,7 @@ import { CategoryUiService } from './category-ui.service';
       </div>
     </div>
   `,
-  styles: [
-    `
-      .text-center {
-        text-align: center;
-      }
-    `,
-  ],
+  styles: [``],
 })
 export class CategoriesComponent implements OnInit, OnDestroy {
   categories: Category[] = [];

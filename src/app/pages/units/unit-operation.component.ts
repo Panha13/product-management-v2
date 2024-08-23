@@ -1,17 +1,17 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { CategoriesService } from './categories.service';
+import { UnitsService } from './units.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CustomValidators } from 'src/app/helpers/customValidators';
 
 @Component({
-  selector: 'app-category-operation',
+  selector: 'app-unit-operation',
   template: `
     <div *nzModalTitle>
-      <span *ngIf="id">{{ 'Edit Category' | translate }}</span>
-      <span *ngIf="!id">{{ 'Add Category' | translate }}</span>
+      <span *ngIf="id">{{ 'Edit Unit' | translate }}</span>
+      <span *ngIf="!id">{{ 'Add Unit' | translate }}</span>
     </div>
     <div>
       <div *ngIf="loading_form" class="loading-overlay">
@@ -26,13 +26,13 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
       >
         <nz-form-item>
           <nz-form-label class="required-marker">{{
-            'Category Name' | translate
+            'Unit Name' | translate
           }}</nz-form-label>
           <nz-form-control>
             <input
               nz-input
               formControlName="name"
-              [placeholder]="'Enter category name' | translate"
+              [placeholder]="'Enter unit name' | translate"
               type="text"
             />
           </nz-form-control>
@@ -67,11 +67,11 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
   `,
   styles: [],
 })
-export class CategoryOperationComponent implements OnInit {
+export class UnitOperationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
-    private raf: NzModalRef<CategoryOperationComponent>,
-    private service: CategoriesService,
+    private raf: NzModalRef<UnitOperationComponent>,
+    private service: UnitsService,
     private notify: NzNotificationService,
     private msg: NzMessageService
   ) {}
@@ -103,7 +103,7 @@ export class CategoryOperationComponent implements OnInit {
   }
 
   private setFrmValue(): void {
-    this.service.getCategory(this.id).subscribe({
+    this.service.getUnit(this.id).subscribe({
       next: (result) => {
         this.frm.setValue({
           name: result.name,
@@ -115,7 +115,7 @@ export class CategoryOperationComponent implements OnInit {
       error: (err) => {
         console.log(err);
         this.loading_form = false;
-        this.notify.error('Error', 'Failed to load category details.');
+        this.notify.error('Error', 'Failed to load unit details.');
       },
     });
   }
@@ -124,18 +124,16 @@ export class CategoryOperationComponent implements OnInit {
     if (this.frm.valid) {
       this.loading = true;
 
-      const categoryData = { ...this.frm.value };
+      const unitData = { ...this.frm.value };
 
-      const categoryAction$ = this.id
-        ? this.service.updateCategory(this.id, categoryData)
-        : this.service.addCategory(categoryData);
+      const unitAction$ = this.id
+        ? this.service.updateUnit(this.id, unitData)
+        : this.service.addUnit(unitData);
 
-      categoryAction$.subscribe({
+      unitAction$.subscribe({
         next: () => {
           this.handleSuccess(
-            this.id
-              ? 'Category updated successfully!'
-              : 'Category added successfully.'
+            this.id ? 'Unit updated successfully!' : 'Unit added successfully.'
           );
         },
         error: (error) => {
@@ -154,7 +152,7 @@ export class CategoryOperationComponent implements OnInit {
   private handleError(error: any): void {
     console.error(error);
     this.loading = false;
-    this.msg.error('An error occurred while processing the category.');
+    this.msg.error('An error occurred while processing the unit.');
   }
 
   onCancel(): void {

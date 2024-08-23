@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductService } from './product.service';
 import { Product } from './product';
 import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Subject, Subscription, debounceTime } from 'rxjs';
-import { PaginationService } from 'src/app/helpers/pagination.service';
 
 @Component({
   selector: 'app-products',

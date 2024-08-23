@@ -61,6 +61,7 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
       .getCategories(this.pageIndex, this.pageSize, '')
       .subscribe({
         next: (ressult) => {
+          // console.log(ressult.data);
           this.categories = ressult.data;
           this.loading = false;
         },

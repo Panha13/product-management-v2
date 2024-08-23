@@ -35,5 +35,17 @@
   "Note": "ចំណាំ",
   "Delete": "លុប",
   "Cancel": "បោះបង់",
-  "Loading": "រងចាំ"
+  "Loading": "រងចាំ",
+  "Search categories here": "ស្វែងរកប្រភេទនៅទីនេះ",
+  "Category Name": "ឈ្មោះប្រភេទ",
+  "Enter category name": "បញ្ចូលឈ្មោះប្រភេទ",
+  "Add Category": "បន្ថែមប្រភេទ",
+  "Edit Category": "កែប្រែប្រភេទ",
+  "Submit": "បញ្ជូន",
+  "Enter description": "បញ្ចូលសេចក្ដីពិពណ៌នា",
+  "Search units here": "ស្វែងរកឯកតានៅទីនេះ",
+  "Unit Name": "ឈ្មោះឯកតា",
+  "Units": "ឯកតា",
+  "Add Unit": "បន្ថែមឯកតា",
+  "Enter unit name": "បញ្ចូលឈ្មោះឯកតា"
 }
