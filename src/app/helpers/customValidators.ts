@@ -9,7 +9,7 @@ export class CustomValidators extends Validators {
       required: 'ទាមទារការបញ្ចូល!',
     },
     en: {
-      required: 'Input is not required!',
+      required: 'Input is required!',
     },
     default: {},
   };

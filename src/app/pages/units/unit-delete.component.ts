@@ -1,16 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { ProductService } from './product.service';
-import { Product } from './product';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { Unit, UnitsService } from './units.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
-  selector: 'app-product-delete',
+  selector: 'app-unit-delete',
   template: `
     <div *nzModalTitle>
-      <span>{{ 'Delete' | translate }} {{ model.code }}</span>
+      <span>{{ 'Delete' | translate }} {{ model.name }}</span>
     </div>
     <div>
       <div *ngIf="loading_form" class="loading-overlay">
@@ -24,7 +23,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
       >
         <nz-form-item>
           <nz-form-label class="required-marker">{{
-            'Product Name' | translate
+            'Unit Name' | translate
           }}</nz-form-label>
           <nz-form-control>
             <input nz-input formControlName="name" type="text" />
@@ -61,11 +60,11 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
   `,
   styles: [],
 })
-export class ProductDeleteComponent implements OnInit {
+export class UnitDeleteComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
-    private raf: NzModalRef<ProductDeleteComponent>,
-    private service: ProductService,
+    private raf: NzModalRef<UnitDeleteComponent>,
+    private service: UnitsService,
     private notify: NzNotificationService,
     private msg: NzMessageService
   ) {}
@@ -75,13 +74,13 @@ export class ProductDeleteComponent implements OnInit {
   loading: boolean = false;
   loading_form: boolean = false;
   frm!: FormGroup;
-  model: Product = {};
+  model: Unit = {};
 
   ngOnInit() {
     if (this.id) {
       this.initFrm();
       this.loading_form = true;
-      this.service.getProduct(this.id).subscribe({
+      this.service.getUnit(this.id).subscribe({
         next: (result) => {
           this.model = result;
           this.frm.setValue({
@@ -93,7 +92,7 @@ export class ProductDeleteComponent implements OnInit {
         error: (err) => {
           console.error(err);
           this.loading_form = false;
-          this.notify.error('Product not found', 'It might have been deleted.');
+          this.notify.error('Unit not found', 'It might have been deleted.');
         },
       });
     }
@@ -108,15 +107,15 @@ export class ProductDeleteComponent implements OnInit {
 
   onDelete(): void {
     this.loading = true;
-    this.service.deleteProduct(this.id, this.frm.value.note).subscribe({
+    this.service.deleteUnit(this.id, this.frm.value.note).subscribe({
       next: () => {
         this.loading = false;
         this.raf.triggerOk();
-        this.msg.success('Product deleted successfull');
+        this.msg.success('Unit deleted successfull');
       },
       error: (err) => {
         this.loading = false;
-        this.msg.error('Product deleted failed!');
+        this.msg.error('Unit deleted failed!');
         console.error('Deletion failed', err);
       },
     });

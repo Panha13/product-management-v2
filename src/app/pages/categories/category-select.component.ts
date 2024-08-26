@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CategoriesService } from './categories.service';
-import { Category } from './category';
+import { CategoriesService, Category, QueryParam } from './categories.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-category-select',
@@ -13,12 +13,18 @@ import { Category } from './category';
       [nzDisabled]="isDisabled"
       [(ngModel)]="selectedValue"
       (ngModelChange)="onChangeCate($event)"
+      [nzLoading]="loading"
     >
-      <nz-option
-        *ngFor="let category of categories"
-        [nzLabel]="category.name"
-        [nzValue]="category.category_id"
-      ></nz-option>
+      <nz-option *ngIf="loading" nzDisabled nzCustomContent>
+        <span nz-icon nzType="loading" class="loading-icon"></span>
+        Loading...
+      </nz-option>
+      <ng-container *ngFor="let category of categories">
+        <nz-option
+          [nzValue]="category.category_id"
+          [nzLabel]="category.name!"
+        ></nz-option>
+      </ng-container>
     </nz-select>
   `,
   providers: [
@@ -30,12 +36,22 @@ import { Category } from './category';
   ],
 })
 export class CategorySelectComponent implements OnInit, ControlValueAccessor {
-  constructor(private categoryService: CategoriesService) {}
+  constructor(
+    private categoryService: CategoriesService,
+    private notify: NzNotificationService
+  ) {}
 
   @Input() placeholder: string = 'Select category';
   categories: Category[] = [];
+  param: QueryParam = {
+    pageIndex: 1,
+    pageSize: 999999,
+    searchQuery: '',
+  };
   selectedValue: number | null = null;
   isDisabled: boolean = false;
+  loading: boolean = false;
+
   onChange(value: any) {}
   onTouched() {}
 
@@ -44,9 +60,18 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
   }
 
   loadCate(): void {
-    this.categoryService.getCategories().subscribe({
-      next: (categories) => (this.categories = categories),
-      error: (error) => console.error('Failed to load categories', error),
+    this.loading = true;
+    this.categoryService.getCategories(this.param).subscribe({
+      next: (ressult) => {
+        // console.log(ressult.data);
+        this.categories = ressult.data;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error(error);
+        this.notify.error('Error', 'Failed to load categories.');
+        this.loading = false;
+      },
     });
   }
 
@@ -57,6 +82,7 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
 
   writeValue(value: any): void {
     this.selectedValue = value;
+    console.log('hit');
   }
   registerOnChange(fn: any): void {
     this.onChange = fn;

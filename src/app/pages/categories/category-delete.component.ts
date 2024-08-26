@@ -1,16 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { ProductService } from './product.service';
-import { Product } from './product';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { CategoriesService, Category } from './categories.service';
 
 @Component({
-  selector: 'app-product-delete',
+  selector: 'app-category-delete',
   template: `
     <div *nzModalTitle>
-      <span>{{ 'Delete' | translate }} {{ model.code }}</span>
+      <span>{{ 'Delete' | translate }} {{ model.name }}</span>
     </div>
     <div>
       <div *ngIf="loading_form" class="loading-overlay">
@@ -36,7 +35,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
             <textarea
               nz-input
               [placeholder]="'Enter note' | translate"
-              [nzAutosize]="{ minRows: 3, maxRows: 3 }"
+              rows="3"
               formControlName="note"
             ></textarea>
           </nz-form-control>
@@ -61,11 +60,11 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
   `,
   styles: [],
 })
-export class ProductDeleteComponent implements OnInit {
+export class CategoryDeleteComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
-    private raf: NzModalRef<ProductDeleteComponent>,
-    private service: ProductService,
+    private raf: NzModalRef<CategoryDeleteComponent>,
+    private service: CategoriesService,
     private notify: NzNotificationService,
     private msg: NzMessageService
   ) {}
@@ -75,13 +74,13 @@ export class ProductDeleteComponent implements OnInit {
   loading: boolean = false;
   loading_form: boolean = false;
   frm!: FormGroup;
-  model: Product = {};
+  model: Category = {};
 
   ngOnInit() {
     if (this.id) {
       this.initFrm();
       this.loading_form = true;
-      this.service.getProduct(this.id).subscribe({
+      this.service.getCategory(this.id).subscribe({
         next: (result) => {
           this.model = result;
           this.frm.setValue({
@@ -108,7 +107,7 @@ export class ProductDeleteComponent implements OnInit {
 
   onDelete(): void {
     this.loading = true;
-    this.service.deleteProduct(this.id, this.frm.value.note).subscribe({
+    this.service.deleteCate(this.id, this.frm.value.note).subscribe({
       next: () => {
         this.loading = false;
         this.raf.triggerOk();
