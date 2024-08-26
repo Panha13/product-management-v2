@@ -103,7 +103,7 @@ export class CategoryOperationComponent implements OnInit {
   }
 
   private setFrmValue(): void {
-    this.service.getCategory(this.id).subscribe({
+    this.service.find(this.id).subscribe({
       next: (result) => {
         this.frm.setValue({
           name: result.name,
@@ -127,8 +127,8 @@ export class CategoryOperationComponent implements OnInit {
       const categoryData = { ...this.frm.value };
 
       const categoryAction$ = this.id
-        ? this.service.updateCategory(this.id, categoryData)
-        : this.service.addCategory(categoryData);
+        ? this.service.edit(this.id, categoryData)
+        : this.service.add(categoryData);
 
       categoryAction$.subscribe({
         next: () => {

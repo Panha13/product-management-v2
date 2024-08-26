@@ -2,6 +2,7 @@ import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Unit, UnitsService } from './units.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { QueryParam } from 'src/app/helpers/base-api.service';
 
 @Component({
   selector: 'app-unit-select',
@@ -43,8 +44,12 @@ export class UnitSelectComponent implements OnInit, ControlValueAccessor {
   selectedValue: number | null = null;
   isDisabled: boolean = false;
   loading: boolean = false;
-  pageIndex: number = 1;
-  pageSize: number = 999999;
+  param: QueryParam = {
+    pageIndex: 1,
+    pageSize: 999999,
+    searchQuery: '',
+  };
+
   onChange(value: any) {}
   onTouched() {}
 
@@ -53,7 +58,7 @@ export class UnitSelectComponent implements OnInit, ControlValueAccessor {
   }
   private loadUnits(): void {
     this.loading = true;
-    this.unitService.getUnits(this.pageIndex, this.pageSize, '').subscribe({
+    this.unitService.getAll(this.param).subscribe({
       next: (result) => {
         this.units = result.data;
         this.loading = false;

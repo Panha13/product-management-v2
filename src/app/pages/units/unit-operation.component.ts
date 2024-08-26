@@ -103,7 +103,7 @@ export class UnitOperationComponent implements OnInit {
   }
 
   private setFrmValue(): void {
-    this.service.getUnit(this.id).subscribe({
+    this.service.find(this.id).subscribe({
       next: (result) => {
         this.frm.setValue({
           name: result.name,
@@ -127,8 +127,8 @@ export class UnitOperationComponent implements OnInit {
       const unitData = { ...this.frm.value };
 
       const unitAction$ = this.id
-        ? this.service.updateUnit(this.id, unitData)
-        : this.service.addUnit(unitData);
+        ? this.service.edit(this.id, unitData)
+        : this.service.add(unitData);
 
       unitAction$.subscribe({
         next: () => {

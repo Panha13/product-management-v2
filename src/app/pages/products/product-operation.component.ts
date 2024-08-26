@@ -1,12 +1,5 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  ViewEncapsulation,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Product } from './product';
 import { ProductService } from './product.service';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -219,7 +212,7 @@ export class ProductOperationComponent implements OnInit {
   }
 
   private setFrmValue(): void {
-    this.productService.getProduct(this.productId).subscribe({
+    this.productService.find(this.productId).subscribe({
       next: (result) => {
         this.form.setValue({
           name: result.name,
@@ -298,8 +291,8 @@ export class ProductOperationComponent implements OnInit {
       }
 
       const productAction$ = this.productId
-        ? this.productService.updateProduct(this.productId, productData)
-        : this.productService.addProduct(productData);
+        ? this.productService.edit(this.productId, productData)
+        : this.productService.add(productData);
 
       productAction$.subscribe({
         next: () => {

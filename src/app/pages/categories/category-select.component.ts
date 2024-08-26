@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CategoriesService, Category, QueryParam } from './categories.service';
+import { CategoriesService, Category } from './categories.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { QueryParam } from 'src/app/helpers/base-api.service';
 
 @Component({
   selector: 'app-category-select',
@@ -61,7 +62,7 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
 
   loadCate(): void {
     this.loading = true;
-    this.categoryService.getCategories(this.param).subscribe({
+    this.categoryService.getAll(this.param).subscribe({
       next: (ressult) => {
         // console.log(ressult.data);
         this.categories = ressult.data;

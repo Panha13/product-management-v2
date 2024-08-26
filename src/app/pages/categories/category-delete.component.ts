@@ -80,7 +80,7 @@ export class CategoryDeleteComponent implements OnInit {
     if (this.id) {
       this.initFrm();
       this.loading_form = true;
-      this.service.getCategory(this.id).subscribe({
+      this.service.find(this.id).subscribe({
         next: (result) => {
           this.model = result;
           this.frm.setValue({
@@ -107,7 +107,7 @@ export class CategoryDeleteComponent implements OnInit {
 
   onDelete(): void {
     this.loading = true;
-    this.service.deleteCate(this.id, this.frm.value.note).subscribe({
+    this.service.delete(this.id, this.frm.value.note).subscribe({
       next: () => {
         this.loading = false;
         this.raf.triggerOk();

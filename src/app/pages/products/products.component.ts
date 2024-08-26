@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProductService } from './product.service';
-import { Product } from './product';
+import { Product, ProductService } from './product.service';
 import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Subject, Subscription, debounceTime } from 'rxjs';
+import { QueryParam } from 'src/app/helpers/base-api.service';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-products',
@@ -15,7 +16,7 @@ import { Subject, Subscription, debounceTime } from 'rxjs';
           <div class="full-width-row">
             <app-search-input
               [placeholder]="'Search product here' | translate"
-              [(searchQuery)]="searchQuery"
+              [(searchQuery)]="param.searchQuery"
               (search)="onSearch($event)"
             ></app-search-input>
 
@@ -39,12 +40,11 @@ import { Subject, Subscription, debounceTime } from 'rxjs';
             nzShowPagination
             nzShowSizeChanger
             [nzFrontPagination]="false"
-            [nzPageIndex]="pageIndex"
-            [nzPageSize]="pageSize"
+            [nzPageIndex]="param.pageIndex"
+            [nzPageSize]="param.pageSize"
             [nzTotal]="totalProducts"
-            (nzPageIndexChange)="onPageIndexChange($event)"
-            (nzPageSizeChange)="onPageSizeChange($event)"
             [nzLoading]="loading"
+            (nzQueryParams)="onQueryParamsChange($event)"
           >
             <thead>
               <tr class="table-header">
@@ -132,10 +132,12 @@ import { Subject, Subscription, debounceTime } from 'rxjs';
 export class ProductsComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   totalProducts: number = 0;
-  pageIndex: number = 1;
-  pageSize: number = 10;
+  param: QueryParam = {
+    pageIndex: 1,
+    pageSize: 10,
+    searchQuery: '',
+  };
   loading: boolean = false;
-  searchQuery: string = '';
   private searchSubject = new Subject<string>();
   private refreshSub$!: Subscription;
 
@@ -148,53 +150,44 @@ export class ProductsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadProducts();
 
-    this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
-      this.loadProducts();
-    });
+    this.searchSubject
+      .pipe(debounceTime(300))
+      .subscribe(() => this.loadProducts());
 
-    this.refreshSub$ = this.uiService.refresher.subscribe(() => {
-      this.loadProducts();
-    });
+    this.refreshSub$ = this.uiService.refresher.subscribe(() =>
+      this.loadProducts()
+    );
   }
 
   loadProducts(): void {
     this.loading = true;
-    this.productsService
-      .getProducts(this.pageIndex, this.pageSize, this.searchQuery)
-      .subscribe({
-        next: (response: any) => {
-          setTimeout(() => {
-            this.products = response.data;
-            this.totalProducts = response.total;
-            this.loading = false;
-          }, 250);
-        },
-        error: (error) => {
-          console.error('Error fetching products:', error);
-          this.message.error('Failed to load products.');
+    this.productsService.getAll(this.param).subscribe({
+      next: (response: any) => {
+        setTimeout(() => {
+          this.products = response.data;
+          this.totalProducts = response.total;
           this.loading = false;
-        },
-      });
+        }, 250);
+      },
+      error: (error) => {
+        console.error('Error fetching products:', error);
+        this.message.error('Failed to load products.');
+        this.loading = false;
+      },
+    });
   }
 
-  onPageIndexChange(pageIndex: number): void {
-    this.pageIndex = pageIndex;
-    this.loadProducts();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.pageSize = pageSize;
-    this.pageIndex = 1; // Reset page index to 1 when page size changes
+  onQueryParamsChange(params: NzTableQueryParams) {
+    const { pageIndex, pageSize } = params;
+
+    this.param.pageIndex = pageIndex;
+    this.param.pageSize = pageSize;
     this.loadProducts();
   }
   onSearch(query: string): void {
-    this.pageIndex = 1; // Reset to first page on search
-    this.searchQuery = query;
+    this.param.pageIndex = 1; // Reset to first page on search
+    this.param.searchQuery = query;
     this.loadProducts();
-  }
-  handleKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.onSearch(this.searchQuery);
-    }
   }
 
   ngOnDestroy(): void {

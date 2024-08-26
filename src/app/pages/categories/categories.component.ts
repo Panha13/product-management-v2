@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { CategoriesService, Category, QueryParam } from './categories.service';
+import { CategoriesService, Category } from './categories.service';
 import { CategoryUiService } from './category-ui.service';
+import { QueryParam } from 'src/app/helpers/base-api.service';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-categories',
@@ -13,7 +15,7 @@ import { CategoryUiService } from './category-ui.service';
           <div class="full-width-row">
             <app-search-input
               [placeholder]="'Search categories here' | translate"
-              [(searchQuery)]="searchQuery"
+              [(searchQuery)]="param.searchQuery"
               (search)="onSearch($event)"
             ></app-search-input>
 
@@ -40,9 +42,8 @@ import { CategoryUiService } from './category-ui.service';
             [nzPageIndex]="param.pageIndex"
             [nzPageSize]="param.pageSize"
             [nzTotal]="totalCate"
-            (nzPageIndexChange)="onPageIndexChange($event)"
-            (nzPageSizeChange)="onPageSizeChange($event)"
             [nzLoading]="loading"
+            (nzQueryParams)="onQueryParamsChange($event)"
           >
             <thead>
               <tr class="table-header">
@@ -95,6 +96,12 @@ import { CategoryUiService } from './category-ui.service';
   styles: [``],
 })
 export class CategoriesComponent implements OnInit, OnDestroy {
+  constructor(
+    private service: CategoriesService,
+    public uiService: CategoryUiService,
+    private message: NzMessageService
+  ) {}
+
   categories: Category[] = [];
   totalCate: number = 0;
   param: QueryParam = {
@@ -104,31 +111,22 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   };
 
   loading: boolean = false;
-  searchQuery: string = '';
   private searchSubject = new Subject<string>();
   private refreshSub$!: Subscription;
-
-  constructor(
-    private service: CategoriesService,
-    public uiService: CategoryUiService,
-    private message: NzMessageService
-  ) {}
 
   ngOnInit(): void {
     this.loadCate();
 
-    this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
-      this.loadCate();
-    });
+    this.searchSubject.pipe(debounceTime(300)).subscribe(() => this.loadCate());
 
-    this.refreshSub$ = this.uiService.refresher.subscribe(() => {
-      this.loadCate();
-    });
+    this.refreshSub$ = this.uiService.refresher.subscribe(() =>
+      this.loadCate()
+    );
   }
 
   loadCate(): void {
     this.loading = true;
-    this.service.getCategories(this.param).subscribe({
+    this.service.getAll(this.param).subscribe({
       next: (response: any) => {
         setTimeout(() => {
           this.categories = response.data;
@@ -144,25 +142,18 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     });
   }
 
-  onPageIndexChange(pageIndex: number): void {
-    this.param.pageIndex = pageIndex;
-    this.loadCate();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.param.pageSize = pageSize;
-    this.param.pageIndex = 1; // Reset page index to 1 when page size changes
+  onQueryParamsChange(params: NzTableQueryParams) {
+    const { pageIndex, pageSize } = params;
 
+    this.param.pageIndex = pageIndex;
+    this.param.pageSize = pageSize;
     this.loadCate();
   }
+
   onSearch(query: string): void {
-    this.param.pageIndex = 1; // Reset to first page on search
+    this.param.pageIndex = 1;
     this.param.searchQuery = query;
     this.loadCate();
-  }
-  handleKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.onSearch(this.searchQuery);
-    }
   }
 
   ngOnDestroy(): void {
