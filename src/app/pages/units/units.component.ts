@@ -3,6 +3,8 @@ import { Unit, UnitsService } from './units.service';
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UnitUiService } from './unit-ui.service';
+import { QueryParam } from 'src/app/helpers/base-api.service';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-units',
@@ -13,7 +15,7 @@ import { UnitUiService } from './unit-ui.service';
           <div class="full-width-row">
             <app-search-input
               [placeholder]="'Search units here' | translate"
-              [(searchQuery)]="searchQuery"
+              [(searchQuery)]="param.searchQuery"
               (search)="onSearch($event)"
             ></app-search-input>
 
@@ -37,12 +39,11 @@ import { UnitUiService } from './unit-ui.service';
             nzShowPagination
             nzShowSizeChanger
             [nzFrontPagination]="false"
-            [nzPageIndex]="pageIndex"
-            [nzPageSize]="pageSize"
+            [nzPageIndex]="param.pageIndex"
+            [nzPageSize]="param.pageSize"
             [nzTotal]="totalUnit"
-            (nzPageIndexChange)="onPageIndexChange($event)"
-            (nzPageSizeChange)="onPageSizeChange($event)"
             [nzLoading]="loading"
+            (nzQueryParams)="onQueryParamsChange($event)"
           >
             <thead>
               <tr class="table-header">
@@ -57,7 +58,7 @@ import { UnitUiService } from './unit-ui.service';
             <tbody>
               <tr *ngFor="let data of units; let i = index">
                 <td nzEllipsis>
-                  {{ (this.pageIndex - 1) * this.pageSize + i + 1 }}
+                  {{ (this.param.pageIndex - 1) * this.param.pageSize + i + 1 }}
                 </td>
                 <td class="font-semibold">{{ data.name }}</td>
 
@@ -97,10 +98,12 @@ import { UnitUiService } from './unit-ui.service';
 export class UnitsComponent implements OnInit, OnDestroy {
   units: Unit[] = [];
   totalUnit: number = 0;
-  pageIndex: number = 1;
-  pageSize: number = 10;
+  param: QueryParam = {
+    pageIndex: 1,
+    pageSize: 10,
+    searchQuery: '',
+  };
   loading: boolean = false;
-  searchQuery: string = '';
   private searchSubject = new Subject<string>();
   private refreshSub$!: Subscription;
 
@@ -113,54 +116,43 @@ export class UnitsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadUnit();
 
-    this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
-      this.loadUnit();
-    });
+    this.searchSubject.pipe(debounceTime(300)).subscribe(() => this.loadUnit());
 
-    this.refreshSub$ = this.uiService.refresher.subscribe(() => {
-      this.loadUnit();
-    });
+    this.refreshSub$ = this.uiService.refresher.subscribe(() =>
+      this.loadUnit()
+    );
   }
 
   loadUnit(): void {
     this.loading = true;
-    this.service
-      .getUnits(this.pageIndex, this.pageSize, this.searchQuery)
-      .subscribe({
-        next: (response: any) => {
-          setTimeout(() => {
-            this.units = response.data;
-            this.totalUnit = response.total;
-            this.loading = false;
-          }, 250);
-        },
-        error: (error) => {
-          console.error('Error fetching units:', error);
-          this.message.error('Failed to load units.');
+    this.service.getAll(this.param).subscribe({
+      next: (response: any) => {
+        setTimeout(() => {
+          this.units = response.data;
+          this.totalUnit = response.total;
           this.loading = false;
-        },
-      });
+        }, 250);
+      },
+      error: (error) => {
+        console.error('Error fetching units:', error);
+        this.message.error('Failed to load units.');
+        this.loading = false;
+      },
+    });
   }
 
-  onPageIndexChange(pageIndex: number): void {
-    this.pageIndex = pageIndex;
-    this.loadUnit();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.pageSize = pageSize;
-    this.pageIndex = 1; // Reset page index to 1 when page size changes
+  onQueryParamsChange(params: NzTableQueryParams) {
+    const { pageIndex, pageSize } = params;
 
+    this.param.pageIndex = pageIndex;
+    this.param.pageSize = pageSize;
     this.loadUnit();
   }
+
   onSearch(query: string): void {
-    this.pageIndex = 1; // Reset to first page on search
-    this.searchQuery = query;
+    this.param.pageIndex = 1;
+    this.param.searchQuery = query;
     this.loadUnit();
-  }
-  handleKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.onSearch(this.searchQuery);
-    }
   }
 
   ngOnDestroy(): void {

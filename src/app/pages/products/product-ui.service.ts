@@ -1,20 +1,13 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { Product } from './product';
 import { ProductOperationComponent } from './product-operation.component';
-import { ProductService } from './product.service';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { ProductDeleteComponent } from './product-delete.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductUiService {
-  constructor(
-    private modalService: NzModalService,
-    private productService: ProductService,
-    private message: NzMessageService
-  ) {}
+  constructor(private modalService: NzModalService) {}
 
   refresher = new EventEmitter<void>();
 

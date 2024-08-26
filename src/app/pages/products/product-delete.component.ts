@@ -1,8 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { ProductService } from './product.service';
-import { Product } from './product';
+import { Product, ProductService } from './product.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
@@ -81,7 +80,7 @@ export class ProductDeleteComponent implements OnInit {
     if (this.id) {
       this.initFrm();
       this.loading_form = true;
-      this.service.getProduct(this.id).subscribe({
+      this.service.find(this.id).subscribe({
         next: (result) => {
           this.model = result;
           this.frm.setValue({
@@ -108,7 +107,7 @@ export class ProductDeleteComponent implements OnInit {
 
   onDelete(): void {
     this.loading = true;
-    this.service.deleteProduct(this.id, this.frm.value.note).subscribe({
+    this.service.delete(this.id, this.frm.value.note).subscribe({
       next: () => {
         this.loading = false;
         this.raf.triggerOk();
