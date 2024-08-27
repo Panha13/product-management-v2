@@ -95,7 +95,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
   `,
   styles: [],
 })
-export class UnitsComponent implements OnInit, OnDestroy {
+export class UnitListComponent implements OnInit, OnDestroy {
   units: Unit[] = [];
   totalUnit: number = 0;
   param: QueryParam = {

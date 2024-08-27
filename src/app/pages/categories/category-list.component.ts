@@ -95,7 +95,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
   `,
   styles: [``],
 })
-export class CategoriesComponent implements OnInit, OnDestroy {
+export class CategoryListComponent implements OnInit, OnDestroy {
   constructor(
     private service: CategoriesService,
     public uiService: CategoryUiService,

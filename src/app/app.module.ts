@@ -37,17 +37,17 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 
 // Components
-import { ProductsComponent } from './pages/products/products-list.component';
+import { ProductsListComponent } from './pages/products/products-list.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { CategoriesComponent } from './pages/categories/category-list.component';
+import { CategoryListComponent } from './pages/categories/category-list.component';
 import { OrderComponent } from './pages/order/order.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { ProductOperationComponent } from './pages/products/product-operation.component';
 import { SearchInputComponent } from './shared/components/search-input.component';
-import { UnitsComponent } from './pages/units/unit-list.component';
+import { UnitListComponent } from './pages/units/unit-list.component';
 import { CategorySelectComponent } from './pages/categories/category-select.component';
 import { UnitSelectComponent } from './pages/units/unit-select.component';
-import { PageComponent } from './pages/page.component';
+
 import { CategoryOperationComponent } from './pages/categories/category-operation.component';
 import { ProductDeleteComponent } from './pages/products/product-delete.component';
 import { CategoryDeleteComponent } from './pages/categories/category-delete.component';
@@ -61,6 +61,7 @@ import { CurrencyPipe } from './pipes/currency.pipe';
 // Translations
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LayoutComponent } from './pages/layout.component';
 
 registerLocaleData(en);
 
@@ -76,19 +77,19 @@ export function i18nFactory(): NzI18nInterface {
 @NgModule({
   declarations: [
     AppComponent,
-    ProductsComponent,
+    ProductsListComponent,
     DashboardComponent,
-    CategoriesComponent,
+    CategoryListComponent,
     OrderComponent,
     PageNotFoundComponent,
     ProductOperationComponent,
     SearchInputComponent,
-    UnitsComponent,
+    UnitListComponent,
     CategorySelectComponent,
     UnitSelectComponent,
     CurrencyPipe,
     ProductDeleteComponent,
-    PageComponent,
+    LayoutComponent,
     CategoryOperationComponent,
     CategoryDeleteComponent,
     UnitOperationComponent,
