@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProductsComponent } from './pages/products/products.component';
+import { ProductsComponent } from './pages/products/products-list.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { CategoriesComponent } from './pages/categories/categories.component';
+import { CategoriesComponent } from './pages/categories/category-list.component';
 import { OrderComponent } from './pages/order/order.component';
-import { UserComponent } from './pages/user/user.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
-import { UnitsComponent } from './pages/units/units.component';
+import { UnitsComponent } from './pages/units/unit-list.component';
+import { UserListComponent } from './pages/user/user-list.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/products' },
@@ -46,7 +46,7 @@ const routes: Routes = [
   },
   {
     path: 'user',
-    component: UserComponent,
+    component: UserListComponent,
     data: { title: 'User', breadcrumb: 'User' },
   },
   { path: '**', component: PageNotFoundComponent },

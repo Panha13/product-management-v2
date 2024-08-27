@@ -37,15 +37,14 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 
 // Components
-import { ProductsComponent } from './pages/products/products.component';
+import { ProductsComponent } from './pages/products/products-list.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { CategoriesComponent } from './pages/categories/categories.component';
+import { CategoriesComponent } from './pages/categories/category-list.component';
 import { OrderComponent } from './pages/order/order.component';
-import { UserComponent } from './pages/user/user.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { ProductOperationComponent } from './pages/products/product-operation.component';
 import { SearchInputComponent } from './shared/components/search-input.component';
-import { UnitsComponent } from './pages/units/units.component';
+import { UnitsComponent } from './pages/units/unit-list.component';
 import { CategorySelectComponent } from './pages/categories/category-select.component';
 import { UnitSelectComponent } from './pages/units/unit-select.component';
 import { PageComponent } from './pages/page.component';
@@ -54,6 +53,7 @@ import { ProductDeleteComponent } from './pages/products/product-delete.componen
 import { CategoryDeleteComponent } from './pages/categories/category-delete.component';
 import { UnitOperationComponent } from './pages/units/unit-operation.component';
 import { UnitDeleteComponent } from './pages/units/unit-delete.component';
+import { UserListComponent } from './pages/user/user-list.component';
 
 // Pipes
 import { CurrencyPipe } from './pipes/currency.pipe';
@@ -80,7 +80,6 @@ export function i18nFactory(): NzI18nInterface {
     DashboardComponent,
     CategoriesComponent,
     OrderComponent,
-    UserComponent,
     PageNotFoundComponent,
     ProductOperationComponent,
     SearchInputComponent,
@@ -94,6 +93,7 @@ export function i18nFactory(): NzI18nInterface {
     CategoryDeleteComponent,
     UnitOperationComponent,
     UnitDeleteComponent,
+    UserListComponent,
   ],
   imports: [
     BrowserModule,
