@@ -1,20 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Unit, UnitsService } from './units.service';
-import { Subject, Subscription, debounceTime } from 'rxjs';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { UnitUiService } from './unit-ui.service';
+import { CategoriesService, Category } from './categories.service';
+import { CategoryUiService } from './category-ui.service';
 import { QueryParam } from 'src/app/helpers/base-api.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
-  selector: 'app-units',
+  selector: 'app-categories',
   template: `
     <div class="inner-content">
       <div class="flex-column-gap">
         <div class="flex-row-gap">
           <div class="full-width-row">
             <app-search-input
-              [placeholder]="'Search units here' | translate"
+              [placeholder]="'Search categories here' | translate"
               [(searchQuery)]="param.searchQuery"
               (search)="onSearch($event)"
             ></app-search-input>
@@ -28,27 +28,27 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
               (click)="uiService.showAdd()"
             >
               <span nz-icon nzType="plus"></span>
-              {{ 'Add Unit' | translate }}
+              {{ 'Add Category' | translate }}
             </button>
           </div>
         </div>
         <div nz-row class="flex-grow">
           <nz-table
-            [nzData]="units"
+            [nzData]="categories"
             nzTableLayout="fixed"
             nzShowPagination
             nzShowSizeChanger
             [nzFrontPagination]="false"
             [nzPageIndex]="param.pageIndex"
             [nzPageSize]="param.pageSize"
-            [nzTotal]="totalUnit"
+            [nzTotal]="totalCate"
             [nzLoading]="loading"
             (nzQueryParams)="onQueryParamsChange($event)"
           >
             <thead>
               <tr class="table-header">
                 <th nzWidth="10%">#</th>
-                <th nzWidth="30%">{{ 'Unit Name' | translate }}</th>
+                <th nzWidth="30%">{{ 'Category Name' | translate }}</th>
                 <th nzWidth="40%">{{ 'Description' | translate }}</th>
                 <th nzWidth="20%" [nzAlign]="'center'">
                   {{ 'Action' | translate }}
@@ -56,7 +56,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let data of units; let i = index">
+              <tr *ngFor="let data of categories; let i = index">
                 <td nzEllipsis>
                   {{ (this.param.pageIndex - 1) * this.param.pageSize + i + 1 }}
                 </td>
@@ -72,7 +72,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
                       nz-button
                       nzType="primary"
                       nzGhost
-                      (click)="uiService.showEdit(data.unit_id || 0)"
+                      (click)="uiService.showEdit(data.category_id || 0)"
                     >
                       <span nz-icon nzType="edit"></span>
                     </button>
@@ -80,7 +80,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
                       nz-button
                       nzType="default"
                       nzDanger
-                      (click)="uiService.showDelete(data.unit_id || 0)"
+                      (click)="uiService.showDelete(data.category_id || 0)"
                     >
                       <span nz-icon nzType="delete"></span>
                     </button>
@@ -93,49 +93,50 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
       </div>
     </div>
   `,
-  styles: [],
+  styles: [``],
 })
-export class UnitsComponent implements OnInit, OnDestroy {
-  units: Unit[] = [];
-  totalUnit: number = 0;
+export class CategoryListComponent implements OnInit, OnDestroy {
+  constructor(
+    private service: CategoriesService,
+    public uiService: CategoryUiService,
+    private message: NzMessageService
+  ) {}
+
+  categories: Category[] = [];
+  totalCate: number = 0;
   param: QueryParam = {
     pageIndex: 1,
     pageSize: 10,
     searchQuery: '',
   };
+
   loading: boolean = false;
   private searchSubject = new Subject<string>();
   private refreshSub$!: Subscription;
 
-  constructor(
-    private service: UnitsService,
-    public uiService: UnitUiService,
-    private message: NzMessageService
-  ) {}
-
   ngOnInit(): void {
-    this.loadUnit();
+    this.loadCate();
 
-    this.searchSubject.pipe(debounceTime(300)).subscribe(() => this.loadUnit());
+    this.searchSubject.pipe(debounceTime(300)).subscribe(() => this.loadCate());
 
     this.refreshSub$ = this.uiService.refresher.subscribe(() =>
-      this.loadUnit()
+      this.loadCate()
     );
   }
 
-  loadUnit(): void {
+  loadCate(): void {
     this.loading = true;
     this.service.getAll(this.param).subscribe({
       next: (response: any) => {
         setTimeout(() => {
-          this.units = response.data;
-          this.totalUnit = response.total;
+          this.categories = response.data;
+          this.totalCate = response.total;
           this.loading = false;
         }, 250);
       },
       error: (error) => {
-        console.error('Error fetching units:', error);
-        this.message.error('Failed to load units.');
+        console.error('Error fetching categories:', error);
+        this.message.error('Failed to load categories.');
         this.loading = false;
       },
     });
@@ -146,13 +147,13 @@ export class UnitsComponent implements OnInit, OnDestroy {
 
     this.param.pageIndex = pageIndex;
     this.param.pageSize = pageSize;
-    this.loadUnit();
+    this.loadCate();
   }
 
   onSearch(query: string): void {
     this.param.pageIndex = 1;
     this.param.searchQuery = query;
-    this.loadUnit();
+    this.loadCate();
   }
 
   ngOnDestroy(): void {

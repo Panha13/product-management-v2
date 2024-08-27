@@ -83,7 +83,6 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
 
   writeValue(value: any): void {
     this.selectedValue = value;
-    console.log('hit');
   }
   registerOnChange(fn: any): void {
     this.onChange = fn;

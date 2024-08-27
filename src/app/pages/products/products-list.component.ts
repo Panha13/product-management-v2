@@ -129,7 +129,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
   ],
   // encapsulation: ViewEncapsulation.Emulated,
 })
-export class ProductsComponent implements OnInit, OnDestroy {
+export class ProductsListComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   totalProducts: number = 0;
   param: QueryParam = {
