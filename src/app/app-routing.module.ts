@@ -8,12 +8,19 @@ import { UnitListComponent } from './pages/units/unit-list.component';
 import { UserListComponent } from './pages/user/user-list.component';
 import { LayoutComponent } from './pages/layout.component';
 import { ProductsListComponent } from './pages/products/products-list.component';
+import { LoginComponent } from './auth/login.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/products' },
+  { path: '', pathMatch: 'full', redirectTo: '/login' },
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
   {
     path: '',
     component: LayoutComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'dashboard',

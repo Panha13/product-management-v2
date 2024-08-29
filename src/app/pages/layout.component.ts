@@ -117,7 +117,12 @@ import { TranslateService } from '@ngx-translate/core';
               </nz-dropdown-menu>
             </div>
 
-            <div class="flex-nowrap">
+            <div
+              class="profile"
+              nz-dropdown
+              nzTrigger="click"
+              [nzDropdownMenu]="profile"
+            >
               <nz-avatar
                 nzIcon="user"
                 nzSize="large"
@@ -125,6 +130,12 @@ import { TranslateService } from '@ngx-translate/core';
               ></nz-avatar>
               <h4 class="margin-zero">Tith Sopanha</h4>
             </div>
+            <nz-dropdown-menu #profile="nzDropdownMenu">
+              <ul nz-menu nzSelectable>
+                <li nz-menu-item>Profile</li>
+                <li nz-menu-item nzDanger routerLink="/login">Logout</li>
+              </ul>
+            </nz-dropdown-menu>
           </div>
         </nz-header>
         <nz-content class="content-layout">
@@ -140,6 +151,14 @@ import { TranslateService } from '@ngx-translate/core';
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+      }
+      .profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .profile:hover {
+        cursor: pointer;
       }
 
       .app-layout {
