@@ -35,6 +35,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 // Components
 import { ProductsListComponent } from './pages/products/products-list.component';
@@ -47,13 +48,14 @@ import { SearchInputComponent } from './shared/components/search-input.component
 import { UnitListComponent } from './pages/units/unit-list.component';
 import { CategorySelectComponent } from './pages/categories/category-select.component';
 import { UnitSelectComponent } from './pages/units/unit-select.component';
-
 import { CategoryOperationComponent } from './pages/categories/category-operation.component';
 import { ProductDeleteComponent } from './pages/products/product-delete.component';
 import { CategoryDeleteComponent } from './pages/categories/category-delete.component';
 import { UnitOperationComponent } from './pages/units/unit-operation.component';
 import { UnitDeleteComponent } from './pages/units/unit-delete.component';
 import { UserListComponent } from './pages/user/user-list.component';
+import { LayoutComponent } from './pages/layout.component';
+import { LoginComponent } from './auth/login.component';
 
 // Pipes
 import { CurrencyPipe } from './pipes/currency.pipe';
@@ -61,7 +63,6 @@ import { CurrencyPipe } from './pipes/currency.pipe';
 // Translations
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LayoutComponent } from './pages/layout.component';
 
 registerLocaleData(en);
 
@@ -95,6 +96,7 @@ export function i18nFactory(): NzI18nInterface {
     UnitOperationComponent,
     UnitDeleteComponent,
     UserListComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -128,6 +130,7 @@ export function i18nFactory(): NzI18nInterface {
     NzTagModule,
     NzInputNumberModule,
     NzNotificationModule,
+    NzCheckboxModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
