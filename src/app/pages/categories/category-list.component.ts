@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { debounceTime, Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CategoriesService, Category } from './categories.service';
 import { CategoryUiService } from './category-ui.service';
@@ -111,14 +111,9 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   };
 
   loading: boolean = false;
-  private searchSubject = new Subject<string>();
   private refreshSub$!: Subscription;
 
   ngOnInit(): void {
-    this.loadCate();
-
-    this.searchSubject.pipe(debounceTime(300)).subscribe(() => this.loadCate());
-
     this.refreshSub$ = this.uiService.refresher.subscribe(() =>
       this.loadCate()
     );

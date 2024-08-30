@@ -6,7 +6,11 @@ import { AppComponent } from './app.component';
 import { NZ_I18N, NzI18nInterface, km_KH, en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import {
+  HttpClientModule,
+  HttpClient,
+  HTTP_INTERCEPTORS,
+} from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Ng Zorro Modules
@@ -63,6 +67,7 @@ import { CurrencyPipe } from './pipes/currency.pipe';
 // Translations
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpRequestInterceptor } from './helpers/http.interceptor';
 
 registerLocaleData(en);
 
@@ -139,7 +144,14 @@ export function i18nFactory(): NzI18nInterface {
       },
     }),
   ],
-  providers: [{ provide: NZ_I18N, useFactory: i18nFactory }],
+  providers: [
+    { provide: NZ_I18N, useFactory: i18nFactory },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpRequestInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

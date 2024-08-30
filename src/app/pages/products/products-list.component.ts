@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product, ProductService } from './product.service';
 import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Subject, Subscription, debounceTime } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { QueryParam } from 'src/app/helpers/base-api.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
@@ -138,7 +138,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
     searchQuery: '',
   };
   loading: boolean = false;
-  private searchSubject = new Subject<string>();
   private refreshSub$!: Subscription;
 
   constructor(
@@ -148,12 +147,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
-
-    this.searchSubject
-      .pipe(debounceTime(300))
-      .subscribe(() => this.loadProducts());
-
     this.refreshSub$ = this.uiService.refresher.subscribe(() =>
       this.loadProducts()
     );

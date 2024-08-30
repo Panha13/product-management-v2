@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Unit, UnitsService } from './units.service';
-import { Subject, Subscription, debounceTime } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UnitUiService } from './unit-ui.service';
 import { QueryParam } from 'src/app/helpers/base-api.service';
@@ -104,7 +104,6 @@ export class UnitListComponent implements OnInit, OnDestroy {
     searchQuery: '',
   };
   loading: boolean = false;
-  private searchSubject = new Subject<string>();
   private refreshSub$!: Subscription;
 
   constructor(
@@ -114,10 +113,6 @@ export class UnitListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadUnit();
-
-    this.searchSubject.pipe(debounceTime(300)).subscribe(() => this.loadUnit());
-
     this.refreshSub$ = this.uiService.refresher.subscribe(() =>
       this.loadUnit()
     );

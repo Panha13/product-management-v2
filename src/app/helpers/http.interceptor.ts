@@ -13,9 +13,14 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    req = req.clone({
-      withCredentials: true,
-    });
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      const clonedReq = req.clone({
+        headers: req.headers.set('Authorization', `Bearer ${token}`),
+      });
+      return next.handle(clonedReq);
+    }
 
     return next.handle(req);
   }
