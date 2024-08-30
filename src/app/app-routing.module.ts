@@ -9,7 +9,7 @@ import { UserListComponent } from './pages/user/user-list.component';
 import { LayoutComponent } from './pages/layout.component';
 import { ProductsListComponent } from './pages/products/products-list.component';
 import { LoginComponent } from './auth/login.component';
-import { AuthGuard } from './auth/auth.guard';
+import { authGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -20,7 +20,7 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',

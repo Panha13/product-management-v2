@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-login',
@@ -130,7 +131,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private msg: NzMessageService
   ) {}
 
   frm!: FormGroup;
@@ -149,18 +151,16 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.frm.valid) {
-      this.loading = true;
       const { email, password } = this.frm.value;
 
       this.auth.login(email, password).subscribe({
         next: (result) => {
-          this.loading = false;
-          localStorage.setItem('Token', result.token);
+          this.auth.saveToken(result.token);
           this.router.navigate(['/products']);
         },
         error: (error) => {
-          this.loading = false;
           console.log(error);
+          this.msg.error(error.message);
         },
       });
     }
