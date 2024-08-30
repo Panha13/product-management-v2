@@ -10,12 +10,14 @@ import { LayoutComponent } from './pages/layout.component';
 import { ProductsListComponent } from './pages/products/products-list.component';
 import { LoginComponent } from './auth/login.component';
 import { authGuard } from './auth/auth.guard';
+import { authRedirectGuard } from './auth/auth-redirect.guard';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
   {
     path: 'login',
     component: LoginComponent,
+    canActivate: [authRedirectGuard],
   },
   {
     path: '',
