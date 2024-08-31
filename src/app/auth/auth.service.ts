@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -11,7 +12,7 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   private AUTH_API: string = environment.apiUrl;
 
@@ -26,14 +27,16 @@ export class AuthService {
     );
   }
 
+  logout(): void {
+    localStorage.removeItem('token');
+    window.location.href = window.location.origin + '/login';
+  }
+
   saveToken(token: string): void {
     localStorage.setItem('token', token);
   }
 
   getToken(): string | null {
     return localStorage.getItem('token');
-  }
-  clearToken(): void {
-    localStorage.removeItem('token');
   }
 }

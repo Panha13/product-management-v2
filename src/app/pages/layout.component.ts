@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Language } from '../app.component';
 import { NzI18nService, en_US, km_KH } from 'ng-zorro-antd/i18n';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-page',
@@ -133,7 +134,9 @@ import { TranslateService } from '@ngx-translate/core';
             <nz-dropdown-menu #profile="nzDropdownMenu">
               <ul nz-menu nzSelectable>
                 <li nz-menu-item>Profile</li>
-                <li nz-menu-item nzDanger routerLink="/login">Logout</li>
+                <li nz-menu-item nzDanger (click)="authService.logout()">
+                  Logout
+                </li>
               </ul>
             </nz-dropdown-menu>
           </div>
@@ -300,7 +303,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class LayoutComponent implements OnInit {
   constructor(
     private translateService: TranslateService,
-    private i18n: NzI18nService
+    private i18n: NzI18nService,
+    public authService: AuthService
   ) {}
   isCollapsed = false;
 
