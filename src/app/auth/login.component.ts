@@ -154,8 +154,7 @@ export class LoginComponent implements OnInit {
       const { email, password } = this.frm.value;
 
       this.auth.login(email, password).subscribe({
-        next: (result) => {
-          this.auth.saveToken(result.token);
+        next: () => {
           this.router.navigate(['/products']);
         },
         error: (error) => {

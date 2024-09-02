@@ -127,9 +127,9 @@ import { AuthService } from '../auth/auth.service';
               <nz-avatar
                 nzIcon="user"
                 nzSize="large"
-                nzSrc="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                [nzSrc]="userInfo.image || '../../assets/image/user.svg'"
               ></nz-avatar>
-              <h4 class="margin-zero">Tith Sopanha</h4>
+              <h4 class="margin-zero">{{ userInfo.name | titlecase }}</h4>
             </div>
             <nz-dropdown-menu #profile="nzDropdownMenu">
               <ul nz-menu nzSelectable>
@@ -307,6 +307,7 @@ export class LayoutComponent implements OnInit {
     public authService: AuthService
   ) {}
   isCollapsed = false;
+  userInfo: any;
 
   //Language
   selectedLanguage!: Language;
@@ -333,6 +334,9 @@ export class LayoutComponent implements OnInit {
       this.getDefaultLanguage();
     this.translateService.use(this.selectedLanguage.code);
     this.i18n.setLocale(this.selectedLanguage.code === 'km' ? km_KH : en_US);
+
+    //Get user info when logged in
+    this.userInfo = this.authService.userInfo;
   }
 
   switchLanguage(lang: Language): void {

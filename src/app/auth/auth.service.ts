@@ -1,12 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
+
+export interface userInfo {
+  id?: number;
+  name?: string;
+  email?: string;
+  image?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -15,25 +22,32 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   private AUTH_API: string = environment.apiUrl;
+  userInfo: userInfo = JSON.parse(<string>localStorage.getItem('user'));
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(
-      this.AUTH_API + '/login',
-      {
-        email,
-        password,
-      },
-      httpOptions
-    );
+    return this.http
+      .post(
+        this.AUTH_API + '/login',
+        {
+          email,
+          password,
+        },
+        httpOptions
+      )
+      .pipe(
+        tap((response: any) => {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+
+          this.userInfo = response.user;
+        })
+      );
   }
 
   logout(): void {
     localStorage.removeItem('token');
-    window.location.href = window.location.origin + '/login';
-  }
-
-  saveToken(token: string): void {
-    localStorage.setItem('token', token);
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
