@@ -47,5 +47,14 @@
   "Unit Name": "Unit Name",
   "Units": "Units",
   "Add Unit": "Add Unit",
-  "Enter unit name": "Enter unit name"
+  "Enter unit name": "Enter unit name",
+  "Sign In": "Sign In",
+  "Email Address": "Email Address",
+  "Password": "Password",
+  "Remember Me": "Remember Me",
+  "Forgot Password": "Forgot Password",
+  "Enter Email Address": "Enter Email Address",
+  "Enter Password": "Enter Password",
+  "Profile": "Profile",
+  "Logout": "Logout"
 }

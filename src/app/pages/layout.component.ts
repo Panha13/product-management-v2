@@ -3,6 +3,7 @@ import { Language } from '../app.component';
 import { NzI18nService, en_US, km_KH } from 'ng-zorro-antd/i18n';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../auth/auth.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-page',
@@ -132,10 +133,24 @@ import { AuthService } from '../auth/auth.service';
               <h4 class="margin-zero">{{ userInfo.name | titlecase }}</h4>
             </div>
             <nz-dropdown-menu #profile="nzDropdownMenu">
-              <ul nz-menu nzSelectable>
-                <li nz-menu-item>Profile</li>
-                <li nz-menu-item nzDanger (click)="authService.logout()">
-                  Logout
+              <ul nz-menu>
+                <li nz-menu-item>
+                  <span
+                    nz-icon
+                    nzType="user"
+                    nzTheme="outline"
+                    class="margin-right-10"
+                  ></span
+                  >{{ 'Profile' | translate }}
+                </li>
+                <li nz-menu-item nzDanger (click)="cfmLogout()">
+                  <span
+                    nz-icon
+                    nzType="logout"
+                    nzTheme="outline"
+                    class="margin-right-10"
+                  ></span
+                  >{{ 'Logout' | translate }}
                 </li>
               </ul>
             </nz-dropdown-menu>
@@ -159,6 +174,9 @@ import { AuthService } from '../auth/auth.service';
         display: flex;
         align-items: center;
         gap: 10px;
+      }
+      .margin-right-10 {
+        margin-right: 10px;
       }
       .profile:hover {
         cursor: pointer;
@@ -304,7 +322,8 @@ export class LayoutComponent implements OnInit {
   constructor(
     private translateService: TranslateService,
     private i18n: NzI18nService,
-    public authService: AuthService
+    public authService: AuthService,
+    private modalService: NzModalService
   ) {}
   isCollapsed = false;
   userInfo: any;
@@ -344,5 +363,19 @@ export class LayoutComponent implements OnInit {
     this.translateService.use(lang.code);
     this.i18n.setLocale(lang.code === 'km' ? km_KH : en_US);
     localStorage.setItem('selectedLang', lang.code);
+  }
+
+  cfmLogout(): void {
+    this.modalService.confirm({
+      nzTitle: 'Logout Account',
+      nzContent: 'Are you sure want to logout?',
+      nzOkText: 'Logout',
+      nzCancelText: 'Cancel',
+      nzMaskClosable: true,
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.authService.logout();
+      },
+    });
   }
 }

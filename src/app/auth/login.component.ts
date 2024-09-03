@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { CustomValidators } from '../helpers/customValidators';
 
 @Component({
   selector: 'app-login',
@@ -16,27 +17,62 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
       </div>
       <div class="login">
         <h1 class="title">Sign in</h1>
+        <nz-alert
+          *ngIf="credential"
+          nzType="error"
+          [nzMessage]="credential"
+          nzCloseable
+          (nzOnClose)="credential = null"
+        ></nz-alert>
         <form nz-form [formGroup]="frm" [nzLayout]="'vertical'">
           <nz-form-item>
             <nz-form-label>Email Address</nz-form-label>
-            <nz-form-control>
+            <nz-form-control [nzErrorTip]="emailErrorTip">
               <input
                 nz-input
                 formControlName="email"
                 type="email"
-                [placeholder]="'Enter email address' | translate"
+                [placeholder]="'Enter email address'"
               />
+              <ng-template #emailErrorTip let-control>
+                <ng-container *ngIf="control.hasError('required')"
+                  >Email is required.</ng-container
+                >
+                <ng-container *ngIf="control.hasError('email')"
+                  >Invalid email address.</ng-container
+                >
+              </ng-template>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
             <nz-form-label>Password</nz-form-label>
-            <nz-form-control>
-              <input
-                nz-input
-                formControlName="password"
-                type="password"
-                [placeholder]="'Enter password' | translate"
-              />
+            <nz-form-control [nzErrorTip]="pwErrorTips">
+              <nz-input-group [nzSuffix]="suffixIcon">
+                <input
+                  nz-input
+                  formControlName="password"
+                  [type]="passwordVisible ? 'text' : 'password'"
+                  [placeholder]="'Enter password'"
+                />
+                <ng-template #suffixIcon>
+                  <button
+                    nz-button
+                    nzType="link"
+                    (click)="togglePassword()"
+                    class="password-toggle-button"
+                  >
+                    <i
+                      nz-icon
+                      [nzType]="passwordVisible ? 'eye' : 'eye-invisible'"
+                    ></i>
+                  </button>
+                </ng-template>
+              </nz-input-group>
+              <ng-template #pwErrorTips let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  Password is required
+                </ng-container>
+              </ng-template>
             </nz-form-control>
           </nz-form-item>
           <div nz-row class="login-form-margin">
@@ -54,6 +90,7 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
             class="login-form-button login-form-margin"
             nzSize="large"
             [nzType]="'primary'"
+            [nzLoading]="loading"
             [disabled]="loading || !frm.valid"
             (click)="onSubmit()"
           >
@@ -110,19 +147,19 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
         border-radius: 8px;
       }
       :host ::ng-deep .ant-input {
-        box-sizing: border-box;
-        margin: 0;
-        font-variant: tabular-nums;
-        position: relative;
-        display: inline-block;
-        color: rgba(0, 0, 0, 0.85);
-        background-image: none;
-        border: 1px solid #d9d9d9;
         border-radius: 8px;
         padding: 8px 12px;
       }
+      :host ::ng-deep .ant-input-affix-wrapper {
+        padding: 3px 12px;
+        border-radius: 8px;
+      }
       :host ::ng-deep .ant-form-item-label > label {
         font-weight: 500;
+      }
+
+      :host ::ng-deep .ant-alert {
+        margin-bottom: 8px;
       }
     `,
   ],
@@ -137,6 +174,8 @@ export class LoginComponent implements OnInit {
 
   frm!: FormGroup;
   loading: boolean = false;
+  credential: string | null = null;
+  passwordVisible: boolean = false;
 
   ngOnInit() {
     this.initForm();
@@ -150,18 +189,26 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.loading = true;
     if (this.frm.valid) {
       const { email, password } = this.frm.value;
 
       this.auth.login(email, password).subscribe({
         next: () => {
+          this.loading = false;
           this.router.navigate(['/products']);
         },
         error: (error) => {
-          console.log(error);
-          this.msg.error(error.message);
+          this.loading = false;
+          if (error.status === 401) {
+            this.credential = 'Invalid Credentials!';
+          }
         },
       });
     }
+  }
+
+  togglePassword(): void {
+    this.passwordVisible = !this.passwordVisible;
   }
 }

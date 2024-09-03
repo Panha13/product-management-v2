@@ -40,6 +40,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 // Components
 import { ProductsListComponent } from './pages/products/products-list.component';
@@ -136,6 +137,7 @@ export function i18nFactory(): NzI18nInterface {
     NzInputNumberModule,
     NzNotificationModule,
     NzCheckboxModule,
+    NzAlertModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
