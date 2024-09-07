@@ -1,4 +1,10 @@
-import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormControl,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { Observable, Observer } from 'rxjs';
 
 export type MyErrorsOptions = { km: string; en: string };
 export type MyValidationErrors = Record<string, MyErrorsOptions>;
@@ -28,5 +34,28 @@ export class CustomValidators extends Validators {
     }
 
     return null;
+  }
+
+  static nameExistValidator(service: any): any {
+    return (control: UntypedFormControl) =>
+      new Observable((observer: Observer<Validators | null>) => {
+        setTimeout(() => {
+          if (control.value) {
+            service.exist(control.value).subscribe((result: boolean) => {
+              if (result) {
+                observer.next({
+                  duplicated: {
+                    km: 'ឈ្មោះមានរួចហើយ!',
+                    en: 'Name already exists!',
+                  },
+                });
+              } else {
+                observer.next(null);
+              }
+              observer.complete();
+            });
+          }
+        }, 600);
+      });
   }
 }

@@ -28,7 +28,7 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
           <nz-form-label class="required-marker">{{
             'Category Name' | translate
           }}</nz-form-label>
-          <nz-form-control>
+          <nz-form-control nzHasFeedback>
             <input
               nz-input
               formControlName="name"
@@ -95,9 +95,9 @@ export class CategoryOperationComponent implements OnInit {
   }
 
   private initFrm(): void {
-    const { required } = CustomValidators;
+    const { required, nameExistValidator } = CustomValidators;
     this.frm = this.fb.group({
-      name: [null, [required]],
+      name: [null, [required], [nameExistValidator(this.service)]],
       description: [null],
     });
   }
