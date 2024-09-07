@@ -36,26 +36,39 @@ export class CustomValidators extends Validators {
     return null;
   }
 
-  static nameExistValidator(service: any): any {
+  static nameExistValidator(service: any, id: number = 0): any {
     return (control: UntypedFormControl) =>
       new Observable((observer: Observer<Validators | null>) => {
-        setTimeout(() => {
-          if (control.value) {
-            service.exist(control.value).subscribe((result: boolean) => {
-              if (result) {
-                observer.next({
-                  duplicated: {
-                    km: 'ឈ្មោះមានរួចហើយ!',
-                    en: 'Name already exists!',
-                  },
-                });
-              } else {
-                observer.next(null);
-              }
-              observer.complete();
-            });
-          }
-        }, 600);
+        if (id && !(control.value && control.dirty)) {
+          observer.next(null);
+          observer.complete();
+          return;
+        }
+
+        // No need for setTimeout here, we'll rely on the service's async behavior
+        service.exist(control.value, id).subscribe({
+          next: (result: boolean) => {
+            if (result) {
+              // Name exists (excluding itself if ID provided)
+              observer.next({
+                duplicated: {
+                  km: 'ឈ្មោះមានរួចហើយ!',
+                  en: 'Name already exists!',
+                },
+              });
+            } else {
+              observer.next(null); // Name is available
+            }
+            observer.complete();
+          },
+          error: (error: any) => {
+            // Handle potential API errors gracefully
+            console.error('Error checking name existence:', error);
+            // Optionally, provide feedback to the user or log the error
+            observer.next({ apiError: true }); // You might want a custom error key
+            observer.complete();
+          },
+        });
       });
   }
 }

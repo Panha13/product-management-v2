@@ -97,7 +97,7 @@ export class CategoryOperationComponent implements OnInit {
   private initFrm(): void {
     const { required, nameExistValidator } = CustomValidators;
     this.frm = this.fb.group({
-      name: [null, [required], [nameExistValidator(this.service)]],
+      name: [null, [required], [nameExistValidator(this.service, this.id)]],
       description: [null],
     });
   }

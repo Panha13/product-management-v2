@@ -43,13 +43,13 @@ export class BaseApiService<T> {
     });
   }
 
-  exist(name: string): Observable<boolean> {
+  exist(name: string = '', id: number = 0): Observable<boolean> {
     let httpParams = new HttpParams();
 
     if (name) {
       httpParams = httpParams.append('name', name);
     }
-
+    httpParams = httpParams.append('id', `${id}`);
     return this.http.get<boolean>(`${this.getEndpoint()}/exists`, {
       params: httpParams,
     });
