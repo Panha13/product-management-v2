@@ -15,7 +15,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
       <span *ngIf="productId">{{ 'Edit Product' | translate }}</span>
       <span *ngIf="!productId">{{ 'Add Product' | translate }}</span>
     </div>
-    <div nz-row nzJustify="center">
+    <div>
       <div *ngIf="loading_form" class="loading-overlay">
         <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
       </div>
@@ -146,7 +146,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
       }
 
       :host ::ng-deep .ant-upload.ant-upload-select-picture-card {
-        width: 210px;
+        width: 100%;
         height: 140px;
         margin: 0;
         text-align: center;
@@ -158,7 +158,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
         transition: border-color 0.3s;
       }
       :host ::ng-deep .ant-upload-list-picture-card-container {
-        width: 210px;
+        width: 100%;
         height: 140px;
         margin: 0;
       }

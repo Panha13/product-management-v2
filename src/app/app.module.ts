@@ -61,6 +61,7 @@ import { UnitDeleteComponent } from './pages/units/unit-delete.component';
 import { UserListComponent } from './pages/user/user-list.component';
 import { LayoutComponent } from './pages/layout.component';
 import { LoginComponent } from './auth/login.component';
+import { ButtonAddItemComponent } from './shared/components/button-add-item.component';
 
 // Pipes
 import { CurrencyPipe } from './pipes/currency.pipe';
@@ -103,6 +104,7 @@ export function i18nFactory(): NzI18nInterface {
     UnitDeleteComponent,
     UserListComponent,
     LoginComponent,
+    ButtonAddItemComponent,
   ],
   imports: [
     BrowserModule,

@@ -199,18 +199,22 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 
       .custom-menu li {
         height: 48px;
+        margin: 0;
+      }
+      .custom-menu li a {
+        display: flex;
         align-items: center;
       }
 
       .custom-menu li a i {
-        font-size: 20px; /* Adjust the font size for the icons */
+        font-size: 18px; /* Adjust the font size for the icons */
         margin-right: 7px; /* Add space between the icon and the text */
-        font-weight: 600;
+        font-weight: 500;
       }
 
       .custom-menu li a span {
-        font-size: 15px; /* Adjust the font size for the text */
-        font-weight: 600;
+        font-size: 14px; /* Adjust the font size for the text */
+        font-weight: 500;
       }
 
       .header-trigger {

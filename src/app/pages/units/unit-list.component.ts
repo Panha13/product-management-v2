@@ -19,17 +19,10 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
               (search)="onSearch($event)"
             ></app-search-input>
 
-            <button
-              nz-button
-              nzType="primary"
-              nzSize="large"
-              nzGhost
-              style="border-radius:10px;"
-              (click)="uiService.showAdd()"
-            >
-              <span nz-icon nzType="plus"></span>
-              {{ 'Add Unit' | translate }}
-            </button>
+            <app-button-add-item
+              [label]="'Add Unit'"
+              (clicked)="uiService.showAdd()"
+            ></app-button-add-item>
           </div>
         </div>
         <div nz-row class="flex-grow">
@@ -60,7 +53,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
                 <td nzEllipsis>
                   {{ (this.param.pageIndex - 1) * this.param.pageSize + i + 1 }}
                 </td>
-                <td class="font-semibold">{{ data.name }}</td>
+                <td>{{ data.name }}</td>
 
                 <td nzEllipsis>
                   {{ data.description ? data.description : '—' }}

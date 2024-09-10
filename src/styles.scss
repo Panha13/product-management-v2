@@ -8,8 +8,13 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: Roboto;
+  src: url("./assets/fonts/Roboto-Regular.ttf");
+}
+
 * {
-  font-family: "Inter", "Kantumruy", sans-serif;
+  font-family: "Roboto", "Kantumruy", sans-serif;
 }
 .inner-content {
   padding: 24px;
@@ -87,8 +92,8 @@ button {
 
 .ant-table-thead > tr > th {
   background-color: #f7f9fb;
-  font-weight: 700;
-  padding: 14px;
+  font-weight: 500;
+  padding: 12px;
   border-bottom: none;
 }
 
@@ -198,11 +203,12 @@ td {
   border-color: #096dd9;
 }
 
-.custom-modal .ant-modal-footer {
-  padding: 0px 48px 24px;
-  text-align: right;
-  background: 0 0;
-  border-radius: 0 0 2px 2px;
+.ant-modal-body {
+  padding: 24px 38px;
+}
+
+.ant-modal-footer {
+  padding: 0px 38px 24px;
   border: none;
 }
 
@@ -217,6 +223,10 @@ td {
 .ant-modal-header {
   padding: 12px 24px;
   text-align: center;
+}
+
+.ant-modal-title {
+  font-size: 14px;
 }
 
 .ant-modal-close-x {

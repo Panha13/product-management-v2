@@ -17,7 +17,6 @@ export class ProductUiService {
       nzContent: ProductOperationComponent,
       nzCentered: true,
       nzMaskClosable: false,
-      nzClassName: 'custom-modal',
       nzOnOk: () => {
         this.refresher.emit();
       },
@@ -31,7 +30,6 @@ export class ProductUiService {
       nzCentered: true,
       nzMaskClosable: false,
       nzData: id,
-      nzClassName: 'custom-modal',
       nzOnOk: () => {
         this.refresher.emit();
       },

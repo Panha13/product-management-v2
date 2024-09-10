@@ -4,7 +4,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, debounceTime } from 'rxjs';
 
 export type MyErrorsOptions = { km: string; en: string };
 export type MyValidationErrors = Record<string, MyErrorsOptions>;
@@ -44,6 +44,7 @@ export class CustomValidators extends Validators {
           observer.complete();
           return;
         }
+
         setTimeout(() => {
           service.exist(control.value, id).subscribe({
             next: (result: boolean) => {
