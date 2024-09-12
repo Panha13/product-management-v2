@@ -283,7 +283,7 @@ export class ProductOperationComponent implements OnInit {
   onSubmit(): void {
     if (this.form.valid) {
       this.loading = true;
-
+      console.log(this.form.value);
       const productData = { ...this.form.value };
 
       if (!productData.image) {

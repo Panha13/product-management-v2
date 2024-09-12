@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product, ProductService } from './product.service';
 import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Subscription } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 import { QueryParam, QueryParam1 } from 'src/app/helpers/base-api.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
@@ -19,6 +19,14 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
                 searchText = $event; param.pageIndex = 1; search()
               "
             ></app-filter-input>
+            <div style="width: 220px">
+              <app-category-select
+                [showAllOption]="true"
+                (valueChanged)="
+                  categoryId = $event; param.pageIndex = 1; search()
+                "
+              ></app-category-select>
+            </div>
 
             <app-button-add-item
               [label]="'Add Product'"
@@ -125,6 +133,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 export class ProductsListComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   totalProducts: number = 0;
+  categoryId: number = 0;
   searchText: string = '';
   param: QueryParam1 = {
     pageIndex: 1,
@@ -153,6 +162,13 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       const filters: any[] = [
         { field: 'name', operator: 'contains', value: this.searchText },
       ];
+      if (this.categoryId) {
+        filters.push({
+          field: 'category_id',
+          operator: 'eq',
+          value: this.categoryId,
+        });
+      }
       this.param.filters = JSON.stringify(filters);
       this.productsService.search(this.param).subscribe({
         next: (response: any) => {
