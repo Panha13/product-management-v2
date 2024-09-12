@@ -70,6 +70,7 @@ import { CurrencyPipe } from './pipes/currency.pipe';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpRequestInterceptor } from './helpers/http.interceptor';
+import { FilterInputComponent } from './shared/components/filter-input.component';
 
 registerLocaleData(en);
 
@@ -105,6 +106,7 @@ export function i18nFactory(): NzI18nInterface {
     UserListComponent,
     LoginComponent,
     ButtonAddItemComponent,
+    FilterInputComponent,
   ],
   imports: [
     BrowserModule,

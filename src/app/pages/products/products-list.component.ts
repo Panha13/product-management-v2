@@ -3,7 +3,7 @@ import { Product, ProductService } from './product.service';
 import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Subscription } from 'rxjs';
-import { QueryParam } from 'src/app/helpers/base-api.service';
+import { QueryParam, QueryParam1 } from 'src/app/helpers/base-api.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
@@ -14,11 +14,11 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
       <div class="flex-column-gap">
         <div class="flex-row-gap">
           <div class="full-width-row">
-            <app-search-input
-              [placeholder]="'Search product here' | translate"
-              [(searchQuery)]="param.searchQuery"
-              (search)="onSearch($event)"
-            ></app-search-input>
+            <app-filter-input
+              (filterChanged)="
+                searchText = $event; param.pageIndex = 1; search()
+              "
+            ></app-filter-input>
 
             <app-button-add-item
               [label]="'Add Product'"
@@ -125,10 +125,11 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 export class ProductsListComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   totalProducts: number = 0;
-  param: QueryParam = {
+  searchText: string = '';
+  param: QueryParam1 = {
     pageIndex: 1,
     pageSize: 10,
-    searchQuery: '',
+    filters: '',
   };
   loading: boolean = false;
   private refreshSub$!: Subscription;
@@ -140,27 +141,34 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.refreshSub$ = this.uiService.refresher.subscribe(() =>
-      this.loadProducts()
-    );
+    this.refreshSub$ = this.uiService.refresher.subscribe(() => this.search());
   }
 
-  loadProducts(): void {
+  search() {
+    if (this.loading) {
+      return;
+    }
     this.loading = true;
-    this.productsService.getAll(this.param).subscribe({
-      next: (response: any) => {
-        setTimeout(() => {
-          this.products = response.data;
-          this.totalProducts = response.total;
+    setTimeout(() => {
+      const filters: any[] = [
+        { field: 'name', operator: 'contains', value: this.searchText },
+      ];
+      this.param.filters = JSON.stringify(filters);
+      this.productsService.search(this.param).subscribe({
+        next: (response: any) => {
+          setTimeout(() => {
+            this.products = response.results;
+            this.totalProducts = response.params.total;
+            this.loading = false;
+          }, 250);
+        },
+        error: (error: any) => {
+          console.error('Error fetching products:', error);
+          this.message.error('Failed to load products.');
           this.loading = false;
-        }, 250);
-      },
-      error: (error) => {
-        console.error('Error fetching products:', error);
-        this.message.error('Failed to load products.');
-        this.loading = false;
-      },
-    });
+        },
+      });
+    }, 50);
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
@@ -168,12 +176,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
 
     this.param.pageIndex = pageIndex;
     this.param.pageSize = pageSize;
-    this.loadProducts();
-  }
-  onSearch(query: string): void {
-    this.param.pageIndex = 1; // Reset to first page on search
-    this.param.searchQuery = query;
-    this.loadProducts();
+    this.search();
   }
 
   ngOnDestroy(): void {
