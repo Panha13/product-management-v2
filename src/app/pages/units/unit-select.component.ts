@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, forwardRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  forwardRef,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Unit, UnitsService } from './units.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
@@ -9,20 +16,30 @@ import { QueryParam } from 'src/app/helpers/base-api.service';
   template: `
     <nz-select
       nzShowSearch
-      nzAllowClear
       [nzPlaceHolder]="placeholder | translate"
-      [nzDisabled]="isDisabled"
+      [nzServerSearch]="true"
       [(ngModel)]="selectedValue"
-      (ngModelChange)="onChangeUnit($event)"
-      [nzLoading]="loading"
+      (ngModelChange)="onModalChange()"
+      (nzOnSearch)="onSearch($event)"
+      [nzDisabled]="isDisabled"
     >
-      <nz-option *ngIf="loading" nzDisabled nzCustomContent>
-        <span nz-icon nzType="loading" class="loading-icon"></span>
-        Loading...
+      <nz-option
+        *ngIf="showAllOption"
+        [nzValue]="0"
+        [nzLabel]="'All Units' | translate"
+      ></nz-option>
+      <nz-option
+        *ngFor="let unit of units"
+        nzCustomContent
+        [nzValue]="unit.unit_id"
+        [nzLabel]="unit.name!"
+      >
+        <span>{{ unit.name }}</span>
       </nz-option>
-      <ng-container *ngFor="let unit of units">
-        <nz-option [nzValue]="unit.unit_id" [nzLabel]="unit.name!"></nz-option>
-      </ng-container>
+      <nz-option *ngIf="loading" nzDisabled nzCustomContent>
+        <i nz-icon nzType="loading" class="loading-icon"></i>
+        {{ 'Loading' | translate }}
+      </nz-option>
     </nz-select>
   `,
   providers: [
@@ -40,44 +57,62 @@ export class UnitSelectComponent implements OnInit, ControlValueAccessor {
   ) {}
 
   @Input() placeholder: string = 'Select Unit';
-  units: Unit[] = [];
-  selectedValue: number | null = null;
+  @Input() showAllOption: boolean = false;
+  @Output() valueChanged = new EventEmitter<any>();
+
+  selectedValue: number = 0;
   isDisabled: boolean = false;
   loading: boolean = false;
+  units: Unit[] = [];
+  searchText = '';
+
   param: QueryParam = {
     pageIndex: 1,
     pageSize: 999999,
-    searchQuery: '',
+    filters: '',
   };
 
-  onChange(value: any) {}
+  onChange(_value: any) {}
   onTouched() {}
 
   ngOnInit(): void {
-    this.loadUnits();
+    if (this.showAllOption) this.selectedValue = 0;
   }
-  private loadUnits(): void {
+
+  search(): void {
     this.loading = true;
-    this.unitService.getAll(this.param).subscribe({
-      next: (result) => {
-        this.units = result.data;
+    this.param.filters = JSON.stringify([
+      { field: 'name', operator: 'contains', value: this.searchText },
+    ]);
+    if (this.searchText && this.param.pageIndex === 1) {
+      this.units = [];
+    }
+    this.unitService.search(this.param).subscribe({
+      next: (response: any) => {
         this.loading = false;
+        this.units = response.results;
       },
-      error: (error) => {
-        console.error(error);
-        this.notify.error('Error', 'Failed to load units.');
+      error: () => {
         this.loading = false;
+        this.notify.error('Error', 'Failed to load units.');
       },
     });
   }
 
-  onChangeUnit(unitId: number): void {
-    this.selectedValue = unitId;
-    this.onChange(unitId);
+  onSearch(value: string): void {
+    this.searchText = value;
+    this.param.pageIndex = 1;
+    this.search();
+  }
+
+  onModalChange(): void {
+    this.valueChanged.emit(this.selectedValue);
+    this.onChange(this.selectedValue);
   }
 
   writeValue(value: any): void {
     this.selectedValue = value;
+    this.search();
   }
   registerOnChange(fn: any): void {
     this.onChange = fn;

@@ -13,12 +13,12 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
       <div class="flex-column-gap">
         <div class="flex-row-gap">
           <div class="full-width-row">
-            <app-search-input
+            <app-filter-input
               [placeholder]="'Search categories here' | translate"
-              [(searchQuery)]="param.searchQuery"
-              (search)="onSearch($event)"
-            ></app-search-input>
-
+              (filterChanged)="
+                searchText = $event; param.pageIndex = 1; search()
+              "
+            ></app-filter-input>
             <app-button-add-item
               [label]="'Add Category'"
               (clicked)="uiService.showAdd()"
@@ -97,37 +97,43 @@ export class CategoryListComponent implements OnInit, OnDestroy {
 
   categories: Category[] = [];
   totalCate: number = 0;
+  searchText: string = '';
+
   param: QueryParam = {
     pageIndex: 1,
     pageSize: 10,
-    searchQuery: '',
+    filters: '',
   };
 
   loading: boolean = false;
   private refreshSub$!: Subscription;
 
   ngOnInit(): void {
-    this.refreshSub$ = this.uiService.refresher.subscribe(() =>
-      this.loadCate()
-    );
+    this.refreshSub$ = this.uiService.refresher.subscribe(() => this.search());
   }
 
-  loadCate(): void {
+  search(): void {
+    if (this.loading) {
+      return;
+    }
     this.loading = true;
-    this.service.getAll(this.param).subscribe({
-      next: (response: any) => {
-        setTimeout(() => {
-          this.categories = response.data;
-          this.totalCate = response.total;
+    setTimeout(() => {
+      const filters: any[] = [
+        { field: 'name', operator: 'contains', value: this.searchText },
+      ];
+      this.param.filters = JSON.stringify(filters);
+      this.service.search(this.param).subscribe({
+        next: (response: any) => {
+          this.categories = response.results;
+          this.totalCate = response.params.total;
           this.loading = false;
-        }, 250);
-      },
-      error: (error) => {
-        console.error('Error fetching categories:', error);
-        this.message.error('Failed to load categories.');
-        this.loading = false;
-      },
-    });
+        },
+        error: (error) => {
+          this.message.error('Failed to load categories.');
+          this.loading = false;
+        },
+      });
+    }, 50);
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
@@ -135,13 +141,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
 
     this.param.pageIndex = pageIndex;
     this.param.pageSize = pageSize;
-    this.loadCate();
-  }
-
-  onSearch(query: string): void {
-    this.param.pageIndex = 1;
-    this.param.searchQuery = query;
-    this.loadCate();
+    this.search();
   }
 
   ngOnDestroy(): void {

@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product, ProductService } from './product.service';
 import { ProductUiService } from './product-ui.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Subscription, filter } from 'rxjs';
-import { QueryParam, QueryParam1 } from 'src/app/helpers/base-api.service';
+import { Subscription } from 'rxjs';
+import { QueryParam } from 'src/app/helpers/base-api.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
@@ -14,12 +14,13 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
       <div class="flex-column-gap">
         <div class="flex-row-gap">
           <div class="full-width-row">
-            <app-filter-input
-              (filterChanged)="
-                searchText = $event; param.pageIndex = 1; search()
-              "
-            ></app-filter-input>
-            <div style="width: 220px">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <app-filter-input
+                [placeholder]="'Search product here' | translate"
+                (filterChanged)="
+                  searchText = $event; param.pageIndex = 1; search()
+                "
+              ></app-filter-input>
               <app-category-select
                 [showAllOption]="true"
                 (valueChanged)="
@@ -117,25 +118,21 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
       </div>
     </div>
   `,
-  styles: [
-    `
-      :host
-        ::ng-deep
-        .ant-select:not(.ant-select-customize-input)
-        .ant-select-selector {
-        border-radius: 10px;
-        text-align: center;
-      }
-    `,
-  ],
+  styles: [``],
   // encapsulation: ViewEncapsulation.Emulated,
 })
 export class ProductsListComponent implements OnInit, OnDestroy {
+  constructor(
+    private productsService: ProductService,
+    public uiService: ProductUiService,
+    private message: NzMessageService
+  ) {}
+
   products: Product[] = [];
   totalProducts: number = 0;
   categoryId: number = 0;
   searchText: string = '';
-  param: QueryParam1 = {
+  param: QueryParam = {
     pageIndex: 1,
     pageSize: 10,
     filters: '',
@@ -143,17 +140,11 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   private refreshSub$!: Subscription;
 
-  constructor(
-    private productsService: ProductService,
-    public uiService: ProductUiService,
-    private message: NzMessageService
-  ) {}
-
   ngOnInit(): void {
     this.refreshSub$ = this.uiService.refresher.subscribe(() => this.search());
   }
 
-  search() {
+  search(): void {
     if (this.loading) {
       return;
     }
@@ -172,14 +163,11 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       this.param.filters = JSON.stringify(filters);
       this.productsService.search(this.param).subscribe({
         next: (response: any) => {
-          setTimeout(() => {
-            this.products = response.results;
-            this.totalProducts = response.params.total;
-            this.loading = false;
-          }, 250);
+          this.products = response.results;
+          this.totalProducts = response.params.total;
+          this.loading = false;
         },
         error: (error: any) => {
-          console.error('Error fetching products:', error);
           this.message.error('Failed to load products.');
           this.loading = false;
         },

@@ -5,11 +5,6 @@ import { environment } from 'src/environments/environment';
 export interface QueryParam {
   pageIndex: number;
   pageSize: number;
-  searchQuery: string;
-}
-export interface QueryParam1 {
-  pageIndex: number;
-  pageSize: number;
   filters: any;
 }
 
@@ -21,16 +16,16 @@ export class BaseApiService<T> {
     return `${this.apiUrl}/${this.endpoint}`;
   }
 
-  getAll(params: QueryParam): Observable<any> {
-    const httpParams = new HttpParams()
-      .set('page', params.pageIndex.toString())
-      .set('pageSize', params.pageSize.toString())
-      .set('searchQuery', params.searchQuery);
+  // search(params: QueryParam): Observable<any> {
+  //   const httpParams = new HttpParams()
+  //     .set('page', params.pageIndex.toString())
+  //     .set('pageSize', params.pageSize.toString())
+  //     .set('searchQuery', params.searchQuery);
 
-    return this.http.get<any>(this.getEndpoint(), { params: httpParams });
-  }
+  //   return this.http.get<any>(this.getEndpoint(), { params: httpParams });
+  // }
 
-  search(params: QueryParam1): Observable<any> {
+  search(params: QueryParam): Observable<any> {
     const httpParams = new HttpParams()
       .set('page', params.pageIndex.toString())
       .set('pageSize', params.pageSize.toString())

@@ -13,12 +13,12 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
       <div class="flex-column-gap">
         <div class="flex-row-gap">
           <div class="full-width-row">
-            <app-search-input
+            <app-filter-input
               [placeholder]="'Search units here' | translate"
-              [(searchQuery)]="param.searchQuery"
-              (search)="onSearch($event)"
-            ></app-search-input>
-
+              (filterChanged)="
+                searchText = $event; param.pageIndex = 1; search()
+              "
+            ></app-filter-input>
             <app-button-add-item
               [label]="'Add Unit'"
               (clicked)="uiService.showAdd()"
@@ -89,44 +89,51 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
   styles: [],
 })
 export class UnitListComponent implements OnInit, OnDestroy {
-  units: Unit[] = [];
-  totalUnit: number = 0;
-  param: QueryParam = {
-    pageIndex: 1,
-    pageSize: 10,
-    searchQuery: '',
-  };
-  loading: boolean = false;
-  private refreshSub$!: Subscription;
-
   constructor(
     private service: UnitsService,
     public uiService: UnitUiService,
     private message: NzMessageService
   ) {}
 
+  units: Unit[] = [];
+  totalUnit: number = 0;
+
+  searchText: string = '';
+  param: QueryParam = {
+    pageIndex: 1,
+    pageSize: 10,
+    filters: '',
+  };
+  loading: boolean = false;
+  private refreshSub$!: Subscription;
+
   ngOnInit(): void {
-    this.refreshSub$ = this.uiService.refresher.subscribe(() =>
-      this.loadUnit()
-    );
+    this.refreshSub$ = this.uiService.refresher.subscribe(() => this.search());
+    this.search();
   }
 
-  loadUnit(): void {
+  search(): void {
+    if (this.loading) {
+      return;
+    }
     this.loading = true;
-    this.service.getAll(this.param).subscribe({
-      next: (response: any) => {
-        setTimeout(() => {
-          this.units = response.data;
-          this.totalUnit = response.total;
+    setTimeout(() => {
+      const filters: any[] = [
+        { field: 'name', operator: 'contains', value: this.searchText },
+      ];
+      this.param.filters = JSON.stringify(filters);
+      this.service.search(this.param).subscribe({
+        next: (response: any) => {
+          this.units = response.results;
+          this.totalUnit = response.params.total;
           this.loading = false;
-        }, 250);
-      },
-      error: (error) => {
-        console.error('Error fetching units:', error);
-        this.message.error('Failed to load units.');
-        this.loading = false;
-      },
-    });
+        },
+        error: () => {
+          this.message.error('Failed to load products.');
+          this.loading = false;
+        },
+      });
+    }, 50);
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
@@ -134,13 +141,7 @@ export class UnitListComponent implements OnInit, OnDestroy {
 
     this.param.pageIndex = pageIndex;
     this.param.pageSize = pageSize;
-    this.loadUnit();
-  }
-
-  onSearch(query: string): void {
-    this.param.pageIndex = 1;
-    this.param.searchQuery = query;
-    this.loadUnit();
+    this.search();
   }
 
   ngOnDestroy(): void {

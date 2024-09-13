@@ -9,19 +9,20 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CategoriesService, Category } from './categories.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { QueryParam, QueryParam1 } from 'src/app/helpers/base-api.service';
+import { QueryParam } from 'src/app/helpers/base-api.service';
 
 @Component({
   selector: 'app-category-select',
   template: `
     <nz-select
       nzShowSearch
+      nzSize="large"
+      [nzPlaceHolder]="placeholder | translate"
       [nzServerSearch]="true"
       [(ngModel)]="selectedValue"
       (ngModelChange)="onModalChange()"
-      (nzOnSearch)="searchText = $event; param.pageIndex = 1; search()"
+      (nzOnSearch)="onSearch($event)"
       [nzDisabled]="isDisabled"
-      style="width:100%"
     >
       <nz-option
         *ngIf="showAllOption"
@@ -42,13 +43,7 @@ import { QueryParam, QueryParam1 } from 'src/app/helpers/base-api.service';
       </nz-option>
     </nz-select>
   `,
-  styles: [
-    `
-      nz-select {
-        width: 100%;
-      }
-    `,
-  ],
+
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -64,21 +59,22 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
   ) {}
 
   @Input() placeholder: string = 'Select category';
-  @Input() showAllOption!: boolean;
+  @Input() showAllOption: boolean = false;
   @Output() valueChanged = new EventEmitter<any>();
+
   selectedValue: number = 0;
   isDisabled: boolean = false;
   loading: boolean = false;
-  value: any = '';
-  searchText = '';
   categories: Category[] = [];
-  param: QueryParam1 = {
+  searchText = '';
+
+  param: QueryParam = {
     pageIndex: 1,
     pageSize: 999999,
     filters: '',
   };
 
-  onChange(value: any) {}
+  onChange(_value: any) {}
   onTouched() {}
 
   ngOnInit(): void {
@@ -93,14 +89,27 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
     if (this.searchText && this.param.pageIndex === 1) {
       this.categories = [];
     }
-    this.categoryService.search(this.param).subscribe((response: any) => {
-      this.loading = false;
-      this.categories = response.results;
+    this.categoryService.search(this.param).subscribe({
+      next: (response: any) => {
+        this.loading = false;
+        this.categories = response.results;
+      },
+      error: () => {
+        this.loading = false;
+        this.notify.error('Error', 'Failed to load categories.');
+      },
     });
+  }
+
+  onSearch(value: string): void {
+    this.searchText = value;
+    this.param.pageIndex = 1;
+    this.search();
   }
 
   onModalChange() {
     this.valueChanged.emit(this.selectedValue);
+    this.onChange(this.selectedValue);
   }
   writeValue(value: any): void {
     this.selectedValue = value;

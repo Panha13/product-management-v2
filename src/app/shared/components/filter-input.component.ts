@@ -1,9 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 
 @Component({
   selector: 'app-filter-input',
   template: `
-    <nz-input-group [nzSuffix]="suffixIconSearch">
+    <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="large">
       <input
         type="text"
         nz-input
@@ -20,11 +27,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
     `
       nz-input-group {
         border-radius: 10px;
-        padding: 8px;
-        width: 420px;
+        width: 320px;
+      }
+      .ant-input:placeholder-shown {
+        font-size: 14px;
       }
     `,
   ],
+  encapsulation: ViewEncapsulation.Emulated,
 })
 export class FilterInputComponent {
   @Input() placeholder: string = 'Search...';
@@ -32,6 +42,6 @@ export class FilterInputComponent {
   @Output() filterChanged: EventEmitter<string> = new EventEmitter<string>();
 
   filterTextChanged(): void {
-    this.filterChanged.emit(this.value);
+    this.filterChanged.emit(this.value.trim());
   }
 }
