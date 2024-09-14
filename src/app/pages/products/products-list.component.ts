@@ -22,6 +22,9 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
                 "
               ></app-filter-input>
               <app-category-select
+                style="width:180px"
+                class="custom"
+                [size]="'large'"
                 [showAllOption]="true"
                 (valueChanged)="
                   categoryId = $event; param.pageIndex = 1; search()
@@ -118,7 +121,13 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
       </div>
     </div>
   `,
-  styles: [``],
+  styles: [
+    `
+      :host ::ng-deep .custom .ant-select-selector {
+        border-radius: 10px;
+      }
+    `,
+  ],
   // encapsulation: ViewEncapsulation.Emulated,
 })
 export class ProductsListComponent implements OnInit, OnDestroy {

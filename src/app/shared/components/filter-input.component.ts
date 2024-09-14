@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
@@ -29,7 +28,7 @@ import {
         border-radius: 10px;
         width: 320px;
       }
-      .ant-input:placeholder-shown {
+      .ant-input-affix-wrapper > input.ant-input {
         font-size: 14px;
       }
     `,

@@ -16,7 +16,7 @@ import { QueryParam } from 'src/app/helpers/base-api.service';
   template: `
     <nz-select
       nzShowSearch
-      nzSize="large"
+      [nzSize]="size"
       [nzPlaceHolder]="placeholder | translate"
       [nzServerSearch]="true"
       [(ngModel)]="selectedValue"
@@ -43,7 +43,13 @@ import { QueryParam } from 'src/app/helpers/base-api.service';
       </nz-option>
     </nz-select>
   `,
-
+  styles: [
+    `
+      nz-select {
+        width: 100%;
+      }
+    `,
+  ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -58,6 +64,7 @@ export class CategorySelectComponent implements OnInit, ControlValueAccessor {
     private notify: NzNotificationService
   ) {}
 
+  @Input() size: 'large' | 'small' | 'default' = 'default';
   @Input() placeholder: string = 'Select category';
   @Input() showAllOption: boolean = false;
   @Output() valueChanged = new EventEmitter<any>();
