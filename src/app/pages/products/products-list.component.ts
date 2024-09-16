@@ -45,8 +45,8 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
             nzShowPagination
             nzShowSizeChanger
             [nzFrontPagination]="false"
-            [nzPageIndex]="param.pageIndex"
-            [nzPageSize]="param.pageSize"
+            [nzPageIndex]="param.pageIndex || 0"
+            [nzPageSize]="param.pageSize || 0"
             [nzTotal]="totalProducts"
             [nzLoading]="loading"
             (nzQueryParams)="onQueryParamsChange($event)"
@@ -54,8 +54,12 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
             <thead>
               <tr class="table-header">
                 <th nzWidth="20%">{{ 'Product' | translate }}</th>
-                <th nzWidth="10%">{{ 'Code' | translate }}</th>
-                <th nzWidth="14%">{{ 'Price' | translate }}</th>
+                <th nzWidth="10%">
+                  {{ 'Code' | translate }}
+                </th>
+                <th nzWidth="14%" [nzSortFn]="true" nzColumnKey="price">
+                  {{ 'Price' | translate }}
+                </th>
                 <th nzWidth="10%" nzEllipsis>
                   {{ 'Quantity' | translate }}
                 </th>
@@ -185,8 +189,10 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
-    const { pageIndex, pageSize } = params;
-
+    const { pageIndex, pageSize, sort } = params;
+    const sortFound = sort.find((x) => x.value);
+    this.param.sort =
+      (sortFound?.key ?? 'code-') + (sortFound?.value === 'descend' ? '-' : '');
     this.param.pageIndex = pageIndex;
     this.param.pageSize = pageSize;
     this.search();

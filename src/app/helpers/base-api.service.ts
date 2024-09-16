@@ -3,9 +3,10 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export interface QueryParam {
-  pageIndex: number;
-  pageSize: number;
-  filters: any;
+  pageIndex?: number;
+  pageSize?: number;
+  filters?: any;
+  sort?: string;
 }
 
 export class BaseApiService<T> {
@@ -27,12 +28,23 @@ export class BaseApiService<T> {
 
   search(params: QueryParam): Observable<any> {
     const httpParams = new HttpParams()
-      .set('page', params.pageIndex.toString())
-      .set('pageSize', params.pageSize.toString())
-      .set('filters', `${params.filters === undefined ? '' : params.filters}`);
+      .set('page', `${params.pageIndex}`)
+      .set('pageSize', `${params.pageSize}`)
+      .set('filters', `${params.filters === undefined ? '' : params.filters}`)
+      .set('sort', `${params.sort === undefined ? '' : params.sort}`);
 
     return this.http.get<any>(this.getEndpoint(), { params: httpParams });
   }
+
+  // search(params: QueryParam): Observable<any> {
+  //   const httpParams = new HttpParams()
+  //     .set('page', params.pageIndex.toString())
+  //     .set('pageSize', params.pageSize.toString())
+  //     .set('filters', `${params.filters === undefined ? '' : params.filters}`)
+  //     .set('sort', `${params.sort === undefined ? '' : params.sort}`);
+
+  //   return this.http.get<any>(this.getEndpoint(), { params: httpParams });
+  // }
 
   find(id: number): Observable<T> {
     return this.http.get<T>(`${this.getEndpoint()}/${id}`);

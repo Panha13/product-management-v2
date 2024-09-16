@@ -32,8 +32,8 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
             nzShowPagination
             nzShowSizeChanger
             [nzFrontPagination]="false"
-            [nzPageIndex]="param.pageIndex"
-            [nzPageSize]="param.pageSize"
+            [nzPageIndex]="param.pageIndex || 0"
+            [nzPageSize]="param.pageSize || 0"
             [nzTotal]="totalCate"
             [nzLoading]="loading"
             (nzQueryParams)="onQueryParamsChange($event)"
@@ -51,7 +51,12 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
             <tbody>
               <tr *ngFor="let data of categories; let i = index">
                 <td nzEllipsis>
-                  {{ (this.param.pageIndex - 1) * this.param.pageSize + i + 1 }}
+                  {{
+                    ((this.param.pageIndex || 1) - 1) *
+                      (this.param.pageSize || 10) +
+                      i +
+                      1
+                  }}
                 </td>
                 <td>{{ data.name }}</td>
 
@@ -137,8 +142,11 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   }
 
   onQueryParamsChange(params: NzTableQueryParams) {
-    const { pageIndex, pageSize } = params;
-
+    const { pageIndex, pageSize, sort } = params;
+    const sortFound = sort.find((x) => x.value);
+    this.param.sort =
+      (sortFound?.key ?? 'category_id-') +
+      (sortFound?.value === 'descend' ? '-' : '');
     this.param.pageIndex = pageIndex;
     this.param.pageSize = pageSize;
     this.search();
