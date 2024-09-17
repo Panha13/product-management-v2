@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Language } from '../app.component';
 import { NzI18nService, en_US, km_KH } from 'ng-zorro-antd/i18n';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../auth/auth.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
+
+export interface Language {
+  name: string;
+  code: string;
+  flag: string;
+}
 
 @Component({
   selector: 'app-page',
