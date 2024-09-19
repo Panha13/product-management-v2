@@ -104,7 +104,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
                       nz-button
                       nzType="primary"
                       nzGhost
-                      (click)="uiService.showEdit(data.product_id || 0)"
+                      (click)="uiService.showEdit(data.id || 0)"
                     >
                       <span nz-icon nzType="edit"></span>
                     </button>
@@ -112,7 +112,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
                       nz-button
                       nzType="default"
                       nzDanger
-                      (click)="uiService.showDelete(data.product_id || 0)"
+                      (click)="uiService.showDelete(data.id || 0)"
                     >
                       <span nz-icon nzType="delete"></span>
                     </button>

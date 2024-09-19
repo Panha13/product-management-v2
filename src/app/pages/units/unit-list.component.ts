@@ -70,7 +70,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
                       nz-button
                       nzType="primary"
                       nzGhost
-                      (click)="uiService.showEdit(data.unit_id || 0)"
+                      (click)="uiService.showEdit(data.id || 0)"
                     >
                       <span nz-icon nzType="edit"></span>
                     </button>
@@ -78,7 +78,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
                       nz-button
                       nzType="default"
                       nzDanger
-                      (click)="uiService.showDelete(data.unit_id || 0)"
+                      (click)="uiService.showDelete(data.id || 0)"
                     >
                       <span nz-icon nzType="delete"></span>
                     </button>
@@ -145,8 +145,7 @@ export class UnitListComponent implements OnInit, OnDestroy {
     const { pageIndex, pageSize, sort } = params;
     const sortFound = sort.find((x) => x.value);
     this.param.sort =
-      (sortFound?.key ?? 'unit_id-') +
-      (sortFound?.value === 'descend' ? '-' : '');
+      (sortFound?.key ?? 'id-') + (sortFound?.value === 'descend' ? '-' : '');
     this.param.pageIndex = pageIndex;
     this.param.pageSize = pageSize;
     this.search();

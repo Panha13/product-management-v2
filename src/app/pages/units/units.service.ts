@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BaseApiService } from 'src/app/helpers/base-api.service';
 
 export interface Unit {
-  unit_id?: number;
+  id?: number;
   name?: string;
   description?: string;
 }

@@ -32,7 +32,7 @@ import { QueryParam } from 'src/app/helpers/base-api.service';
       <nz-option
         *ngFor="let category of categories"
         nzCustomContent
-        [nzValue]="category.category_id"
+        [nzValue]="category.id"
         [nzLabel]="category.name!"
       >
         <span>{{ category.name }}</span>
