@@ -17,15 +17,6 @@ export class BaseApiService<T> {
     return `${this.apiUrl}/${this.endpoint}`;
   }
 
-  // search(params: QueryParam): Observable<any> {
-  //   const httpParams = new HttpParams()
-  //     .set('page', params.pageIndex.toString())
-  //     .set('pageSize', params.pageSize.toString())
-  //     .set('searchQuery', params.searchQuery);
-
-  //   return this.http.get<any>(this.getEndpoint(), { params: httpParams });
-  // }
-
   search(params: QueryParam): Observable<any> {
     const httpParams = new HttpParams()
       .set('page', `${params.pageIndex}`)
@@ -35,16 +26,6 @@ export class BaseApiService<T> {
 
     return this.http.get<any>(this.getEndpoint(), { params: httpParams });
   }
-
-  // search(params: QueryParam): Observable<any> {
-  //   const httpParams = new HttpParams()
-  //     .set('page', params.pageIndex.toString())
-  //     .set('pageSize', params.pageSize.toString())
-  //     .set('filters', `${params.filters === undefined ? '' : params.filters}`)
-  //     .set('sort', `${params.sort === undefined ? '' : params.sort}`);
-
-  //   return this.http.get<any>(this.getEndpoint(), { params: httpParams });
-  // }
 
   find(id: number): Observable<T> {
     return this.http.get<T>(`${this.getEndpoint()}/${id}`);
