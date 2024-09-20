@@ -2,17 +2,25 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BaseApiService } from 'src/app/helpers/base-api.service';
 
-export interface Category {
+export interface Customer {
   id?: number;
+  code?: string;
+  image?: string;
   name?: string;
-  description?: string;
+  email?: string;
+  phone?: string;
+  customerType?: {
+    id?: number;
+    name?: string;
+  };
+  address?: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class CategoriesService extends BaseApiService<Category> {
+export class CustomersService extends BaseApiService<Customer> {
   constructor(protected override http: HttpClient) {
-    super(http, 'categories');
+    super(http, 'customers');
   }
 }

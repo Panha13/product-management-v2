@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BaseApiService } from 'src/app/helpers/base-api.service';
 
 export interface Product {
-  product_id?: number;
+  id?: number;
   code?: string;
   image?: string;
   name?: string;
@@ -12,7 +12,7 @@ export interface Product {
   stock_quantity?: number;
   unit_id?: number;
   category?: {
-    category_id?: number;
+    id?: number;
     name?: string;
     description?: string;
   };

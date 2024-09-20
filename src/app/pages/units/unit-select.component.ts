@@ -31,7 +31,7 @@ import { QueryParam } from 'src/app/helpers/base-api.service';
       <nz-option
         *ngFor="let unit of units"
         nzCustomContent
-        [nzValue]="unit.unit_id"
+        [nzValue]="unit.id"
         [nzLabel]="unit.name!"
       >
         <span>{{ unit.name }}</span>

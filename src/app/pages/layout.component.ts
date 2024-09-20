@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Language } from '../app.component';
 import { NzI18nService, en_US, km_KH } from 'ng-zorro-antd/i18n';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../auth/auth.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
+
+export interface Language {
+  name: string;
+  code: string;
+  flag: string;
+}
 
 @Component({
   selector: 'app-page',
@@ -53,12 +58,13 @@ import { NzModalService } from 'ng-zorro-antd/modal';
               <span>{{ 'Units' | translate }}</span>
             </a>
           </li>
-          <!-- <li nz-menu-item nzMatchRouter nzDisabled>
-        <a routerLink="/order">
-          <i nz-icon nzType="shopping"></i>
-          <span>{{'Order'| translate}}</span>
-        </a>
-      </li> -->
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/customers">
+              <i nz-icon nzType="idcard"></i>
+              <span>{{ 'Customers' | translate }}</span>
+            </a>
+          </li>
+
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/user">
               <i nz-icon nzType="user"></i>
@@ -157,7 +163,9 @@ import { NzModalService } from 'ng-zorro-antd/modal';
           </div>
         </nz-header>
         <nz-content class="content-layout">
-          <router-outlet></router-outlet>
+          <div class="inner-content">
+            <router-outlet></router-outlet>
+          </div>
         </nz-content>
       </nz-layout>
     </nz-layout>

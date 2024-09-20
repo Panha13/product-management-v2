@@ -219,7 +219,7 @@ export class ProductOperationComponent implements OnInit {
           price: result.price,
           stock_quantity: result.stock_quantity,
           image: result.image || this.DEFAULT_IMG_URL,
-          category_id: result.category?.category_id || null,
+          category_id: result.category?.id || null,
           unit_id: result.unit_id,
           description: result.description || null,
         });

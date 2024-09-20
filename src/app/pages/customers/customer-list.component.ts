@@ -1,14 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Unit, UnitsService } from './units.service';
-import { Subscription } from 'rxjs';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { UnitUiService } from './unit-ui.service';
-import { QueryParam } from 'src/app/helpers/base-api.service';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { Component, OnInit } from '@angular/core';
 import { BaseListComponent } from 'src/app/utils/components/base-list.component';
+import { Customer, CustomersService } from './customers.service';
 
 @Component({
-  selector: 'app-units',
+  selector: 'app-customer-list',
   template: `
     <div class="flex-column-gap">
       <div class="flex-row-gap">
@@ -17,10 +12,7 @@ import { BaseListComponent } from 'src/app/utils/components/base-list.component'
             [placeholder]="'Search units here' | translate"
             (filterChanged)="searchText = $event; param.pageIndex = 1; search()"
           ></app-filter-input>
-          <app-button-add-item
-            [label]="'Add Unit'"
-            (clicked)="uiService.showAdd()"
-          ></app-button-add-item>
+          <app-button-add-item [label]="'Add Unit'"></app-button-add-item>
         </div>
       </div>
       <div nz-row class="flex-grow">
@@ -38,10 +30,15 @@ import { BaseListComponent } from 'src/app/utils/components/base-list.component'
         >
           <thead>
             <tr class="table-header">
-              <th nzWidth="10%">#</th>
-              <th nzWidth="30%">{{ 'Unit Name' | translate }}</th>
-              <th nzWidth="40%">{{ 'Description' | translate }}</th>
-              <th nzWidth="20%" [nzAlign]="'center'">
+              <th nzWidth="50px">#</th>
+              <th>{{ 'Image' | translate }}</th>
+              <th>{{ 'Name' | translate }}</th>
+              <th>{{ 'Code' | translate }}</th>
+              <th>{{ 'Email' | translate }}</th>
+              <th>{{ 'Phone' | translate }}</th>
+              <th>{{ 'Customer type' | translate }}</th>
+              <th>{{ 'Address' | translate }}</th>
+              <th [nzAlign]="'center'">
                 {{ 'Action' | translate }}
               </th>
             </tr>
@@ -56,28 +53,34 @@ import { BaseListComponent } from 'src/app/utils/components/base-list.component'
                     1
                 }}
               </td>
-              <td>{{ data.name }}</td>
-
               <td nzEllipsis>
-                {{ data.description ? data.description : '—' }}
+                <img [src]="data.image" class="data-image" />
+              </td>
+              <td nzEllipsis>
+                {{ data.name }}
+              </td>
+              <td nzEllipsis>
+                {{ data.code }}
+              </td>
+              <td nzEllipsis>
+                {{ data.email }}
+              </td>
+              <td nzEllipsis>
+                {{ data.phone }}
+              </td>
+              <td nzEllipsis>
+                {{ data.customerType?.name }}
+              </td>
+              <td nzEllipsis>
+                {{ data.address ? data.address : '—' }}
               </td>
 
               <td>
                 <nz-row class="action-buttons">
-                  <button
-                    nz-button
-                    nzType="primary"
-                    nzGhost
-                    (click)="uiService.showEdit(data.id || 0)"
-                  >
+                  <button nz-button nzType="primary" nzGhost>
                     <span nz-icon nzType="edit"></span>
                   </button>
-                  <button
-                    nz-button
-                    nzType="default"
-                    nzDanger
-                    (click)="uiService.showDelete(data.id || 0)"
-                  >
+                  <button nz-button nzType="default" nzDanger>
                     <span nz-icon nzType="delete"></span>
                   </button>
                 </nz-row>
@@ -90,27 +93,8 @@ import { BaseListComponent } from 'src/app/utils/components/base-list.component'
   `,
   styles: [],
 })
-export class UnitListComponent
-  extends BaseListComponent<Unit>
-  implements OnDestroy
-{
-  constructor(service: UnitsService, public uiService: UnitUiService) {
+export class CustomerListComponent extends BaseListComponent<Customer> {
+  constructor(service: CustomersService) {
     super(service);
-  }
-
-  override param: QueryParam = {
-    ...this.param,
-    sort: 'id-',
-  };
-
-  private refreshSub$!: Subscription;
-
-  override ngOnInit(): void {
-    this.refreshSub$ = this.uiService.refresher.subscribe(() => this.search());
-    this.search();
-  }
-
-  ngOnDestroy(): void {
-    this.refreshSub$?.unsubscribe();
   }
 }
