@@ -93,10 +93,7 @@ import { Customer, CustomersService } from './customers.service';
   `,
   styles: [],
 })
-export class CustomerListComponent
-  extends BaseListComponent<Customer>
-  implements OnInit
-{
+export class CustomerListComponent extends BaseListComponent<Customer> {
   constructor(service: CustomersService) {
     super(service);
   }
