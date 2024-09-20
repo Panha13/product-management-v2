@@ -11,6 +11,7 @@ import { ProductsListComponent } from './pages/products/products-list.component'
 import { LoginComponent } from './auth/login.component';
 import { authGuard } from './auth/auth.guard';
 import { authRedirectGuard } from './auth/auth-redirect.guard';
+import { CustomerListComponent } from './pages/customers/customer-list.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -57,6 +58,11 @@ const routes: Routes = [
         path: 'user',
         component: UserListComponent,
         data: { title: 'User', breadcrumb: 'User' },
+      },
+      {
+        path: 'customers',
+        component: CustomerListComponent,
+        data: { title: 'customers', breadcrumb: 'customers' },
       },
     ],
   },

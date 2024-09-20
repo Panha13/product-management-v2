@@ -58,12 +58,13 @@ export interface Language {
               <span>{{ 'Units' | translate }}</span>
             </a>
           </li>
-          <!-- <li nz-menu-item nzMatchRouter nzDisabled>
-        <a routerLink="/order">
-          <i nz-icon nzType="shopping"></i>
-          <span>{{'Order'| translate}}</span>
-        </a>
-      </li> -->
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/customers">
+              <i nz-icon nzType="idcard"></i>
+              <span>{{ 'Customers' | translate }}</span>
+            </a>
+          </li>
+
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/user">
               <i nz-icon nzType="user"></i>
@@ -162,7 +163,9 @@ export interface Language {
           </div>
         </nz-header>
         <nz-content class="content-layout">
-          <router-outlet></router-outlet>
+          <div class="inner-content">
+            <router-outlet></router-outlet>
+          </div>
         </nz-content>
       </nz-layout>
     </nz-layout>
