@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProductService } from './product.service';
+import { Product, ProductService } from './product.service';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
@@ -85,7 +85,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
                   [nzMin]="0"
                   [nzStep]="1"
                   [nzPrecision]="0"
-                  formControlName="stock_quantity"
+                  formControlName="stockQty"
                   [nzPlaceHolder]="'Please enter quantity' | translate"
                   class="w-100"
                 ></nz-input-number>
@@ -98,7 +98,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
                 'Unit' | translate
               }}</nz-form-label>
               <nz-form-control>
-                <app-unit-select formControlName="unit_id"></app-unit-select>
+                <app-unit-select formControlName="unitId"></app-unit-select>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -107,7 +107,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
           <nz-form-label>{{ 'Category' | translate }}</nz-form-label>
           <nz-form-control>
             <app-category-select
-              formControlName="category_id"
+              formControlName="categoryId"
             ></app-category-select>
           </nz-form-control>
         </nz-form-item>
@@ -203,24 +203,24 @@ export class ProductOperationComponent implements OnInit {
     this.form = this.fb.group({
       name: [null, [required]],
       price: [null, [required]],
-      stock_quantity: [null, [required]],
+      stockQty: [null, [required]],
       image: [null],
-      category_id: [null],
-      unit_id: [null, [required]],
+      categoryId: [null],
+      unitId: [null, [required]],
       description: [null],
     });
   }
 
   private setFrmValue(): void {
     this.productService.find(this.productId).subscribe({
-      next: (result) => {
+      next: (result: Product) => {
         this.form.setValue({
           name: result.name,
           price: result.price,
-          stock_quantity: result.stock_quantity,
+          stockQty: result.stockQty,
           image: result.image || this.DEFAULT_IMG_URL,
-          category_id: result.category?.id || null,
-          unit_id: result.unit_id,
+          categoryId: result.category?.id || null,
+          unitId: result.unitId,
           description: result.description || null,
         });
         // Initialize image data
@@ -283,8 +283,7 @@ export class ProductOperationComponent implements OnInit {
   onSubmit(): void {
     if (this.form.valid) {
       this.loading = true;
-      console.log(this.form.value);
-      const productData = { ...this.form.value };
+      const productData: Product = { ...this.form.value };
 
       if (!productData.image) {
         productData.image = this.DEFAULT_IMG_URL;

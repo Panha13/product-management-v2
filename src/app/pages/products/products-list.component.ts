@@ -81,7 +81,7 @@ import { BaseListComponent } from 'src/app/utils/components/base-list.component'
               <td>
                 {{ data.price | currency : 'USD' }}
               </td>
-              <td>{{ data.stock_quantity }}</td>
+              <td>{{ data.stockQty }}</td>
               <td nzEllipsis>
                 {{ data.category ? data.category.name : '—' }}
               </td>
@@ -89,9 +89,9 @@ import { BaseListComponent } from 'src/app/utils/components/base-list.component'
                 {{ data.description ? data.description : '—' }}
               </td>
               <td>
-                <nz-tag [nzColor]="data.stock_quantity! > 0 ? 'green' : 'red'"
+                <nz-tag [nzColor]="data.stockQty! > 0 ? 'green' : 'red'"
                   >{{
-                    data.stock_quantity! > 0
+                    data.stockQty! > 0
                       ? ('In stock' | translate)
                       : ('Out of stock' | translate)
                   }}

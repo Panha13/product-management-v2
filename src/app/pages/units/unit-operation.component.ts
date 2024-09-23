@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { UnitsService } from './units.service';
+import { Unit, UnitsService } from './units.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CustomValidators } from 'src/app/helpers/customValidators';
+import { BaseOperationComponent } from 'src/app/utils/components/base-operation.component';
 
 @Component({
   selector: 'app-unit-operation',
@@ -67,34 +68,18 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
   `,
   styles: [],
 })
-export class UnitOperationComponent implements OnInit {
+export class UnitOperationComponent extends BaseOperationComponent<Unit> {
   constructor(
-    private fb: FormBuilder,
-    private raf: NzModalRef<UnitOperationComponent>,
-    private service: UnitsService,
-    private notify: NzNotificationService,
-    private msg: NzMessageService
-  ) {}
-
-  readonly id = inject(NZ_MODAL_DATA);
-
-  loading: boolean = false;
-  loading_form: boolean = false;
-  frm!: FormGroup;
-  autoTips = CustomValidators.autoTips;
-
-  ngOnInit() {
-    this.initFrm();
-    if (this.id) {
-      this.loading_form = true;
-      if (this.id) {
-        this.loading_form = true;
-        this.setFrmValue();
-      }
-    }
+    fb: FormBuilder,
+    modalRef: NzModalRef<any>,
+    service: UnitsService,
+    notify: NzNotificationService,
+    msg: NzMessageService
+  ) {
+    super(fb, modalRef, service, notify, msg);
   }
 
-  private initFrm(): void {
+  override initControl(): void {
     const { required, nameExistValidator } = CustomValidators;
     this.frm = this.fb.group({
       name: [null, [required], [nameExistValidator(this.service, this.id)]],
@@ -102,9 +87,9 @@ export class UnitOperationComponent implements OnInit {
     });
   }
 
-  private setFrmValue(): void {
+  override setFrmValue(): void {
     this.service.find(this.id).subscribe({
-      next: (result) => {
+      next: (result: Unit) => {
         this.frm.setValue({
           name: result.name,
           description: result.description || null,
@@ -118,44 +103,5 @@ export class UnitOperationComponent implements OnInit {
         this.notify.error('Error', 'Failed to load unit details.');
       },
     });
-  }
-
-  onSubmit(): void {
-    if (this.frm.valid) {
-      this.loading = true;
-
-      const unitData = { ...this.frm.value };
-
-      const unitAction$ = this.id
-        ? this.service.edit(this.id, unitData)
-        : this.service.add(unitData);
-
-      unitAction$.subscribe({
-        next: () => {
-          this.handleSuccess(
-            this.id ? 'Unit updated successfully!' : 'Unit added successfully.'
-          );
-        },
-        error: (error) => {
-          this.handleError(error);
-        },
-      });
-    }
-  }
-
-  private handleSuccess(successMessage: string): void {
-    this.loading = false;
-    this.raf.triggerOk();
-    this.msg.success(successMessage);
-  }
-
-  private handleError(error: any): void {
-    console.error(error);
-    this.loading = false;
-    this.msg.error('An error occurred while processing the unit.');
-  }
-
-  onCancel(): void {
-    this.raf.triggerCancel();
   }
 }
