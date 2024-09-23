@@ -11,13 +11,11 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
   template: ``,
 })
 export class BaseOperationComponent<T> implements OnInit {
-  constructor(
-    protected fb: FormBuilder,
-    protected modalRef: NzModalRef<any>,
-    protected service: BaseApiService<any>,
-    protected notify: NzNotificationService,
-    protected msg: NzMessageService
-  ) {}
+  constructor(protected service: BaseApiService<any>) {}
+  protected fb = inject(FormBuilder);
+  protected modalRef = inject(NzModalRef<any>);
+  protected notify = inject(NzNotificationService);
+  protected msg = inject(NzMessageService);
 
   readonly id = inject(NZ_MODAL_DATA);
 

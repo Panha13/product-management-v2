@@ -69,14 +69,8 @@ import { BaseOperationComponent } from 'src/app/utils/components/base-operation.
   styles: [],
 })
 export class UnitOperationComponent extends BaseOperationComponent<Unit> {
-  constructor(
-    fb: FormBuilder,
-    modalRef: NzModalRef<any>,
-    service: UnitsService,
-    notify: NzNotificationService,
-    msg: NzMessageService
-  ) {
-    super(fb, modalRef, service, notify, msg);
+  constructor(service: UnitsService) {
+    super(service);
   }
 
   override initControl(): void {
