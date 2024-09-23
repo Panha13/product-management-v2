@@ -9,12 +9,11 @@ export interface Product {
   name?: string;
   description?: string;
   price?: number;
-  stock_quantity?: number;
-  unit_id?: number;
+  stockQty?: number;
+  unitId?: number;
   category?: {
     id?: number;
     name?: string;
-    description?: string;
   };
 }
 
