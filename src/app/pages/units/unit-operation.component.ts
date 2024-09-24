@@ -1,9 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { Component } from '@angular/core';
 import { Unit, UnitsService } from './units.service';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { CustomValidators } from 'src/app/helpers/customValidators';
 import { BaseOperationComponent } from 'src/app/utils/components/base-operation.component';
 
@@ -69,14 +65,8 @@ import { BaseOperationComponent } from 'src/app/utils/components/base-operation.
   styles: [],
 })
 export class UnitOperationComponent extends BaseOperationComponent<Unit> {
-  constructor(
-    fb: FormBuilder,
-    modalRef: NzModalRef<any>,
-    service: UnitsService,
-    notify: NzNotificationService,
-    msg: NzMessageService
-  ) {
-    super(fb, modalRef, service, notify, msg);
+  constructor(service: UnitsService) {
+    super(service);
   }
 
   override initControl(): void {
