@@ -61,16 +61,16 @@ export class BaseOperationComponent<T> implements OnInit {
   initControl(): void {}
   setFrmValue(): void {}
 
-  private handleSuccess(successMessage: string): void {
+  protected handleSuccess(successMessage: string): void {
     this.loading = false;
     this.modalRef.triggerOk();
     this.msg.success(successMessage);
   }
 
-  private handleError(error: any): void {
+  protected handleError(error: any): void {
     console.error(error);
     this.loading = false;
-    this.msg.error('An error occurred while processing the unit.');
+    this.msg.error('An error occurred while processing.');
   }
 
   onCancel(): void {
