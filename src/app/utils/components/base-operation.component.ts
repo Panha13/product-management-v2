@@ -28,10 +28,7 @@ export class BaseOperationComponent<T> implements OnInit {
     this.initControl();
     if (this.id) {
       this.loading_form = true;
-      if (this.id) {
-        this.loading_form = true;
-        this.setFrmValue();
-      }
+      this.setFrmValue();
     }
   }
 

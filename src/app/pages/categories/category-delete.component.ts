@@ -1,15 +1,12 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { Component, OnInit } from '@angular/core';
 import { CategoriesService, Category } from './categories.service';
+import { BaseDeleteComponent } from 'src/app/utils/components/base-delete.component';
 
 @Component({
   selector: 'app-category-delete',
   template: `
     <div *nzModalTitle>
-      <span>{{ 'Delete' | translate }} {{ model.name }}</span>
+      <span>{{ 'Delete' | translate }} {{ model?.name }}</span>
     </div>
     <div>
       <div *ngIf="loading_form" class="loading-overlay">
@@ -60,68 +57,11 @@ import { CategoriesService, Category } from './categories.service';
   `,
   styles: [],
 })
-export class CategoryDeleteComponent implements OnInit {
-  constructor(
-    private fb: FormBuilder,
-    private raf: NzModalRef<CategoryDeleteComponent>,
-    private service: CategoriesService,
-    private notify: NzNotificationService,
-    private msg: NzMessageService
-  ) {}
-
-  private id = inject(NZ_MODAL_DATA);
-
-  loading: boolean = false;
-  loading_form: boolean = false;
-  frm!: FormGroup;
-  model: Category = {};
-
-  ngOnInit() {
-    if (this.id) {
-      this.initFrm();
-      this.loading_form = true;
-      this.service.find(this.id).subscribe({
-        next: (result) => {
-          this.model = result;
-          this.frm.setValue({
-            name: this.model.name,
-            note: '',
-          });
-          this.loading_form = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading_form = false;
-          this.notify.error('Product not found', 'It might have been deleted.');
-        },
-      });
-    }
-  }
-
-  private initFrm(): void {
-    this.frm = this.fb.group({
-      name: [{ value: null, disabled: true }],
-      note: [null],
-    });
-  }
-
-  onDelete(): void {
-    this.loading = true;
-    this.service.delete(this.id, this.frm.value.note).subscribe({
-      next: () => {
-        this.loading = false;
-        this.raf.triggerOk();
-        this.msg.success('Product deleted successfull');
-      },
-      error: (err) => {
-        this.loading = false;
-        this.msg.error('Product deleted failed!');
-        console.error('Deletion failed', err);
-      },
-    });
-  }
-
-  onCancel(): void {
-    this.raf.triggerCancel();
+export class CategoryDeleteComponent
+  extends BaseDeleteComponent<Category>
+  implements OnInit
+{
+  constructor(service: CategoriesService) {
+    super(service);
   }
 }

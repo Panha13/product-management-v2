@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Unit, UnitsService } from './units.service';
 import { Subscription } from 'rxjs';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { UnitUiService } from './unit-ui.service';
 import { QueryParam } from 'src/app/helpers/base-api.service';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { BaseListComponent } from 'src/app/utils/components/base-list.component';
 
 @Component({
